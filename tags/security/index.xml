@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Security on yuasa&#39;s blog</title>
+    <link>//localhost:1313/tags/security/</link>
+    <description>Recent content in Security on yuasa&#39;s blog</description>
+    <generator>Hugo</generator>
+    <language>ja</language>
+    <copyright>© yuasa</copyright>
+    <lastBuildDate>Sun, 14 Jul 2024 22:39:25 +0900</lastBuildDate>
+    <atom:link href="//localhost:1313/tags/security/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GitHub Actionsにおける脅威と対策まとめ</title>
+      <link>//localhost:1313/posts/46/</link>
+      <pubDate>Sun, 14 Jul 2024 22:39:25 +0900</pubDate>
+      <guid>//localhost:1313/posts/46/</guid>
+      <description>この記事はZennに投稿されています。</description>
+    </item>
+  </channel>
+</rss>

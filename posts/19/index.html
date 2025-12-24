@@ -1,0 +1,235 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[HackTheBox] Mirai Writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="I worked on the Mirai retired machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.48 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 6.7p1 Debian 5+deb8u3 (protocol 2.0) | ssh-hostkey: | 1024 aa:ef:5c:e0:8e:86:97:82:47:ff:4a:e5:40:18:90:c5 (DSA) | 2048 e8:c1:9d:c5:43:ab:fe:61:23:3b:d7:e4:af:9b:74:18 (RSA) | 256 b6:a0:78:38:d0:c8:10:94:8b:44:b2:ea:a0:17:42:2b (ECDSA) |_ 256 4d:68:40:f7:20:c4:e5:52:80:7a:44:38:b8:a2:a7:52 (ED25519) 53/tcp open domain dnsmasq 2.76 | dns-nsid: |_ bind.version: dnsmasq-2.76 80/tcp open http lighttpd 1."><meta property="og:image" content><meta property="og:title" content="[HackTheBox] Mirai Writeup"><meta property="og:description" content="I worked on the Mirai retired machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.48 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 6.7p1 Debian 5+deb8u3 (protocol 2.0) | ssh-hostkey: | 1024 aa:ef:5c:e0:8e:86:97:82:47:ff:4a:e5:40:18:90:c5 (DSA) | 2048 e8:c1:9d:c5:43:ab:fe:61:23:3b:d7:e4:af:9b:74:18 (RSA) | 256 b6:a0:78:38:d0:c8:10:94:8b:44:b2:ea:a0:17:42:2b (ECDSA) |_ 256 4d:68:40:f7:20:c4:e5:52:80:7a:44:38:b8:a2:a7:52 (ED25519) 53/tcp open domain dnsmasq 2.76 | dns-nsid: |_ bind.version: dnsmasq-2.76 80/tcp open http lighttpd 1."><meta property="og:type" content="article"><meta property="og:url" content="/posts/19/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-06-01T07:10:30+09:00"><meta property="article:modified_time" content="2022-06-01T07:10:30+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[HackTheBox] Mirai Writeup"><meta name=twitter:description content="I worked on the Mirai retired machine of HackTheBox, so I will write its writeup.
+Port Scan kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.48 PORT STATE SERVICE VERSION 22/tcp open ssh OpenSSH 6.7p1 Debian 5+deb8u3 (protocol 2.0) | ssh-hostkey: | 1024 aa:ef:5c:e0:8e:86:97:82:47:ff:4a:e5:40:18:90:c5 (DSA) | 2048 e8:c1:9d:c5:43:ab:fe:61:23:3b:d7:e4:af:9b:74:18 (RSA) | 256 b6:a0:78:38:d0:c8:10:94:8b:44:b2:ea:a0:17:42:2b (ECDSA) |_ 256 4d:68:40:f7:20:c4:e5:52:80:7a:44:38:b8:a2:a7:52 (ED25519) 53/tcp open domain dnsmasq 2.76 | dns-nsid: |_ bind.version: dnsmasq-2.76 80/tcp open http lighttpd 1."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[HackTheBox] Mirai Writeup</h1><div class=meta>Posted on Jun 1, 2022</div></div><nav id=TableOfContents><ol><li><a href=#port-scan>Port Scan</a></li><li><a href=#initial-shell>Initial shell</a></li><li><a href=#privilege-escalation-pi---root>Privilege Escalation <code>pi</code> -> <code>root</code></a></li><li><a href=#thoughts>Thoughts</a></li></ol></nav><section class=body><p>I worked on the Mirai retired machine of HackTheBox, so I will write its writeup.</p><p><img src=/images/posts/19/label.png alt=label></p><h1 id=port-scan>Port Scan</h1><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ nmap -T4 -A -v -Pn -p- 10.10.10.48
+PORT      STATE    SERVICE VERSION
+22/tcp    open     ssh     OpenSSH 6.7p1 Debian 5+deb8u3 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 aa:ef:5c:e0:8e:86:97:82:47:ff:4a:e5:40:18:90:c5 (DSA)
+|   2048 e8:c1:9d:c5:43:ab:fe:61:23:3b:d7:e4:af:9b:74:18 (RSA)
+|   256 b6:a0:78:38:d0:c8:10:94:8b:44:b2:ea:a0:17:42:2b (ECDSA)
+|_  256 4d:68:40:f7:20:c4:e5:52:80:7a:44:38:b8:a2:a7:52 (ED25519)
+53/tcp    open     domain  dnsmasq 2.76
+| dns-nsid: 
+|_  bind.version: dnsmasq-2.76
+80/tcp    open     http    lighttpd 1.4.35
+| http-methods: 
+|_  Supported Methods: OPTIONS GET HEAD POST
+|_http-server-header: lighttpd/1.4.35
+|_http-title: Site doesn&#39;t have a title (text/html; charset=UTF-8).
+240/tcp   filtered unknown
+1996/tcp  open     upnp    Platinum UPnP 1.0.5.13 (UPnP/1.0 DLNADOC/1.50)
+5161/tcp  filtered snmpssh
+5760/tcp  filtered unknown
+10675/tcp filtered unknown
+14487/tcp filtered unknown
+26857/tcp filtered unknown
+27861/tcp filtered unknown
+32400/tcp open     http    Plex Media Server httpd
+| http-auth: 
+| HTTP/1.1 401 Unauthorized\x0D
+|_  Server returned status 401 but no WWW-Authenticate header.
+|_http-cors: HEAD GET POST PUT DELETE OPTIONS
+|_http-favicon: Plex
+|_http-title: Unauthorized
+32469/tcp open     upnp    Platinum UPnP 1.0.5.13 (UPnP/1.0 DLNADOC/1.50)
+45503/tcp filtered unknown
+46515/tcp filtered unknown
+51654/tcp filtered unknown
+54189/tcp filtered unknown
+55267/tcp filtered unknown
+56957/tcp filtered unknown
+57466/tcp filtered unknown
+62366/tcp filtered unknown
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre><h1 id=initial-shell>Initial shell</h1><p>Directory scan with gobuster.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ gobuster dir -u http://10.10.10.48/ -w /usr/share/seclists/Discovery/Web-Content/common.txt -s &#39;200,204,301,302,307,403,500&#39; -e
+===============================================================
+Gobuster v3.1.0
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.10.10.48/
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/seclists/Discovery/Web-Content/common.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.1.0
+[+] Expanded:                true
+[+] Timeout:                 10s
+===============================================================
+2022/05/30 00:58:38 Starting gobuster in directory enumeration mode
+===============================================================
+http://10.10.10.48/_framework/blazor.webassembly.js (Status: 200) [Size: 61]
+http://10.10.10.48/admin                (Status: 301) [Size: 0] [--&gt; http://10.10.10.48/admin/]
+http://10.10.10.48/swfobject.js         (Status: 200) [Size: 61]                               
+                                                                                               
+===============================================================
+2022/05/30 01:00:57 Finished
+===============================================================
+</code></pre><p>http://10.10.10.48/admin/
+<img src=/images/posts/19/pi-hole.png alt=pi-hole></p><p>If you are looking for the default credentials for pi-hole, you will find the credentials for the raspberry pie itself.
+<a href="https://forums.raspberrypi.com/viewtopic.php?t=261662">https://forums.raspberrypi.com/viewtopic.php?t=261662</a></p><p>Try user: <code>pi</code>, pass: <code>raspberry</code> credentials using SSH.
+You can see that you can actually log in.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>kali@kali:~$ ssh pi@10.10.10.48
+The authenticity of host &#39;10.10.10.48 (10.10.10.48)&#39; can&#39;t be established.
+ECDSA key fingerprint is SHA256:UkDz3Z1kWt2O5g2GRlullQ3UY/cVIx/oXtiqLPXiXMY.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added &#39;10.10.10.48&#39; (ECDSA) to the list of known hosts.
+pi@10.10.10.48&#39;s password: 
+Permission denied, please try again.
+pi@10.10.10.48&#39;s password: 
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Sun Aug 27 14:47:50 2017 from localhost
+
+SSH is enabled and the default password for the &#39;pi&#39; user has not been changed.
+This is a security risk - please login as the &#39;pi&#39; user and type &#39;passwd&#39; to set a new password.
+
+
+SSH is enabled and the default password for the &#39;pi&#39; user has not been changed.
+This is a security risk - please login as the &#39;pi&#39; user and type &#39;passwd&#39; to set a new password.
+
+pi@raspberrypi:~ $ id
+uid=1000(pi) gid=1000(pi) groups=1000(pi),4(adm),20(dialout),24(cdrom),27(sudo),29(audio),44(video),46(plugdev),60(games),100(users),101(input),108(netdev),117(i2c),998(gpio),999(spi)
+</code></pre><p>You can also find the user flag.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>pi@raspberrypi:~ $ ls -la /
+total 72
+drwxr-xr-x  35 root root  4096 Aug 14  2017 .
+drwxr-xr-x  35 root root  4096 Aug 14  2017 ..
+drwxr-xr-x   2 root root  4096 Aug 13  2017 bin
+drwxr-xr-x   2 root root  4096 Aug 13  2017 boot
+drwxr-xr-x  17 root root  3280 May 31 05:24 dev
+drwxr-xr-x 170 root root  4096 Dec 24  2017 etc
+drwxr-xr-x   4 root root  4096 Aug 13  2017 home
+lrwxrwxrwx   1 root root    33 Dec 13  2016 initrd.img -&gt; /boot/initrd.img-3.16.0-4-686-pae
+lrwxrwxrwx   1 root root    29 Dec 13  2016 initrd.img.old -&gt; /boot/initrd.img-3.16.0-4-586
+drwxr-xr-x  28 root root  4096 Aug 13  2017 lib
+drwx------   2 root root 16384 Aug 13  2017 lost+found
+drwxr-xr-x   3 root root  4096 Aug 14  2017 media
+drwxr-xr-x   2 root root     3 Nov  2  2016 mnt
+drwxr-xr-x   6 root root  4096 Aug 13  2017 opt
+-rw-r--r--   1 root root     8 Aug 13  2017 persistence.conf
+dr-xr-xr-x 123 root root     0 May 31 05:23 proc
+drwx------   3 root root  4096 Aug 27  2017 root
+drwxr-xr-x  24 root root   820 May 31 17:10 run
+drwxr-xr-x   2 root root  4096 Dec 24  2017 sbin
+drwxr-xr-x   2 root root     3 Nov  2  2016 srv
+dr-xr-xr-x  13 root root     0 May 31 05:23 sys
+drwxrwxrwt  13 root root   320 May 31 17:09 tmp
+drwxr-xr-x  19 root root  4096 Aug 13  2017 usr
+drwxr-xr-x  18 root root  4096 May 31 06:25 var
+lrwxrwxrwx   1 root root    29 Dec 13  2016 vmlinuz -&gt; boot/vmlinuz-3.16.0-4-686-pae
+lrwxrwxrwx   1 root root    25 Dec 13  2016 vmlinuz.old -&gt; boot/vmlinuz-3.16.0-4-586
+pi@raspberrypi:~ $ ls -la /home
+total 12
+drwxr-xr-x  4 root root 4096 Aug 13  2017 .
+drwxr-xr-x 35 root root 4096 Aug 14  2017 ..
+drwxr-xr-x 21 pi   pi   4096 May 31 05:24 pi
+pi@raspberrypi:~ $ ls -la /home/pi
+total 1509
+drwxr-xr-x 21 pi   pi      4096 May 31 05:24 .
+drwxr-xr-x  4 root root    4096 Aug 13  2017 ..
+-rw-r--r--  1 pi   pi        69 Aug 13  2017 .asoundrc
+-rw-r--r--  1 pi   pi   1441764 Aug 13  2017 background.jpg
+-rw-------  1 pi   pi        18 Dec 24  2017 .bash_history
+-rw-r--r--  1 pi   pi       220 Nov 12  2014 .bash_logout
+-rw-r--r--  1 pi   pi      3512 Oct 24  2016 .bashrc
+drwxr-xr-x  6 pi   pi      4096 Aug 13  2017 .cache
+drwx------ 15 pi   pi      4096 Aug 13  2017 .config
+drwx------  3 pi   pi      4096 Aug 13  2017 .dbus
+drwxr-xr-x  3 pi   pi      4096 Aug 13  2017 Desktop
+drwxr-xr-x  5 pi   pi        99 Dec 13  2016 Documents
+drwxr-xr-x  2 pi   pi      4096 Aug 13  2017 Downloads
+drwxr-xr-x  2 pi   pi      4096 Aug 13  2017 .gstreamer-0.10
+-rw-r--r--  1 pi   pi        26 Aug 13  2017 .gtkrc-2.0
+drwxr-xr-x  4 pi   pi      4096 Aug 13  2017 .local
+drwxr-xr-x  2 pi   pi      4096 Aug 13  2017 Music
+drwxr-xr-x  3 pi   pi      4096 Aug 13  2017 oldconffiles
+drwxr-xr-x  2 pi   pi      4096 Aug 13  2017 Pictures
+drwx------  3 pi   pi      4096 Aug 13  2017 .pki
+-rw-r--r--  1 pi   pi       675 Nov 12  2014 .profile
+drwxr-xr-x  2 pi   pi      4096 Aug 13  2017 Public
+drwxr-xr-x  2 pi   pi      1629 Dec 13  2016 python_games
+drwxr-xr-x  2 pi   pi      4096 Aug 13  2017 Templates
+drwxr-xr-x  3 pi   pi      4096 Aug 13  2017 .themes
+drwx------  4 pi   pi      4096 Aug 13  2017 .thumbnails
+drwxr-xr-x  2 pi   pi      4096 Aug 13  2017 Videos
+-rw-------  1 pi   pi        56 May 31 05:24 .Xauthority
+-rw-------  1 pi   pi       711 May 31 05:24 .xsession-errors
+-rw-------  1 pi   pi       711 Dec 24  2017 .xsession-errors.old
+pi@raspberrypi:~ $ ls -la /home/pi/Desktop
+total 16
+drwxr-xr-x  3 pi pi 4096 Aug 13  2017 .
+drwxr-xr-x 21 pi pi 4096 May 31 05:24 ..
+drwxr-xr-x  4 pi pi 4096 Aug 13  2017 Plex
+-rw-r--r--  1 pi pi   32 Aug 13  2017 user.txt
+pi@raspberrypi:~ $ cat /home/pi/Desktop/user.txt
+*************************
+</code></pre><h1 id=privilege-escalation-pi---root>Privilege Escalation <code>pi</code> -> <code>root</code></h1><p>This user belongs to the sudo group, so try <code>sudo -l</code>. All commands can be executed with root privileges without a password.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>pi@raspberrypi:/tmp $ sudo -l
+Matching Defaults entries for pi on localhost:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User pi may run the following commands on localhost:
+    (ALL : ALL) ALL
+    (ALL) NOPASSWD: ALL
+</code></pre><p>Privilege escalation to root user with <code>sudo su</code>.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>pi@raspberrypi:/tmp $ sudo su
+root@raspberrypi:/tmp# id
+uid=0(root) gid=0(root) groups=0(root)
+</code></pre><p>If you look at the flag in the usual place, you can see that there is a flag on the USB.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>root@raspberrypi:/tmp# ls -la /root
+total 22
+drwx------  3 root root 4096 Aug 27  2017 .
+drwxr-xr-x 35 root root 4096 Aug 14  2017 ..
+-rw-------  1 root root  549 Dec 24  2017 .bash_history
+-rw-r--r--  1 root root  570 Jan 31  2010 .bashrc
+-rw-r--r--  1 root root  140 Nov 19  2007 .profile
+-rw-r--r--  1 root root   76 Aug 14  2017 root.txt
+drwx------  2 root root 4096 Aug 27  2017 .ssh
+root@raspberrypi:/tmp# cat /root/root.txt
+I lost my original root.txt! I think I may have a backup on my USB stick...
+</code></pre><p>Check the mount status.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>root@raspberrypi:/tmp# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+aufs            8.5G  2.8G  5.3G  34% /
+tmpfs           100M  8.8M   92M   9% /run
+/dev/sda1       1.3G  1.3G     0 100% /lib/live/mount/persistence/sda1
+/dev/loop0      1.3G  1.3G     0 100% /lib/live/mount/rootfs/filesystem.squashfs
+tmpfs           250M     0  250M   0% /lib/live/mount/overlay
+/dev/sda2       8.5G  2.8G  5.3G  34% /lib/live/mount/persistence/sda2
+devtmpfs         10M     0   10M   0% /dev
+tmpfs           250M  8.0K  250M   1% /dev/shm
+tmpfs           5.0M  4.0K  5.0M   1% /run/lock
+tmpfs           250M     0  250M   0% /sys/fs/cgroup
+tmpfs           250M  444K  250M   1% /tmp
+/dev/sdb        8.7M   93K  7.9M   2% /media/usbstick
+tmpfs            50M     0   50M   0% /run/user/999
+tmpfs            50M     0   50M   0% /run/user/1000
+</code></pre><p>Since usb is often mounted in <code>/dev/sdb</code>, use the <code>strings</code> command to search for strings in that file. And the root flag is found.</p><pre tabindex=0><code class=language-:bash data-lang=:bash>root@raspberrypi:/tmp# strings /dev/sdb
+&gt;r &amp;
+/media/usbstick
+lost+found
+root.txt
+damnit.txt
+&gt;r &amp;
+&gt;r &amp;
+/media/usbstick
+lost+found
+root.txt
+damnit.txt
+&gt;r &amp;
+/media/usbstick
+2]8^
+lost+found
+root.txt
+damnit.txt
+&gt;r &amp;
+*************************
+Damnit! Sorry man I accidentally deleted your files off the USB stick.
+Do you know if there is any way to get them back?
+-James
+</code></pre><h1 id=thoughts>Thoughts</h1><p>It was fun because I was able to try a simple forensics.</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/hackthebox>hackthebox</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

